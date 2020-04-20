@@ -1,0 +1,39 @@
+@import '../variables';
+
+.Footer {
+  padding: 0 $profile-right-margin 0 $profile-left-margin;
+  font-family: $global-text-font;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  font-size: 1em;
+
+  @include media-breakpoint-down(md) {
+    padding: 0;
+  }
+
+  hr {
+    background-color: $custom-light-blue;
+  }
+
+  .Support {
+    color: $custom-dark-gray;
+    text-decoration: none;
+    border-bottom: 1px dotted;
+    border-color: transparent;
+    font-weight: 500;
+    font-size: 1em;
+    text-transform: uppercase;
+    float: right;
+
+    &:hover {
+      color: $black;
+      border-color: $custom-blue;
+    }
+
+    .fa-tags {
+      margin-right: 3px;
+      font-weight: 300;
+      font-size: 1.1em;
+    }
+  }
+}

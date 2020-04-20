@@ -1,0 +1,26 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins/_breakpoints';
+
+$global-text-font: 'Open Sans', sans-serif;
+$dark-gray-text-color: #b2b8ba;
+$dark-blue-text-color: #1c3656;
+$blue-text-color: #24557d;
+$gray-text-color: #d9dfe1;
+
+/* Redefining base colors for general use */
+$custom-dark-gray: #777777;
+$custom-gray: #aeb4b6;
+
+$custom-blue: #24557d;
+$custom-light-blue: #7ea2bc;
+$custom-orange: #f08d32;
+$custom-green: #01fec3;
+
+$white: rgb(255, 255, 255);
+$light-gray: rgb(194, 194, 194);
+$black: rgb(0, 0, 0);
+
+/* Margins, distances */
+$profile-left-margin: 300px;
+$profile-right-margin: 300px;

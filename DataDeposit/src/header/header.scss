@@ -1,0 +1,196 @@
+@import "../variables";
+
+$header-color: #fff;
+$header-color-secondary: #fff;
+$header-color-hover: darken($header-color, 20%);
+
+/* ==========================================================================
+Navbar styles
+========================================================================== */
+.CustomNavbar {
+  background-color: #3c87be;
+  padding: 0.2em 1em;
+  border-bottom: 7px solid #24557d;
+
+  .ProfileImage {
+    margin: -10px 0px;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+  }
+
+  @mixin itemActive {
+    border-color: #3c87bf;
+    background-color: transparent;
+    color: black;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .dropdown-item {
+    font-size: .9em;
+    padding: 0.5rem 1rem;
+    text-transform: uppercase;
+    border-radius: 3px;
+    border-bottom: 2px solid transparent;
+    color: $custom-gray;
+  }
+
+  .dropdown-item.active {
+    @include itemActive();
+  }
+  .dropdown-item:focus,
+  .dropdown-item:hover {
+    padding: 0.5rem 1rem 0.5rem 1.5rem;
+    @include itemActive();
+  }
+
+  .dropdown-menu {
+    padding: 10px;
+    border-radius: 5px;
+    width: 320px;
+    -webkit-box-shadow: 0px 5px 12px -3px #000000;
+    box-shadow: 0px 5px 12px -3px #000000;
+  }
+
+  .dropdown-divider {
+    margin: 0;
+  }
+
+  .dropdown-toggle::after {
+    margin-left: 0.15em;
+  }
+
+  ul.navbar-nav {
+    padding: 0.5em;
+
+    .nav-item {
+      margin-left: 1.5rem;
+    }
+  }
+
+  a.nav-link {
+    font-weight: 400;
+    color: white;
+
+    > span {
+      margin-left: 5px;
+    }
+  }
+
+  .CustomNavbarToggler {
+    color: #fff;
+    font-size: 1.5em;
+    padding: 10px;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+.NavbarAvatar {
+  border: 1px solid #7ea2bc;
+  border-radius: 100%;
+  position: absolute;
+  margin-left: -30px;
+  object-fit: cover;
+  height: 30px;
+  width: 30px;
+}
+
+.BrandLogo {
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  .BrandIcon {
+    height: 45px;
+    width: auto;
+    display: inline-block;
+    margin-right: 10px;
+
+    img {
+      height: 45px;
+    }
+  }
+}
+
+.LogoCRESCDI {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &:hover {
+    text-decoration: none;
+  }
+  @include media-breakpoint-down(md) {
+    position: fixed;
+    top: 30px;
+    left: 20%;
+    transform: translate(-20%, auto);
+  }
+  @include media-breakpoint-down(sm) {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translate(-50%, auto);
+  }
+}
+.BrandTitle {
+  font-size: 24px;
+  color: $header-color;
+  font-family: $global-text-font;
+  font-weight: 300;
+  margin-right: 10px;
+
+  &:hover {
+    color: $header-color-hover;
+    text-decoration: none;
+  }
+
+  @include media-breakpoint-down(md) {
+    display: none;
+  }
+}
+
+.nav-link {
+  font-family: $global-text-font;
+}
+
+.locale-menu-entry {
+  a {
+    margin-left: -10px;
+  }
+}
+.account-menu-entry {
+  a {
+    margin-left: -10px;
+  }
+}
+.nav-item .tooltiptext {
+  visibility: hidden;
+  max-width: auto;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  padding: 4px;
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 25%;
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: pre;
+}
+
+.nav-item:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
