@@ -8,6 +8,7 @@
     "build": "webpack --progress --config webpack.config.js --mode=production",
     "build:dev": "webpack --progress --config webpack.config.js --mode=development",
     "watch": "webpack --config webpack.config.js --mode=development --watch",
+    "start-build": "npm run build && python3 ../server/server.py",
     "start": "npm run webpack:dev",
     "webpack:dev": "npm run webpack-dev-server -- --config webpack.config.js --inline --port=9060 --env.stats=minimal",
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js"

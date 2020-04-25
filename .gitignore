@@ -1,2 +1,3 @@
 DataDeposit/static/node_modules/
 DataDeposit/static/dist/app.bundle.js
+.vscode/launch.json

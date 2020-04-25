@@ -1,6 +1,6 @@
 import './header.scss';
 
-// import axios from 'axios';
+import axios from 'axios';
 import React from 'react';
 import { Storage, translate } from 'react-jhipster';
 import { Collapse, Nav, Navbar, NavbarToggler, NavItem, NavLink } from 'reactstrap';
@@ -38,6 +38,23 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
   state: IHeaderState = {
     menuOpen: false
   };
+
+  componentDidMount() {
+    axios.get('/takeData', {
+      params: {
+        ID: 12345
+      }
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    .finally(function () {
+      // always executed
+    });  
+  }
 
   toggleMenu = () => {
     this.setState({ menuOpen: !this.state.menuOpen });

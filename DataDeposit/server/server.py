@@ -15,9 +15,9 @@ def index():
     return render_template("index.html")
 ##############################################################################
 
-@app.route("/hello")
-def hello():
-    return "Hello World!"
+@app.route('/takeData', methods = ['GET'])
+def upload_file():
+    return "HATZ JOHNULE"
 
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=False)
