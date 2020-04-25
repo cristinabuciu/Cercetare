@@ -1,6 +1,6 @@
 import React from 'react';
 import { Translate, translate } from 'react-jhipster';
-// import { NavLink as Link } from 'react-router-dom';
+import { NavLink as Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt } from '@fortawesome/free-regular-svg-icons/faFileAlt';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons/faUserCog';
@@ -33,22 +33,22 @@ export const BrandIcon = props => (
 );
 
 export const Brand = props => (
-  <NavbarBrand to="/" className="BrandLogo">
+  <NavbarBrand tag={Link} to="/" className="BrandLogo">
     <BrandIcon />
     <span className="BrandTitle" style={{ fontSize: 'large' }}>
       <Translate contentKey="global.title" />
     </span>
   </NavbarBrand>
 );
-// export const Logo = props => (
-//   <NavItem className="LogoCRESCDI" >
-//     <NavLink tag={Link}
-//       className="d-flex align-items-center"
-//       style={{ color: 'white', textDecoration: 'none', cursor: 'default' }} to="/">
-//       <embed src={'content/images/logo_CRESCDI.jpg'} style={{ height: '45px', verticalAlign: 'middle', objectFit: 'cover' }} />
-//     </NavLink>
-//   </NavItem>
-// );
+export const Logo = props => (
+  <NavItem className="LogoCRESCDI" >
+    <NavLink tag={Link}
+      className="d-flex align-items-center"
+      style={{ color: 'white', textDecoration: 'none', cursor: 'default' }} to="/">
+      <embed src={'content/images/logo_CRESCDI.jpg'} style={{ height: '45px', verticalAlign: 'middle', objectFit: 'cover' }} />
+    </NavLink>
+  </NavItem>
+);
 
 // export const Search = props => (
 //   <NavItem>
@@ -144,25 +144,25 @@ export const Brand = props => (
 //   </NavItem>
 // );
 
-// export const Home = props => (
-//   <NavItem>
-//     <span className="tooltiptext">
-//       <Translate contentKey="global.menu.account.login" />
-//     </span>
-//     <NavLink
-//       tag={Link}
-//       to="/login"
-//       className="d-flex align-items-center"
-//       onClick={() => props.toggleMenu()}
-//       style={{ color: 'white', textDecoration: 'none' }}
-//     >
-//       <FontAwesomeIcon icon="user" />
-//       <span>
-//         <Translate contentKey="global.menu.account.login">Login</Translate>
-//       </span>
-//     </NavLink>
-//   </NavItem>
-// );
+export const Home = props => (
+  <NavItem>
+    <span className="tooltiptext">
+      <Translate contentKey="global.menu.account.login" />
+    </span>
+    <NavLink
+      tag={Link}
+      to="/login"
+      className="d-flex align-items-center"
+      onClick={() => props.toggleMenu()}
+      style={{ color: 'white', textDecoration: 'none' }}
+    >
+      <FontAwesomeIcon icon="user" />
+      <span>
+        <Translate contentKey="global.menu.account.login">Login</Translate>
+      </span>
+    </NavLink>
+  </NavItem>
+);
 
 // export const Notifications = props => (
 //   <>
