@@ -2,11 +2,6 @@ $grid-line-color: rgb(187, 228, 240);
 @import 'bootstrap-variables';
 
 @import 'node_modules/bootstrap/scss/bootstrap';
-body {
-  background-image: url("../dist/content/images/bkg-texture.png");
-  margin: 0;
-}
-
 .ant-notification .ant-notification-topRight {
   z-index: 2050;
 }

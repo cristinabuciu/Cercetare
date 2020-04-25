@@ -48,7 +48,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
     // const account = this.props.account.user;
 
     let loginName: String = 'guest';
-    let photoLink: String = 'content/images/default-profile-photo.jpg';
+    let photoLink: String = 'static/dist/content/images/default-profile-photo.jpg';
 
     // if (account && account.researchers) {
     //   loginName = account.firstName;

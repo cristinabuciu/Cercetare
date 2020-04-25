@@ -16,7 +16,7 @@ export const NavDropdown = props => (
       {props.avatar && props.menu === 'account' ? (
         <img src={props.avatar} className="NavbarAvatar" />
       ) : ((props.menu === 'account') ?
-        <img src={'content/images/default-profile-photo.jpg'} className="NavbarAvatar" /> : null
+        <img src={'static/dist/content/images/default-profile-photo.jpg'} className="NavbarAvatar" /> : null
         )}
       <span>{props.name}</span>
     </DropdownToggle>
@@ -28,7 +28,7 @@ export const NavDropdown = props => (
 
 export const BrandIcon = props => (
   <div {...props} className="BrandIcon">
-    <img src={'content/images/logo-normal.png'} alt="Logo" />
+    <img src={'static/dist/content/images/logo-normal.png'} alt="Logo" />
   </div>
 );
 
@@ -45,7 +45,7 @@ export const Logo = props => (
     <NavLink tag={Link}
       className="d-flex align-items-center"
       style={{ color: 'white', textDecoration: 'none', cursor: 'default' }} to="/">
-      <embed src={'content/images/logo_CRESCDI.jpg'} style={{ height: '45px', verticalAlign: 'middle', objectFit: 'cover' }} />
+      <embed src={'static/dist/content/images/logo_CRESCDI.jpg'} style={{ height: '45px', verticalAlign: 'middle', objectFit: 'cover' }} />
     </NavLink>
   </NavItem>
 );
@@ -83,7 +83,7 @@ export const Logo = props => (
 //       {props.avatar ? (
 //         <img src={props.avatar} className="NavbarAvatar" />
 //       ) : (
-//           <img src={'content/images/default-profile-photo.jpg'} className="NavbarAvatar" />
+//           <img src={'static/dist/content/images/default-profile-photo.jpg'} className="NavbarAvatar" />
 //         )}
 //       <span>{props.username}</span>
 //     </NavLink>

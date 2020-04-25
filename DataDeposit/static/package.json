@@ -5,15 +5,25 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no tests installed\" && exit 1",
-    "build": "webpack --config webpack.config.js --mode=production",
-    "build:dev": "webpack --config webpack.config.js --mode=development",
+    "build": "webpack --progress --config webpack.config.js --mode=production",
+    "build:dev": "webpack --progress --config webpack.config.js --mode=development",
     "watch": "webpack --config webpack.config.js --mode=development --watch",
-    "start": "node server.js"
+    "start": "npm run webpack:dev",
+    "webpack:dev": "npm run webpack-dev-server -- --config webpack.config.js --inline --port=9060 --env.stats=minimal",
+    "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ClaudiuNedelcu1307/Cercetare.git"
   },
+  "keywords": [
+    "fullstack",
+    "template",
+    "python",
+    "react",
+    "npm",
+    "webpack"
+  ],
   "author": "Mr.Nobody",
   "license": "MIT",
   "bugs": {
@@ -82,7 +92,9 @@
     "to-string-loader": "1.1.5",
     "typescript": "^3.8.3",
     "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-merge": "4.1.4"
+    "webpack-cli": "3.1.2",
+    "webpack-merge": "4.1.4",
+    "webpack-notifier": "1.7.0",
+    "webpack-dev-server": "3.1.14"
   }
 }
