@@ -1,0 +1,31 @@
+@import '../variables';
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form-container {
+  border: 2px solid #3c87be;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px 50px;
+}
+
+.login-form-logo {
+  text-align: center;
+
+  img {
+    height: auto;
+    width: 20%;
+
+    @include media-breakpoint-down(xs) {
+      width: 50%;
+    }
+
+    @include media-breakpoint-down(md) {
+      width: 30%;
+    }
+  }
+}

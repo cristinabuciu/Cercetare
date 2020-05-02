@@ -151,14 +151,14 @@ export const Home = props => (
     </span>
     <NavLink
       tag={Link}
-      to="/login"
+      to="/LoginForm"
       className="d-flex align-items-center"
       onClick={() => props.toggleMenu()}
       style={{ color: 'white', textDecoration: 'none' }}
     >
       <FontAwesomeIcon icon="user" />
       <span>
-        <Translate contentKey="global.menu.account.login">Login</Translate>
+        Autentificare
       </span>
     </NavLink>
   </NavItem>

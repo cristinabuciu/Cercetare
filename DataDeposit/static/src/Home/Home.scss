@@ -1,0 +1,35 @@
+$grid-line-color: rgb(187, 228, 240);
+
+.ant-notification .ant-notification-topRight {
+  z-index: 2050;
+}
+
+.app-container {
+  box-sizing: border-box;
+
+  .view-container {
+    width: 100%;
+    min-height: 100%;
+
+    display: grid;
+    grid-template-rows: 1fr auto;
+
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: .5rem 1rem 1rem 1rem;
+
+    .card {
+      // padding: 1rem;
+      padding: 0 1rem 1rem 1rem;
+    }
+
+    .view-routes {
+      height: 100%;
+
+      > div {
+        height: 100%;
+      }
+    }
+  }
+}

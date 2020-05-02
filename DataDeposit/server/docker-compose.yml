@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+
+    mysql-dev-crescdi:
+        image: mysql:8.0.17
+        container_name: database_container_crescdi
+        environment:
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_DATABASE: database
+        expose:
+            - '5002'
+        ports:
+            - "5002:5002"
+        networks:
+            important_default:
+                ipv4_address: 10.21.0.4
+    
+    visualizer:
+        image: dockersamples/visualizer:stable
+        ports:
+            - "5003:5003"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock"
+        deploy:
+            placement:
+                constraints: [node.role == manager]
+        networks:
+            important_default:
+                ipv4_address: 10.21.0.9
+
+networks:
+    important_default:
+        ipam:
+            driver: default
+            config:
+                - subnet: 10.21.0.0/16

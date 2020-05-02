@@ -1,7 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
 
 import {HeaderMenu} from './header/headerMenu';
+import LoginForm from './LoginForm/LoginForm';
 import Footer from './footer/footer';
 import { AppContainer } from 'react-hot-loader';
 import { Card } from 'reactstrap';
@@ -12,7 +14,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import './app.scss';
 import 'antd/dist/antd.css';
 
-import { HashRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRoutes from './appRoutes';
 
 class App extends React.Component<{greeting: string}, {count:number}> {
   state = {count: 0};
@@ -32,10 +35,8 @@ class App extends React.Component<{greeting: string}, {count:number}> {
             <div className="container-fluid view-container" id="app-view-container">
               <Card className="jh-card">
                 <ErrorBoundary>
-                  <h2>{this.props.greeting}</h2>
-                  <button onClick={() => this.setState({count: this.state.count+1})}>
-                    This button has been clicked {this.state.count} times.
-                  </button>
+                  {/* <LoginForm color="black"/> */}
+                  <AppRoutes />
                 </ErrorBoundary>
               </Card>
               <Footer />
@@ -48,6 +49,24 @@ class App extends React.Component<{greeting: string}, {count:number}> {
       );
   }
 } 
+
+function mapStateToProps(state) {
+  return {
+    greeting: "De ce ma intrebi?"
+  };
+}
+
+function mapDispatchToProps(state) {
+  return {
+    greeting: "De ce ma intrebi?"
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
+
 
 ReactDOM.render(
   <App greeting="Hello, world!"/>,
