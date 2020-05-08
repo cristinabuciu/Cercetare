@@ -1,6 +1,8 @@
 import * as React from 'react';
 import axios from 'axios';
 import * as ReactDOM from 'react-dom';
+import {withRouter} from 'react-router';
+import { connect } from 'react-redux'
 
 import { Alert, Button, Col, Label, Row } from 'reactstrap';
 import { AvField, AvForm, AvGroup, AvInput } from 'availity-reactstrap-validation';
@@ -35,7 +37,15 @@ export default class LoginForm extends React.Component<ILoginFormProps, ILoginFo
             rememberMe: rememberMe
         })
           .then(response => {
-
+            console.log(response);
+            if(response.data.isAuthenticated) {
+                localStorage.setItem('login_user_token', response.data.username);
+                // window.location.reload(false);
+                window.location.href = '/';
+            } else {
+                console.log(response.data.errorMessage);
+            }
+            
           })
           .catch(function (error) {
             console.log(error);
@@ -56,22 +66,6 @@ export default class LoginForm extends React.Component<ILoginFormProps, ILoginFo
                     </div>
                     <AvForm onSubmit={this.handleSubmit}>
                     <Row>
-                        {/* <Col md="12">
-                        {this.props.loginError ? (
-                            <Alert color="danger">
-                            <Translate contentKey="login.messages.error.authentication">
-                                <strong>Failed to sign in!</strong> Please check your credentials and try again.
-                            </Translate>
-                            </Alert>
-                        ) : null}
-                        {this.props.permissionsError ? (
-                            <Alert color="danger">
-                            <Translate contentKey="login.messages.error.permissions">
-                                <strong>Failed to sign in!</strong> Please check your credentials and try again.
-                            </Translate>
-                            </Alert>
-                        ) : null}
-                        </Col> */}
                         <Col md="12">
                         <AvField
                             name="username"

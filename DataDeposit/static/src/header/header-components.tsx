@@ -36,7 +36,7 @@ export const Brand = props => (
   <NavbarBrand tag={Link} to="/" className="BrandLogo">
     <BrandIcon />
     <span className="BrandTitle" style={{ fontSize: 'large' }}>
-      <Translate contentKey="global.title" />
+      Universitatea Politehnica din București
     </span>
   </NavbarBrand>
 );
@@ -45,7 +45,7 @@ export const Logo = props => (
     <NavLink tag={Link}
       className="d-flex align-items-center"
       style={{ color: 'white', textDecoration: 'none', cursor: 'default' }} to="/">
-      <embed src={'static/dist/content/images/logo_CRESCDI.jpg'} style={{ height: '45px', verticalAlign: 'middle', objectFit: 'cover' }} />
+      <embed src={'static/dist/content/images/logo.png'} style={{ height: '45px', verticalAlign: 'middle', objectFit: 'cover' }} />
     </NavLink>
   </NavItem>
 );
@@ -126,23 +126,23 @@ export const Logo = props => (
 //   </NavItem>
 // );
 
-// export const Logout = props => (
-//   <NavItem>
-//     <span className="tooltiptext">
-//       <Translate contentKey="global.menu.account.logout" />
-//     </span>
-//     <NavLink
-//       tag={Link}
-//       to="/logout"
-//       className="d-flex align-items-center"
-//       onClick={() => props.toggleMenu()}
-//       style={{ color: 'white', textDecoration: 'none' }}
-//     >
-//       <FontAwesomeIcon icon="sign-out-alt" />
-//       <Translate contentKey="global.menu.account.logout">Logout</Translate>
-//     </NavLink>
-//   </NavItem>
-// );
+export const Logout = props => (
+  <NavItem>
+    <span className="tooltiptext">
+      <Translate contentKey="global.menu.account.logout" />
+    </span>
+    <NavLink
+      tag={Link}
+      to="/"
+      className="d-flex align-items-center"
+      onClick={() => props.handleLogout()}
+      style={{ color: 'white', textDecoration: 'none' }}
+    >
+      <FontAwesomeIcon icon="sign-out-alt" />
+      Logout
+    </NavLink>
+  </NavItem>
+);
 
 export const Home = props => (
   <NavItem>
