@@ -4,6 +4,10 @@ $grid-line-color: rgb(187, 228, 240);
   z-index: 2050;
 }
 
+.themed-container {
+  max-width: 90%;
+}
+
 .app-container {
   box-sizing: border-box;
 

@@ -2,6 +2,7 @@
 import os
 import sys
 import mysql.connector
+from search import search
 ############################### FLASK CONFIG ################################
 from flask import Flask, render_template, request, json, redirect, url_for, flash, session, make_response, jsonify
 app = Flask(__name__, static_folder="../static", template_folder="../static/dist")
@@ -26,6 +27,13 @@ def logout_post():
     resp = make_response('Logout')
     resp.set_cookie('current_username', expires=0)
     return resp
+
+@app.route('/getData', methods = ['POST', 'GET'])
+def getData():
+    receivedData = json.loads(request.data.decode('utf-8'))
+    _items = receivedData.get('items')
+
+    return search(_items)
 
 @app.route("/login_post", methods=['POST'])
 def login_post():

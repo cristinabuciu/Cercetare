@@ -31,7 +31,7 @@ export class App extends React.Component<{greeting: string}, {count:number}> {
               </ErrorBoundary>
 
               <div className="container-fluid view-container" id="app-view-container">
-                <Card className="jh-card">
+                <Card className="jh-card card-ala-prost">
                   <ErrorBoundary>
                     <AppRoutes />
                   </ErrorBoundary>
