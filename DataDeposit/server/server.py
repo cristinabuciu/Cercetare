@@ -48,7 +48,7 @@ def login_post():
     _username = receivedData.get('username')
     _password = receivedData.get('password')
 
-    myConnection = pgdb.connect( host=db_hostname, user=db_username, password=db_password, database=db_database )
+    myConnection = pgdb.Connection( host=db_hostname, user=db_username, password=db_password, database=db_database )
     cursor = myConnection.cursor()
     
     cursor.execute("SELECT * from loginTable WHERE username = '%s'" % (_username))

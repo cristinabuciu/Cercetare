@@ -9,7 +9,7 @@ def search(numbersOfItemsPerPage):
     username = 'root'
     password = 'secret'
     database = 'database'
-    myConnection = pgdb.connect( host=hostname, user=username, password=password, database=database )
+    myConnection = pgdb.Connection( host=hostname, user=username, password=password, database=database )
     cursor = myConnection.cursor()
     
     cursor.execute("SELECT * from datasets")
@@ -21,7 +21,7 @@ def applyFilters(jsonParams):
     username = 'root'
     password = 'secret'
     database = 'database'
-    myConnection = pgdb.connect( host=hostname, user=username, password=password, database=database )
+    myConnection = pgdb.Connection( host=hostname, user=username, password=password, database=database )
     cursor = myConnection.cursor()
 
     query = "SELECT * from datasets WHERE "
