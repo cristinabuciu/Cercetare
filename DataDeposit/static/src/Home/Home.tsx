@@ -38,10 +38,21 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     }
 
     showSearchCards() {
+        console.log("JOHNULE!!!");
+        console.log(this.state.searchResult);
         let cards = this.state.searchResult.map(item => (
             <Row>
                 <Col>
-                    <SearchCard />
+                    <SearchCard 
+                        domain={item[1]} 
+                        subdomain={item[2]} 
+                        country={item[3]} 
+                        data_format={item[4]} 
+                        authors={item[5]} 
+                        year={item[6]} 
+                        dataset_title={item[7]}
+                        article_title={item[8]} 
+                    />
                 </Col>
             </Row>
           )
@@ -61,9 +72,12 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                         <Title titleSet={this.props.greeting}/>
                     </Row>
                     <Row md="4">
-                        <LeftBar color='black'/>
+                        <Col md={{ size: 3, offset: 0 }} className="vertical-line">
+                            <LeftBar color='black'/>
+                        </Col>
                         <Col md={{ size: 9, offset: 0 }}>
                             <Search setItemsForShow={this.setItemsForShow}/>
+                            <hr className="hr-style" />
                             {this.showSearchCards()}
                         </Col>
                         

@@ -14,7 +14,16 @@ import "./items.scss"
  
 
 
-export interface ISearchCardProps {}
+export interface ISearchCardProps {
+    domain: string;
+    subdomain: Array<String> 
+    country: string;
+    data_format: string; 
+    authors: string;
+    year: string;
+    dataset_title: string;
+    article_title: string; 
+}
 
 
 export interface ISearchCardState {
@@ -71,7 +80,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     <Label for="titluDataset" className="label-format">Titlu Dataset:</Label>
                 </Col>
                 <Col>
-                    <Nav.Link href="/home" id="titluDataset">TITLU</Nav.Link>
+                    <Nav.Link href="/home" id="titluDataset">{this.props.dataset_title}</Nav.Link>
                 </Col>
                 
             </Row>
@@ -80,33 +89,33 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     <Label for="titluArticol" className="label-format">Titlu Articol:</Label>
                 </Col>
                 <Col>
-                    <Nav.Link href="/home" id="titluArticol">TITLU ARTICOL + AN</Nav.Link>
+                    <Nav.Link href="/home" id="titluArticol">{this.props.article_title + " " + this.props.year}</Nav.Link>
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <span className="label-format">
-                        Domeniu: ...
+                        Domain: <span className="search-card-field">{this.props.domain}:</span> {this.props.subdomain.map(txt => <span>{txt}; </span>)}
                     </span>
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <span className="label-format">
-                        Data Format: ...
+                        Data Format: <span className="search-card-field">{this.props.data_format}</span>
                     </span>
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <span className="label-format">
-                        Country: ...
+                        Country: <span className="search-card-field">{this.props.country}</span>
                     </span>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <Input type="textarea" name="text" id="description" placeholder="Short Description" className="margin-top-10" />
+                    <Input type="textarea" name="text" id="description" placeholder="Short Description" className="margin-top-10" disabled={true}/>
                 </Col>
             </Row>
             <Row>

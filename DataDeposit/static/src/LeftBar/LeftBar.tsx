@@ -26,7 +26,7 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
       const { activeItem } = this.state
   
       return (
-        <Col md={{ size: 3, offset: 0 }} className="vertical-line">
+        <div>
             <Nav className="flex-column">
                 <Nav.Link href="/home"><Button outline size='lg' className="button-color">Upload Dataset</Button>{' '}</Nav.Link>
             </Nav>
@@ -38,7 +38,7 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
                 <Nav.Link eventKey="link-2">Sponsors</Nav.Link>
                 <Nav.Link eventKey="link-2">Developers</Nav.Link>
             </Nav>
-        </Col>
+        </div>
       )
     }
 

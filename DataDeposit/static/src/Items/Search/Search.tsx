@@ -32,6 +32,9 @@ export interface ICardState {
     dataFormat: string;
     sortBy: string;
     resultsPerPage: number | null;
+    year: string | null;
+    dataset_title: string | null;
+    resultsSearchArray: Array<String>;
 }
 
 export default class Search extends React.Component<ICardProps, ICardState> {
@@ -40,40 +43,67 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         buttonDropDownStatus: true,
         startDate: new Date(),
         searchInputOptions: {
-            domain: ['abc', 'def'],
-            subdomain: ['123', '456'],
-            country: ['Romania', 'Patagonia', 'Japonia'],
-            dataFormat: ['zip', 'rar', 'tar.gz'],
+            domain: ['All domains  ', 'IT', 'MEDICINE'],
+            subdomain: ['All Subdomains  ', 'SOFTWARE', '456'],
+            country: ['All countries  ', 'Romania', 'Patagonia', 'Japonia'],
+            dataFormat: ['All Data Formats ', 'zip', 'rar', 'tar.gz'],
             sortBy: ['Asc', 'Desc']
         },
-        domain: "Domain  ",
-        subdomain: "Subomain ",
-        country: "Country ",
-        dataFormat: "Data Format ",
+        domain: "All domains  ",
+        subdomain: "All Subdomains  ",
+        country: "All countries  ",
+        dataFormat: "All Data Formats ",
         sortBy: "Sort By  ",
-        resultsPerPage: 10
-            
+        resultsPerPage: 10,
+        year: '',
+        dataset_title: '',
+        resultsSearchArray: []
     }
     
     handleChange = date => {
         this.setState({
           startDate: date
         });
-      };
+    };
 
-    changeValue = (e, comboBoxTitle) => {
+    componentDidMount() {
+        this.searchData();
+    }
+
+    changeValue = (e, comboBoxTitle, shouldUpdateNumber) => {
         this.state[comboBoxTitle] = e;
         this.forceUpdate();
+        if(shouldUpdateNumber) {
+        	this.searchData();
+        }
     }
 
     searchData = () => {
         console.log(this.state.resultsPerPage);
         axios.post( '/getData', {
             items: this.state.resultsPerPage,
+            params: {
+              	notArrayParams: {
+					domain: this.state.domain === 'All domains  ' ? '%' : this.state.domain,
+					country: this.state.country === 'All countries  ' ? '%' : this.state.country,
+					data_format: this.state.dataFormat === 'All Data Formats ' ? '%' : this.state.dataFormat,
+					year: this.state.year === '' ? '%' : this.state.year,
+					dataset_title: this.state.dataset_title === ''? '%' : this.state.dataset_title
+              },
+              arrayParams: {
+                  	subdomain: this.state.subdomain === 'All Subdomains  ' ? '%' : this.state.subdomain,
+              },
+              sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.state.sortBy
+              
+            }
         })
           .then(response => {
-            console.log(response);
-            this.props.setItemsForShow(3, 10, [['a'], ['b'], ['c']]);
+            console.log("///////////");
+            console.log(response.data);
+            console.log("///////////");
+            this.setState({
+              resultsSearchArray:response.data
+            });
           })
           .catch(function (error) {
             console.log(error);
@@ -82,7 +112,6 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             // always executed
           }); 
       }
-    
   
     render() {  
 
@@ -104,18 +133,22 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 <InputText nameOfDropdown="country" titleDropdown={this.state.country} listOfItems={this.state.searchInputOptions.country} changeValue={this.changeValue} />
                 </Col>
                 <Col>
-                <InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.searchInputOptions.dataFormat} changeValue={this.changeValue} />
+                <InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.searchInputOptions.dataFormat} changeValue={this.changeValue}  />
                 </Col>
             </Row>
             <Row className="padding-top-20">
                 <Col md={{ size: 5, offset: 0 }}>
-                    <Input type="text" name="author" id="Author" placeholder="Author" />
+                    <Input type="text" name="author" id="Author" placeholder="Author"  />
                 </Col>
                 <Col md={{ size: 2, offset: 0 }}>
-                    <Input type="number" name="year" id="Year" placeholder="Year" className="text-align-center" />
+                    <Input type="number" name="year" id="Year" placeholder="Year" className="text-align-center" 
+                        value={this.state.year}
+                        onChange={value => this.setState({year: value })}/>
                 </Col>
                 <Col md={{ size: 5, offset: 0 }}>
-                    <Input type="text" name="Dataset-title" id="Dataset-title" placeholder="Dataset title" />
+                    <Input type="text" name="Dataset-title" id="Dataset-title" placeholder="Dataset title" 
+                        value={this.state.dataset_title}
+                        onChange={value => this.setState({dataset_title: '' + value })}/>
                 </Col>
                 
             </Row>
@@ -133,8 +166,8 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 </Col>
                 {/* <Col md={{ size: 6, offset: 0 }}></Col>
                 <Col md={{ size: 3, offset: 0 }}> */}
-                    <Button color="primary" outline className="search-button-size" onClick={() => this.searchData()}>
-                        Search    <Badge color="secondary">4</Badge>
+                    <Button color="primary" outline className="search-button-size" onClick={() => this.props.setItemsForShow(this.state.resultsSearchArray.length, this.state.resultsPerPage, this.state.resultsSearchArray)}>
+                        Search    <Badge color="secondary">{this.state.resultsSearchArray.length}</Badge>
                     </Button>
                 {/* </Col> */}
                     

@@ -2,16 +2,16 @@ version: '3'
 
 services:
 
-    mysql-dev-crescdi:
-        image: mysql:8.0.17
-        container_name: database_container_crescdi
-        environment:
-            MYSQL_ROOT_PASSWORD: secret
-            MYSQL_DATABASE: database
-        expose:
-            - '5002'
+    postgres-dev-crescdi:
+        image: postgres:alpine
+        container_name: postgres_container_crescdi
         ports:
-            - "5002:5002"
+            - "5005:5432"
+        restart: always
+        environment:
+            POSTGRES_DB: database
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: secret
         networks:
             important_default:
                 ipv4_address: 10.21.0.4
@@ -35,3 +35,7 @@ networks:
             driver: default
             config:
                 - subnet: 10.21.0.0/16
+
+
+
+

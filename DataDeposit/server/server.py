@@ -1,8 +1,8 @@
 # server.py
 import os
 import sys
-import mysql.connector
-from search import search
+from search import search, applyFilters
+import pgdb
 ############################### FLASK CONFIG ################################
 from flask import Flask, render_template, request, json, redirect, url_for, flash, session, make_response, jsonify
 app = Flask(__name__, static_folder="../static", template_folder="../static/dist")
@@ -11,6 +11,11 @@ UPLOAD_FOLDER = './uploadFiles'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 160 * 1024 * 1024
 app.secret_key = 'development'
+
+db_hostname = '10.21.0.4'
+db_username = 'root'
+db_password = 'secret'
+db_database = 'database'
 
 @app.route("/")
 def index():
@@ -32,16 +37,20 @@ def logout_post():
 def getData():
     receivedData = json.loads(request.data.decode('utf-8'))
     _items = receivedData.get('items')
+    _params = receivedData.get('params')
 
-    return search(_items)
+    return applyFilters(_params)
 
 @app.route("/login_post", methods=['POST'])
 def login_post():
+    global db_username, db_password, db_database, db_hostname
     receivedData = json.loads(request.data.decode('utf-8'))
     _username = receivedData.get('username')
     _password = receivedData.get('password')
-    cnx = mysql.connector.connect(user='root', password='secret', host='10.21.0.4', database='database')
-    cursor = cnx.cursor()
+
+    myConnection = pgdb.connect( host=db_hostname, user=db_username, password=db_password, database=db_database )
+    cursor = myConnection.cursor()
+    
     cursor.execute("SELECT * from loginTable WHERE username = '%s'" % (_username))
 
     isAuthenticated = False
@@ -56,10 +65,10 @@ def login_post():
             currentUser = username
             resp = make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, errorMessage=errorMessage))
             resp.set_cookie("current_username", username)
-            cnx.close()
+            myConnection.close()
             return resp
 
-    cnx.close()
+    myConnection.close()
     errorMessage = "User-or-password-wrong"
     return make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, errorMessage=errorMessage))
 
