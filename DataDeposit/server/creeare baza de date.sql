@@ -4,7 +4,7 @@ CREATE TABLE loginTable (
     id BIGSERIAL PRIMARY KEY,
     username TEXT NOT NULL,
     password TEXT NOT NULL
-);
+); 
 
 
 insert into loginTable(username, password) values('John', 'abcd');
