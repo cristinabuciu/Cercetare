@@ -23,6 +23,8 @@ export interface ISearchCardProps {
     year: string;
     dataset_title: string;
     article_title: string; 
+    short_desc: string;
+    avg_rating: number;
 }
 
 
@@ -58,7 +60,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                 </Col>
                 <Col><div id="TooltipStars">
                     <StarRatings
-                        rating={this.state.ratingAvgValue}
+                        rating={this.props.avg_rating}
                         starDimension="19px"
                         starSpacing="3px"
                         numberOfStars={5}
@@ -93,29 +95,40 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                 </Col>
             </Row>
             <Row>
-                <Col>
+                <Col md={{ size: 2, offset: 0 }}>
                     <span className="label-format">
-                        Domain: <span className="search-card-field">{this.props.domain}:</span> {this.props.subdomain.map(txt => <span>{txt}; </span>)}
+                        Domain: 
                     </span>
+                    
+                </Col>
+                <Col>
+                    <span className="search-card-field padding-left-16 padding-right-16">{this.props.domain}</span> {this.props.subdomain.map(txt => <span> | {txt}</span>)}
                 </Col>
             </Row>
             <Row>
-                <Col>
+                <Col md={{ size: 2, offset: 0 }}> 
                     <span className="label-format">
-                        Data Format: <span className="search-card-field">{this.props.data_format}</span>
+                        Data Format: 
                     </span>
+                </Col>
+                <Col>
+                    <span className="search-card-field padding-left-16 padding-right-16">{this.props.data_format}</span>
                 </Col>
             </Row>
             <Row>
-                <Col>
+                <Col md={{ size: 2, offset: 0 }}>
                     <span className="label-format">
-                        Country: <span className="search-card-field">{this.props.country}</span>
+                        Country: 
                     </span>
                 </Col>
+                <Col>
+                    <span className="search-card-field padding-left-16 padding-right-16">{this.props.country}</span>
+                </Col>
+                
             </Row>
             <Row>
                 <Col>
-                    <Input type="textarea" name="text" id="description" placeholder="Short Description" className="margin-top-10" disabled={true}/>
+                    <Input type="textarea" name="text" id="description" placeholder="Short Description" className="margin-top-10" disabled={true} value={this.props.short_desc}/>
                 </Col>
             </Row>
             <Row>
@@ -123,7 +136,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     <Label for="gitLink" className="label-format">Gitlink:</Label>
                 </Col>
                 <Col>
-                    <Nav.Link href="/home" id="gitLink">www.mata.com</Nav.Link>
+                    <Nav.Link href="/home" id="gitLink">www.example.com</Nav.Link>
                 </Col>
             </Row>
             <Row>

@@ -52,6 +52,8 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                         year={item[6]} 
                         dataset_title={item[7]}
                         article_title={item[8]} 
+                        short_desc={item[9]}
+                        avg_rating={item[10]}
                     />
                 </Col>
             </Row>
@@ -72,8 +74,10 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                         <Title titleSet={this.props.greeting}/>
                     </Row>
                     <Row md="4">
-                        <Col md={{ size: 3, offset: 0 }} className="vertical-line">
-                            <LeftBar color='black'/>
+                        
+                        <LeftBar color='black' modeSearch={true}/>
+                        <Col md={{ size: 3, offset: 0 }}>
+                            .
                         </Col>
                         <Col md={{ size: 9, offset: 0 }}>
                             <Search setItemsForShow={this.setItemsForShow}/>

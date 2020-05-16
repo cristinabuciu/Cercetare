@@ -24,22 +24,25 @@ def applyFilters(jsonParams):
     myConnection = pgdb.Connection( host=hostname, user=username, password=password, database=database )
     cursor = myConnection.cursor()
 
+    jsonParams['arrayParams']['author'] = '%' if len(jsonParams['arrayParams']['author']) == 0 else jsonParams['arrayParams']['author'].replace(', ', '\', \'')
+
     query = "SELECT * from datasets WHERE "
 
     for (key, value) in jsonParams['notArrayParams'].items():
         query += key + ' LIKE \'' + value + '\' AND '
-    query = query[:-4]
+
     for (key, value) in jsonParams['arrayParams'].items():
         if value == '%':
             continue
-        query += key + ' @> ARRAY[' + value + '] '
-    cursor.execute(query)
-
+        query += key + ' @> ARRAY[\'' + value + '\'] AND '
+    query = query[:-4]
+    
     if jsonParams['sortBy'] == 'ASC':
-         query += 'SORT BY dataset_title ASC'
+         query += 'ORDER BY dataset_title ASC'
     elif jsonParams['sortBy'] == 'DESC':
-         query += 'SORT BY dataset_title DESC'
-
+         query += 'ORDER BY dataset_title DESC'
+    
+    cursor.execute(query)
     returnArray = []
     row = cursor.fetchone()
     if row == None:
@@ -47,7 +50,7 @@ def applyFilters(jsonParams):
         return json.dumps(returnArray)
     else:
         while row != None:
-            returnArray.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]])
+            returnArray.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]['demo_description'], row[9]['avg_rating_value']])
             row = cursor.fetchone()
 
     cursor.close()

@@ -32,8 +32,9 @@ export interface ICardState {
     dataFormat: string;
     sortBy: string;
     resultsPerPage: number | null;
-    year: string | null;
+    year: string;
     dataset_title: string | null;
+    authors: string | null;
     resultsSearchArray: Array<String>;
 }
 
@@ -47,7 +48,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             subdomain: ['All Subdomains  ', 'SOFTWARE', '456'],
             country: ['All countries  ', 'Romania', 'Patagonia', 'Japonia'],
             dataFormat: ['All Data Formats ', 'zip', 'rar', 'tar.gz'],
-            sortBy: ['Asc', 'Desc']
+            sortBy: ['ASC', 'DESC']
         },
         domain: "All domains  ",
         subdomain: "All Subdomains  ",
@@ -57,6 +58,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         resultsPerPage: 10,
         year: '',
         dataset_title: '',
+        authors: '',
         resultsSearchArray: []
     }
     
@@ -71,7 +73,9 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     }
 
     changeValue = (e, comboBoxTitle, shouldUpdateNumber) => {
-        this.state[comboBoxTitle] = e;
+        console.log("CODRIN");
+        console.log(e);
+        this.state[comboBoxTitle] = '' + e;
         this.forceUpdate();
         if(shouldUpdateNumber) {
         	this.searchData();
@@ -79,21 +83,22 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     }
 
     searchData = () => {
-        console.log(this.state.resultsPerPage);
+        console.log(this.state.year);
         axios.post( '/getData', {
             items: this.state.resultsPerPage,
             params: {
               	notArrayParams: {
-					domain: this.state.domain === 'All domains  ' ? '%' : this.state.domain,
-					country: this.state.country === 'All countries  ' ? '%' : this.state.country,
-					data_format: this.state.dataFormat === 'All Data Formats ' ? '%' : this.state.dataFormat,
-					year: this.state.year === '' ? '%' : this.state.year,
-					dataset_title: this.state.dataset_title === ''? '%' : this.state.dataset_title
-              },
-              arrayParams: {
-                  	subdomain: this.state.subdomain === 'All Subdomains  ' ? '%' : this.state.subdomain,
-              },
-              sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.state.sortBy
+                    domain: this.state.domain === 'All domains  ' ? '%' : this.state.domain,
+                    country: this.state.country === 'All countries  ' ? '%' : this.state.country,
+                    data_format: this.state.dataFormat === 'All Data Formats ' ? '%' : this.state.dataFormat,
+                    year: this.state.year === '' ? '%' : this.state.year,
+                    dataset_title: this.state.dataset_title === '' ? '%' : '%' + this.state.dataset_title + '%'
+                },
+                arrayParams: {
+                      subdomain: this.state.subdomain === 'All Subdomains  ' ? '%' : this.state.subdomain,
+                      author: this.state.authors
+                },
+                sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.state.sortBy
               
             }
         })
@@ -138,17 +143,16 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             </Row>
             <Row className="padding-top-20">
                 <Col md={{ size: 5, offset: 0 }}>
-                    <Input type="text" name="author" id="Author" placeholder="Author"  />
+                    <Input type="text" name="author" id="Author" placeholder="Author" 
+                        onChange={e => this.changeValue(e.target.value, 'authors', true)} />
                 </Col>
                 <Col md={{ size: 2, offset: 0 }}>
                     <Input type="number" name="year" id="Year" placeholder="Year" className="text-align-center" 
-                        value={this.state.year}
-                        onChange={value => this.setState({year: value })}/>
+                        onChange={e => this.changeValue(e.target.value, 'year', true)}/>
                 </Col>
                 <Col md={{ size: 5, offset: 0 }}>
                     <Input type="text" name="Dataset-title" id="Dataset-title" placeholder="Dataset title" 
-                        value={this.state.dataset_title}
-                        onChange={value => this.setState({dataset_title: '' + value })}/>
+                        onChange={e => this.changeValue(e.target.value, 'dataset_title', true)}/>
                 </Col>
                 
             </Row>
@@ -164,12 +168,12 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                         value={this.state.resultsPerPage}
                         onChange={value => this.setState({resultsPerPage: value })} />
                 </Col>
-                {/* <Col md={{ size: 6, offset: 0 }}></Col>
-                <Col md={{ size: 3, offset: 0 }}> */}
+                {/* <Col md={{ size: 6, offset: 0 }}></Col>*/}
+                <Col md={{ size: 4, offset: 0 }} className="text-align-right"> 
                     <Button color="primary" outline className="search-button-size" onClick={() => this.props.setItemsForShow(this.state.resultsSearchArray.length, this.state.resultsPerPage, this.state.resultsSearchArray)}>
                         Search    <Badge color="secondary">{this.state.resultsSearchArray.length}</Badge>
                     </Button>
-                {/* </Col> */}
+                </Col>
                     
             </Row>
           </CardText>

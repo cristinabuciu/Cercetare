@@ -10,7 +10,7 @@ export const InputText = (props) => {
   let changeValueBind = props.changeValue.bind();
 
   return (
-    <ButtonDropdown isOpen={dropdownOpen} toggle={toggle} className="button-style">
+    <ButtonDropdown isOpen={dropdownOpen} toggle={toggle} className={props.className ? props.className : "button-style"}>
       <DropdownToggle caret>
         {props.titleDropdown}
       </DropdownToggle>
@@ -24,6 +24,27 @@ export const InputText = (props) => {
     </ButtonDropdown>
   );
 }
+
+export const Switch = ({ isOn, handleToggle, onColor }) => {
+  return (
+    <>
+      <input
+        checked={isOn}
+        onChange={handleToggle}
+        className="react-switch-checkbox"
+        id={'react-switch-new'}
+        type="checkbox"
+      />
+      <label
+        style={{ background: isOn && onColor }}
+        className="react-switch-label"
+        htmlFor={'react-switch-new'}
+      >
+        <span className={'react-switch-button'} />
+      </label>
+    </>
+  );
+};
 
 // export default class CurrencySelector extends Component {
 //     constructor(props) {
