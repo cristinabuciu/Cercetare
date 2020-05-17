@@ -17,11 +17,27 @@ export interface ILeftBarProps {
 
 export interface ILeftBarState {
     activeItem: string;
+    isAuthenticated: boolean;
 }
 
 export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarState> {
 
-    state = { activeItem: 'bio' }
+    state = { activeItem: 'bio',
+    isAuthenticated: false
+ }
+
+    componentDidMount() {
+        this.state.isAuthenticated = false;
+        const token = localStorage.getItem('login_user_token');
+        console.log(token);
+        console.log("COMPONENT DID MOUNT LEFT BAR");
+        if(token) {
+            console.log("INTRA PE AICI in Left Bar");
+            this.setState({
+                isAuthenticated: true
+            })
+        }
+    }
 
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
   
@@ -31,9 +47,13 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
       return (
         <Col className="leftBat-fixed-style vertical-line" md={{ size: 3, offset: 0 }}>
             <Nav className="flex-column">
+                {this.state.isAuthenticated ? 
+                <>
                 {this.props.modeSearch ? 
                     <NavLink tag={Link} to="/uploadPage"><Button outline size='lg' className="button-color">Upload dataset</Button>{' '}</NavLink>
-                    : <NavLink tag={Link} to="/"><Button outline size='lg' className="button-color">Search datasets</Button>{' '}</NavLink>}
+                    : <NavLink tag={Link} to="/"><Button outline size='lg' className="button-color">Search datasets</Button>{' '}</NavLink>}</>
+                    : <></>
+                }
                 
             </Nav>
 

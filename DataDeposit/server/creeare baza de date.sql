@@ -31,13 +31,13 @@ CREATE TABLE datasets (
     -- rating_commits BIGINT NOT NULL
 
 insert into datasets(domain, subdomain, country, data_format, author, year, dataset_title, article_title, info) 
-values('IT', '{"SOFTWARE", "HARDWARE"}', 'Romania', 'zip', '{"Dorian", "Sam", "Macac", "Jack"}', '2015', 'Dezvoltarea aplicatiilor internet', 'Mare site', '{"article_url": "https://www.google.com/?wow", "full_description": "abcd", "demo_description": "a", "GIT_url": "www.git.hub", "avg_rating_value": 4.58, "rating_commits": 700}');
+values('IT', '{"SOFTWARE", "HARDWARE"}', 'Romania', 'zip', '{"Dorian", "Sam", "Macac", "Jack"}', '2015', 'Dezvoltarea aplicatiilor internet', 'Mare site', '{"article_url": "https://www.google.com/?wow", "full_description": "abcd", "demo_description": "a", "GIT_url": "www.git.hub", "avg_rating_value": 4.58, "rating_commits": 700, "owner": "admin"}');
 
 insert into datasets(domain, subdomain, country, data_format, author, year, dataset_title, article_title, info) 
-values('MEDICINE', '{"SURGERY", "PRACTICE"}', 'France', 'zip', '{"Steven Tyler", "David Coverdale", "Josh Lakkur"}', '2017', 'Dezvoltarea aplicatiilor medicale', 'Leac pentru veselie', '{"article_url": "https://www.google.com/?med", "full_description": "def", "demo_description": "d", "GIT_url": "www.git.hub", "avg_rating_value": 2.78, "rating_commits": 500}');
+values('MEDICINE', '{"SURGERY", "PRACTICE"}', 'France', 'zip', '{"Steven Tyler", "David Coverdale", "Josh Lakkur"}', '2017', 'Dezvoltarea aplicatiilor medicale', 'Leac pentru veselie', '{"article_url": "https://www.google.com/?med", "full_description": "def", "demo_description": "d", "GIT_url": "www.git.hub", "avg_rating_value": 2.78, "rating_commits": 500, "owner": "john"}');
 
 insert into datasets(domain, subdomain, country, data_format, author, year, dataset_title, article_title, info) 
-values('IT', '{"MACHINE LEARNING", "ARTIFICIAL INTELLIGENCE"}', 'Patagonia', 'rar', '{"Joe Satriani", "Alice Cooper", "Joe Eliot", "Gary Moore"}', '2016', 'Dezvoltarea aplicatiilor inteligente', 'Fuljere groaza si Dumitru', '{"article_url": "https://www.google.com/?med", "full_description": "fhjisdghcfnjkhsdgvnkjdrh", "demo_description": "pai da", "GIT_url": "www.git.hub", "avg_rating_value": 3.98, "rating_commits": 1000}');
+values('IT', '{"MACHINE LEARNING", "ARTIFICIAL INTELLIGENCE"}', 'Patagonia', 'rar', '{"Joe Satriani", "Alice Cooper", "Joe Eliot", "Gary Moore"}', '2016', 'Dezvoltarea aplicatiilor inteligente', 'Fuljere groaza si Dumitru', '{"article_url": "https://www.google.com/?med", "full_description": "fhjisdghcfnjkhsdgvnkjdrh", "demo_description": "pai da", "GIT_url": "www.git.hub", "avg_rating_value": 3.98, "rating_commits": 1000, "owner": "admin"}');
 
 
 update datasets set info='{"article_url": "https://www.google.com/?wow", "full_description": "abcd", "demo_description": "a", "GIT_url": "www.git.hub", "avg_rating_value": 4.58, "rating_commits": 700}'
@@ -45,3 +45,7 @@ WHERE domain='IT';
 
 update datasets set info='{"article_url": "https://www.google.com/?med", "full_description": "def", "demo_description": "d", "GIT_url": "www.git.hub", "avg_rating_value": 2.78, "rating_commits": 500}'
 WHERE domain='MEDICINE';
+
+INSERT INTO datasets(domain, subdomain, country, data_format, author, year, dataset_title, article_title, info) VALUES('IT', '{"IT_1"}', 'Japonia', 'zip', '{"sdfsdf"}', '342', 'sdfs', 'sdfsd', '{"article_url": "None", "full_description": "None", "demo_description": "dsfd", "GIT_url": "sdf", "avg_rating_value": 0.0, "rating_commits": 0.0}');
+
+

@@ -44,14 +44,24 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         buttonDropDownStatus: true,
         startDate: new Date(),
         searchInputOptions: {
-            domain: ['All domains  ', 'IT', 'MEDICINE'],
-            subdomain: ['All Subdomains  ', 'SOFTWARE', '456'],
+            domain: ['All domains  ', 'IT', 'MEDICINE', 'ARCHITECTURE', 'BIOLOGY', 'CHEMISTRY', 'PHYSICS', 'BUSINESS'],
+            subdomain: ['All subdomains  '],
+            subdomainList: {
+                'All domains  ': ['All subdomains  '],
+                IT: ['All subdomains  ', 'IT_1', 'IT_2', 'IT_3', 'IT_4'],
+                MEDICINE: ['All subdomains  ', 'MEDICINE_1', 'MEDICINE_2', 'MEDICINE_3', 'MEDICINE_4'],
+                ARCHITECTURE: ['All subdomains  ', 'ARCHITECTURE_1', 'ARCHITECTURE_2', 'ARCHITECTURE_3', 'ARCHITECTURE_4'],
+                BIOLOGY: ['All subdomains  ', 'BIOLOGY_1', 'BIOLOGY_2', 'BIOLOGY_3', 'BIOLOGY_4'],
+                CHEMISTRY: ['All subdomains  ', 'CHEMISTRY_1', 'CHEMISTRY_2', 'CHEMISTRY_3', 'CHEMISTRY_4'],
+                PHYSICS: ['All subdomains  ', 'PHYSICS_1', 'PHYSICS_2', 'PHYSICS_3', 'PHYSICS_4'],
+                BUSINESS: ['All subdomains  ', 'Ragnaros']
+            },
             country: ['All countries  ', 'Romania', 'Patagonia', 'Japonia'],
             dataFormat: ['All Data Formats ', 'zip', 'rar', 'tar.gz'],
             sortBy: ['ASC', 'DESC']
         },
         domain: "All domains  ",
-        subdomain: "All Subdomains  ",
+        subdomain: "All subdomains  ",
         country: "All countries  ",
         dataFormat: "All Data Formats ",
         sortBy: "Sort By  ",
@@ -75,6 +85,10 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     changeValue = (e, comboBoxTitle, shouldUpdateNumber) => {
         console.log("CODRIN");
         console.log(e);
+        if(comboBoxTitle === 'domain') {
+            this.state.searchInputOptions.subdomain = this.state.searchInputOptions.subdomainList[e];
+            this.state.subdomain = "All subdomains  ";
+        }
         this.state[comboBoxTitle] = '' + e;
         this.forceUpdate();
         if(shouldUpdateNumber) {
@@ -95,7 +109,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     dataset_title: this.state.dataset_title === '' ? '%' : '%' + this.state.dataset_title + '%'
                 },
                 arrayParams: {
-                      subdomain: this.state.subdomain === 'All Subdomains  ' ? '%' : this.state.subdomain,
+                      subdomain: this.state.subdomain === 'All subdomains  ' ? '%' : this.state.subdomain,
                       author: this.state.authors
                 },
                 sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.state.sortBy

@@ -16,6 +16,7 @@ export const InputText = (props) => {
       </DropdownToggle>
       <DropdownMenu >
           {/* {hatz(props.listOfItems)} */}
+          {props.listOfItems && props.listOfItems.length ? <></> : <DropdownItem disabled>Nothing to show</DropdownItem> }
           { props.listOfItems.map(item => (
               <DropdownItem onClick={(e) => changeValueBind(e.target.textContent, props.nameOfDropdown, true)}>{item}</DropdownItem>
             )

@@ -18,10 +18,12 @@ export interface IUploadPageProps {
 }
 
 export interface IUploadPageState {
+    fileToBeSent: string | Blob;
     buttonDropDownStatus: boolean;
     startDate: Date;
     dataset_title: string;
     article_title: string;
+    short_desc: string;
     dataset_authors: string;
     year: number;
     domain: string;
@@ -51,11 +53,13 @@ export interface IUploadPageState {
 export default class UploadPage extends React.Component<IUploadPageProps, IUploadPageState> {
 
     state = {
+        fileToBeSent: '',
         buttonDropDownStatus: true,
         startDate: new Date(),
         dataset_title: '',
         article_title: '',
         dataset_authors: '',
+        short_desc: '',
         gitlink: '',
         year: 0,
         valueSwitch: false,
@@ -64,16 +68,15 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
         subdomain: "Select Subdomains  ",
         dataFormat: "Select Dataformat  ",
         uploadInputOptions: {
-            domain: ['IT', 'MEDICINE', 'ARCHITECTURE', 'BIOLOGY', 'CHEMISTRY', 'COMPUTER_SCIENCE', 'PHYSICS', 'BUSINESS'],
+            domain: ['IT', 'MEDICINE', 'ARCHITECTURE', 'BIOLOGY', 'CHEMISTRY', 'PHYSICS', 'BUSINESS'],
             subdomain: [],
             subdomainList: {
-                IT: ['mata'],
-                MEDICINE: ['tactu'],
-                ARCHITECTURE: ['Codrin'],
-                BIOLOGY: ['WoT'],
-                CHEMISTRY: ['IS7'],
-                COMPUTER_SCIENCE: ['IS4'],
-                PHYSICS: ['Zapp'],
+                IT: ['IT_1', 'IT_2', 'IT_3', 'IT_4'],
+                MEDICINE: ['MEDICINE_1', 'MEDICINE_2', 'MEDICINE_3', 'MEDICINE_4'],
+                ARCHITECTURE: ['ARCHITECTURE_1', 'ARCHITECTURE_2', 'ARCHITECTURE_3', 'ARCHITECTURE_4'],
+                BIOLOGY: ['BIOLOGY_1', 'BIOLOGY_2', 'BIOLOGY_3', 'BIOLOGY_4'],
+                CHEMISTRY: ['CHEMISTRY_1', 'CHEMISTRY_2', 'CHEMISTRY_3', 'CHEMISTRY_4'],
+                PHYSICS: ['PHYSICS_1', 'PHYSICS_2', 'PHYSICS_3', 'PHYSICS_4'],
                 BUSINESS: ['Ragnaros']
             },
             country: ['Romania', 'Patagonia', 'Japonia'],
@@ -101,6 +104,64 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
         this.forceUpdate();
         console.log("TROOPER");
         console.log(this.state);
+    }
+
+    handleSubmit = () => {
+        axios.post( '/postData', {
+            params: {
+              	notArrayParams: {
+                    domain: this.state.domain,
+                    country: this.state.country,
+                    data_format: this.state.dataFormat,
+                    year: this.state.year,
+                    dataset_title: this.state.dataset_title,
+                    article_title: this.state.article_title,
+                    short_desc: this.state.short_desc,
+                    gitlink: this.state.gitlink
+                },
+                arrayParams: {
+                      subdomain: this.state.subdomain.split(", "),
+                      author: this.state.dataset_authors.split(", ")
+                },
+                private: this.state.valueSwitch
+            }
+        })
+          .then(response => {
+            console.log("//CCCCCCCCCCCCCCCCC//");
+            console.log(response.data);
+            console.log("/CCCCCCCCCCCCCCCCCCCC/");
+            let file = this.state.fileToBeSent;
+            const formData = new FormData();
+        
+            formData.append("file", file);
+        
+            axios
+            .post("/uploadFile", formData)
+            .then(res => console.log(res))
+            .catch(err => console.warn(err));
+
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          }); 
+    }
+
+    uploadFile = (e) => {
+        this.setState({
+            fileToBeSent: e.target.files[0]
+        });
+        /////////////////////////////////////////
+        console.log("BAGA SET");
+        // let file = e.target.files[0];
+        // const formData = new FormData();
+        // formData.append("file", file);
+        // axios
+        // .post("/uploadFile", formData)
+        // .then(res => console.log(res))
+        // .catch(err => console.warn(err));
     }
   
     render() {  
@@ -185,7 +246,7 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
                         </Row>
                         <Row className="padding-top-20">
                             <Col>
-                                <Input type="textarea" name="text" maxLength="200"  id="description" placeholder="Short Description" className="margin-top-10" />
+                                <Input type="textarea" name="text" maxLength="200"  id="description" placeholder="Short Description" className="margin-top-10" onBlur={e => this.changeValue(e.target.value, 'short_desc')}/>
                             </Col>
                         </Row>
 
@@ -195,10 +256,16 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
                                     onChange={e => this.changeValue(e.target.value, 'gitlink')}/>
                             </Col>
                         </Row>
-
+                        <Row className="padding-top-20">
+                            <Col >
+                                <input type="file"
+                                    name="myFile"
+                                    onChange={this.uploadFile} />
+                            </Col>
+                        </Row>
                         <Row className="padding-top-20">
                             <Col className="text-align-center">
-                                <Button color="primary" outline className="upload-button-size">
+                                <Button color="primary" outline className="upload-button-size" onClick={() => this.handleSubmit()}>
                                     Upload dataset
                                 </Button>
                             </Col>

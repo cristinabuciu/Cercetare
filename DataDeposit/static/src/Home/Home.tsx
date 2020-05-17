@@ -18,14 +18,27 @@ export interface IHomeState {
     count:number;
     searchResult:Array<Array<string>>;
     numberOfCards: number;
+    isAuthenticated: boolean;
 }
 
 export default class Home extends React.Component<IHomeProps, IHomeState> {
     state = {
         count: 0,
         searchResult: [],
-        numberOfCards: 0
+        numberOfCards: 0,
+        isAuthenticated: false
     };
+
+    componentDidMount() {
+        this.state.isAuthenticated = false;
+        const token = localStorage.getItem('login_user_token');
+        console.log(token);
+        
+        if(token) {
+            console.log("INTRA PE AICI");
+            this.state.isAuthenticated = true;
+        }
+    }
 
 
     setItemsForShow = (numberOfCards, numberOfCardsPerPage, searchResultItems) => {

@@ -31,13 +31,15 @@ export interface ISearchCardProps {
 export interface ISearchCardState {
     setTooltipOpen: boolean;
     ratingAvgValue: number;
+    uploadedFileLink: string;
 }
 
 export default class SearchCard extends React.Component<ISearchCardProps, ISearchCardState> {
 
     state = {
         setTooltipOpen: false,
-        ratingAvgValue: 4.58 
+        ratingAvgValue: 4.58,
+        uploadedFileLink: ''
     }
 
 
@@ -45,6 +47,24 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
         this.setState ({
             setTooltipOpen: value
         });
+    }
+
+    openPdf() {
+        const user = localStorage.getItem('login_user_token');
+        if(user) {
+            console.log("INTRA PE AICI in SEARCH CARD");
+            window.open('static/dist/uploadPdfs/' + user + '.pdf', '_blank');
+        }
+        
+    }
+
+    componentDidMount() {
+        const user = localStorage.getItem('login_user_token');
+        if(user) {
+            this.setState({
+                uploadedFileLink: 'static/dist/uploadDataset/' + user + '_dataset.zip'
+            });
+        }
     }
   
     render() {  
@@ -91,7 +111,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     <Label for="titluArticol" className="label-format">Titlu Articol:</Label>
                 </Col>
                 <Col>
-                    <Nav.Link href="/home" id="titluArticol">{this.props.article_title + " " + this.props.year}</Nav.Link>
+                    <Nav.Link href="#" onClick={() => this.openPdf()} id="titluArticol">{this.props.article_title + " " + this.props.year}</Nav.Link>
                 </Col>
             </Row>
             <Row>
@@ -141,9 +161,15 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
             </Row>
             <Row>
                 <Col className="text-align-center">
+                    <a href={this.state.uploadedFileLink} target="_blank" rel="noopener noreferrer" download>
                     <Button color="primary" outline className="download-button-size">
+                            <i className="fas fa-download"/>
+                            Download File
+                        </Button>
+                    </a>
+                    {/* <Button color="primary" outline className="download-button-size" onClick={() => this.dlDataset()}>
                         Download
-                    </Button>
+                    </Button> */}
                 </Col>
             </Row>
           </CardText>
