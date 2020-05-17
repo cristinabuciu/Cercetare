@@ -41,7 +41,6 @@ export interface IUploadPageState {
             ARCHITECTURE: Array<String>;
             BIOLOGY: Array<String>;
             CHEMISTRY: Array<String>;
-            COMPUTER_SCIENCE: Array<String>;
             PHYSICS: Array<String>;
             BUSINESS: Array<String>;
         };
