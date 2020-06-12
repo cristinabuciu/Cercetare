@@ -116,11 +116,14 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
                     dataset_title: this.state.dataset_title,
                     article_title: this.state.article_title,
                     short_desc: this.state.short_desc,
-                    gitlink: this.state.gitlink
+                    gitlink: this.state.gitlink,
+                    full_desc: '...',
+                    avg_rating_value: 0,
+                    ratings_number: 0
                 },
                 arrayParams: {
-                      subdomain: this.state.subdomain.split(", "),
-                      author: this.state.dataset_authors.split(", ")
+                        subdomain: this.state.subdomain.split(", "),
+                        authors: this.state.dataset_authors.split(", ")
                 },
                 private: this.state.valueSwitch
             }

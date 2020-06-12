@@ -29,6 +29,7 @@ CREATE TABLE datasets (
     -- GIT_url TEXT NOT NULL,
     -- avg_rating_value FLOAT(2) NOT NULL,
     -- rating_commits BIGINT NOT NULL
+    -- owner TEXT
 
 insert into datasets(domain, subdomain, country, data_format, author, year, dataset_title, article_title, info) 
 values('IT', '{"SOFTWARE", "HARDWARE"}', 'Romania', 'zip', '{"Dorian", "Sam", "Macac", "Jack"}', '2015', 'Dezvoltarea aplicatiilor internet', 'Mare site', '{"article_url": "https://www.google.com/?wow", "full_description": "abcd", "demo_description": "a", "GIT_url": "www.git.hub", "avg_rating_value": 4.58, "rating_commits": 700, "owner": "admin"}');

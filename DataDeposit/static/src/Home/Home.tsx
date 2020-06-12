@@ -67,6 +67,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                         article_title={item[8]} 
                         short_desc={item[9]}
                         avg_rating={item[10]}
+                        gitlink={item[11]}
                     />
                 </Col>
             </Row>

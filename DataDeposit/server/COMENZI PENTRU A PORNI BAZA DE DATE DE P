@@ -8,3 +8,28 @@ pip3 install psycopg2
 
 pip3 install pygresql
 
+-------------------------------
+ELASTIC SEARCH
+sudo pip3 install elasticsearch==7.0.2
+
+locations = {
+    'OR1' : (43.777374, -120.587085),
+    'SJ1' : (37.339365, -121.888105),
+    'VA5' : (37.374802, -78.485903),
+    'LON5' : (51.505861, -0.127066),
+    'AMS1' : (52.367052, 4.888200),
+    'SIN2' : (1.352437, 103.861423),
+    'HK2' : (22.334770, 114.176440)
+}
+
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
+
+curl -X PUT "172.24.0.2:9200/datasets?pretty" -H 'Content-Type: application/json' -d'
+{
+    "mappings" : {
+        "_doc": {"properties" : {
+            "geo_coord" : { "type" : "geo_point" }
+        }}
+    }
+}
+'

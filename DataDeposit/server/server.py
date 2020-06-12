@@ -129,6 +129,7 @@ def upload_file():
             zipFileList = find_file(os.path.join(pathToFolder, current_user), 'zip')
             zipFile = zipFileList[0]
             os.rename(zipFile, (os.path.join(pathToFolder, current_user) + '/' + current_user + '_dataset.zip'))
+            zipFile = os.path.join(pathToFolder, current_user) + '/' + current_user + '_dataset.zip'
             os.system('cp ' + zipFile + ' ' + pathToFolderInStaticZIP)
 
             # in folder este un pdf si o arhiva cu setul de date

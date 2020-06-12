@@ -1,41 +1,52 @@
-version: '3'
-
+version: '3.3'
 services:
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    container_name: es01
+    # environment:
+    #   - node.name=es01
+    #   - cluster.name=es-docker-cluster
+    #   - discovery.seed_hosts=es02,es03
+    #   - cluster.initial_master_nodes=es01,es02,es03
+    #   - bootstrap.memory_lock=true
+    #   - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    # ulimits:
+    #   memlock:
+    #     soft: -1
+    #     hard: -1
+    # volumes:
+    #   - data01:/usr/share/elasticsearch/data
+    # ports:
+    #   - 8200:8200
+    networks:
+      - elastic
 
-    postgres-dev-crescdi:
-        image: postgres:alpine
-        container_name: postgres_container_crescdi
-        ports:
-            - "5005:5432"
-        restart: always
-        environment:
-            POSTGRES_DB: database
-            POSTGRES_USER: root
-            POSTGRES_PASSWORD: secret
-        networks:
-            important_default:
-                ipv4_address: 10.21.0.4
-    
-    visualizer:
-        image: dockersamples/visualizer:stable
-        ports:
-            - "5003:5003"
-        volumes:
-            - "/var/run/docker.sock:/var/run/docker.sock"
-        deploy:
-            placement:
-                constraints: [node.role == manager]
-        networks:
-            important_default:
-                ipv4_address: 10.21.0.9
+
+  kib01:
+    image: docker.elastic.co/kibana/kibana:6.3.2
+    container_name: kib01
+    # volumes:
+    #   - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - 5601:5601
+    environment:
+      SERVER_NAME: kibana.example.org
+      ELASTICSEARCH_URL: http://es01:9200
+      # ELASTICSEARCH_HOSTS: http://es01:8200
+    depends_on:
+      - es01
+    networks:
+      - elastic
+
+# volumes:
+#   data01:
+#     driver: local
+#   data02:
+#     driver: local
+#   data03:
+#     driver: local
+
 
 networks:
-    important_default:
-        ipam:
-            driver: default
-            config:
-                - subnet: 10.21.0.0/16
-
-
-
-
+  elastic:
+    # driver: bridge

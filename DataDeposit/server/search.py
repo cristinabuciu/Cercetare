@@ -3,6 +3,8 @@ import os
 import sys
 from flask import jsonify, json
 import pgdb
+import es_connector
+
 
 def search(numbersOfItemsPerPage):
     hostname = '10.21.0.4'
@@ -16,11 +18,34 @@ def search(numbersOfItemsPerPage):
 
     return jsonify(numbersOfItemsPerPage=numbersOfItemsPerPage)
 
+
 def applyFilters(jsonParams):
+    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es.connect()
+
+    result = es.get_es_index('datasets')
+    datasets = []
+    for dataset in result:
+        datasets.append(dataset['_source']['input'])
+    returnArray = []
+
+    for row in datasets:
+        returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink']])
+
+    return json.dumps(returnArray)
+
+
+
+def applyFilters1(jsonParams):
     hostname = '10.21.0.4'
     username = 'root'
     password = 'secret'
     database = 'database'
+
+    # es = es_connector.ESClass(server='https://kibana-api.ne.adobe.net', port=443, use_ssl=True, user='', password='')
+    # es.connect()
+
+
     myConnection = pgdb.Connection( host=hostname, user=username, password=password, database=database )
     cursor = myConnection.cursor()
 

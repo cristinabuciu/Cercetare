@@ -22,7 +22,7 @@ export default class AppRoutes extends Component {
     render() {
         return (
             <Switch>
-                <Route path="/" exact render={(props) => <Home {...props} greeting={"De ce ma intrebi? SPEAK"} />}/>
+                <Route path="/" exact render={(props) => <Home {...props} greeting={""} />}/>
                 <Route path="/LoginForm" exact render={(props) => <LoginForm {...props} color={"black"} />} />
                 <Route path="/uploadPage" exact render={(props) => <UploadPage {...props} color={"UPLOAD "} />} />
                 {/* <Route path="/Contact" component={Contact} />

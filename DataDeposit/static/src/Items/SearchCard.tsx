@@ -25,6 +25,7 @@ export interface ISearchCardProps {
     article_title: string; 
     short_desc: string;
     avg_rating: number;
+    gitlink: string;
 }
 
 
@@ -88,13 +89,13 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                         name='rating'
                     />
                     </div>
-                    <Tooltip 
+                    {/* <Tooltip 
                         placement="top" 
                         isOpen={this.state.setTooltipOpen} 
                         target="TooltipStars" 
                         toggle={() => this.tooltipOpen(!this.state.setTooltipOpen)}>
                         {this.state.ratingAvgValue}
-                    </Tooltip>
+                    </Tooltip> */}
                 </Col>
             </Row>
             <Row>
@@ -156,7 +157,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     <Label for="gitLink" className="label-format">Gitlink:</Label>
                 </Col>
                 <Col>
-                    <Nav.Link href="/home" id="gitLink">www.example.com</Nav.Link>
+                    <Nav.Link href="/home" id="gitLink">{this.props.gitlink}</Nav.Link>
                 </Col>
             </Row>
             <Row>
