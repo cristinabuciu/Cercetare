@@ -4,25 +4,23 @@ import sys
 import pgdb
 from datetime import datetime, timedelta
 import es_connector
+from time import sleep
 
-locations = {
-    'Romania' : (45.9432, 24.9668),
-    'Japonia' : (83.777374, -620.587085),
-    'SJ1' : (37.339365, -121.888105),
-    'VA5' : (37.374802, -78.485903),
-    'LON5' : (51.505861, -0.127066),
-    'AMS1' : (52.367052, 4.888200),
-    'SIN2' : (1.352437, 103.861423),
-    'HK2' : (22.334770, 114.176440)
-}
+def getCoordinates(country):
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es.connect()
+
+    locations = es.get_es_index('locations')[0]['_source']
+
+    return ", ".join(str(x) for x in locations[country])
 
 def uploadDataset(params, current_user):
-    global locations
     try:
-        es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
         es.connect()
 
-        total = len(es.get_es_index('datasets'))
+        total = es.get_es_index('last_id')[0]['_source']['id']
+        currentID = total + 1
 
         dataset_json = {}
         dataset_json_input = {}
@@ -38,12 +36,14 @@ def uploadDataset(params, current_user):
         dataset_json['input'] = dataset_json_input
         dataset_json['date'] = (datetime.now() - timedelta(hours = 3)).strftime('%Y-%m-%dT%H:%M:%S+0000')
 
-        (latCoord, longCoord) = locations[params['notArrayParams']['country']]
-        dataset_json['geo_coord'] = str(latCoord) + ', ' + str(longCoord)
+        dataset_json['geo_coord'] = getCoordinates(params['notArrayParams']['country'])
 
-        dataset_json['id'] = total + 1
+        dataset_json['id'] = currentID
 
         es.insert('datasets', '_doc', dataset_json)
+        es.delete_index('last_id')
+        sleep(2)
+        es.insert('last_id', '_doc', {'id': currentID})
         return "Succes"
     except:
         return "Eroare" 
@@ -98,5 +98,5 @@ def uploadDataset(params, current_user):
 #         cursor.close()
 #         return "Eroare"
 
-# def uploadPaths(pathToPdf):
-#     pass
+def uploadPaths(pathToPdf):
+    pass

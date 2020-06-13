@@ -20,7 +20,7 @@ def search(numbersOfItemsPerPage):
 
 
 def applyFilters(jsonParams):
-    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     result = es.get_es_index('datasets')
@@ -29,8 +29,10 @@ def applyFilters(jsonParams):
         datasets.append(dataset['_source']['input'])
     returnArray = []
 
+    idProst = 0
     for row in datasets:
-        returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink']])
+        idProst += 1
+        returnArray.append([idProst, row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink']])
 
     return json.dumps(returnArray)
 

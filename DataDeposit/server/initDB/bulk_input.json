@@ -1,5 +1,5 @@
-{
-    "input": [
+
+[
     {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 1,
@@ -47,7 +47,7 @@
     "id": 3,
     "input": {"article_title": "The Dirty Trickster",
             "authors": [" Jeffrey Toobin", " Jeffrey Tuube"],
-            "country": "Japonia",
+            "country": "Japan",
             "data_format": "zip",
             "dataset_title": "The Dirty Trickster Dataset",
             "domain": "IT",
@@ -68,7 +68,7 @@
     "id": 4,
     "input": {"article_title": "Nora Ephron’s Apartment: A Love Story",
             "authors": ["Nora Ephron", "Nora Iepuran"],
-            "country": "Japonia",
+            "country": "Japan",
             "data_format": "zip",
             "dataset_title": "Nora Ephron’s Apartment: A Love Story Dataset",
             "domain": "CHEMISTRY",
@@ -320,7 +320,7 @@
     "id": 16,
     "input": {"article_title": "Secrets of the Magus",
             "authors": ["Mark Singer", "Jaina Proudmore"],
-            "country": "Mexic",
+            "country": "Mexico",
             "data_format": "zip",
             "dataset_title": "Secrets of the Magus Dataset",
             "domain": "CHEMISTRY",
@@ -341,7 +341,7 @@
     "id": 17,
     "input": {"article_title": "Ghosts in the House",
             "authors": ["Hilton Als", "Hilton Paris"],
-            "country": "Mexic",
+            "country": "Mexico",
             "data_format": "zip",
             "dataset_title": "Ghosts in the House, Dataset",
             "domain": "CHEMISTRY",
@@ -439,6 +439,26 @@
             "ratings_number": 285,
             "owner": "admin"
             }
-        }
+        },
+    {"date": "2020-06-12T11:49:45+0000",
+        "geo_coord": "45.9432, 24.9668",
+        "id": 22,
+        "input": {"article_title": "Izoleta pentru fiul meu ",
+                "authors": ["Catalin Izolatu", "Adela"],
+                "country": "Chile",
+                "data_format": "zip",
+                "dataset_title": "Tusea Romaniei Dataset",
+                "domain": "ARCHITECTURE",
+                "gitlink": "www.curat.com",
+                "private": true,
+                "short_desc": "Ce sapun romanii cand se uita la sport, dieta si o izoleta? Bravo, ai virus!",
+                "subdomain": ["ARCHITECTURE_2"],
+                "year": "2014",
+                "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
+                "avg_rating_value": 2.61,
+                "ratings_number": 13,
+                "owner": "admin"
+                }
+            }
     ]
-    }
+    

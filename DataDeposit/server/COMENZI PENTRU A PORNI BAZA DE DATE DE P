@@ -24,7 +24,7 @@ locations = {
 
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
 
-curl -X PUT "172.24.0.2:9200/datasets?pretty" -H 'Content-Type: application/json' -d'
+curl -X PUT "172.23.0.2:9200/datasets?pretty" -H 'Content-Type: application/json' -d'
 {
     "mappings" : {
         "_doc": {"properties" : {
