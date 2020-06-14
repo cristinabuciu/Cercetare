@@ -56,7 +56,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 PHYSICS: ['All subdomains  ', 'PHYSICS_1', 'PHYSICS_2', 'PHYSICS_3', 'PHYSICS_4'],
                 BUSINESS: ['All subdomains  ', 'Ragnaros']
             },
-            country: ['All countries  ', 'Romania', 'Patagonia', 'Japonia'],
+            country: ['All countries  ', 'Romania', 'Chile', 'Japan', 'Russia', 'China', 'Canada', 'Mexico', 'Egypt'],
             dataFormat: ['All Data Formats ', 'zip', 'rar', 'tar.gz'],
             sortBy: ['ASC', 'DESC']
         },
@@ -65,7 +65,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         country: "All countries  ",
         dataFormat: "All Data Formats ",
         sortBy: "Sort By  ",
-        resultsPerPage: 10,
+        resultsPerPage: 3,
         year: '',
         dataset_title: '',
         authors: '',
@@ -102,14 +102,14 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             items: this.state.resultsPerPage,
             params: {
               	notArrayParams: {
-                    domain: this.state.domain === 'All domains  ' ? '%' : this.state.domain,
-                    country: this.state.country === 'All countries  ' ? '%' : this.state.country,
-                    data_format: this.state.dataFormat === 'All Data Formats ' ? '%' : this.state.dataFormat,
+                    domain: this.state.domain === 'All domains  ' ? '.*' : this.state.domain,
+                    country: this.state.country === 'All countries  ' ? '.*' : this.state.country,
+                    data_format: this.state.dataFormat === 'All Data Formats ' ? '.*' : this.state.dataFormat,
                     year: this.state.year === '' ? '%' : this.state.year,
-                    dataset_title: this.state.dataset_title === '' ? '%' : '%' + this.state.dataset_title + '%'
+                    dataset_title: this.state.dataset_title === '' ? '.*' : '.*' + this.state.dataset_title + '.*'
                 },
                 arrayParams: {
-                      subdomain: this.state.subdomain === 'All subdomains  ' ? '%' : this.state.subdomain,
+                      subdomain: this.state.subdomain === 'All subdomains  ' ? '.*' : this.state.subdomain,
                       author: this.state.authors
                 },
                 sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.state.sortBy
@@ -177,7 +177,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     <NumericInput 
                         className="width-numeric-input" 
                         step={1} 
-                        min={0} 
+                        min={3} 
                         max={50} 
                         value={this.state.resultsPerPage}
                         onChange={value => this.setState({resultsPerPage: value })} />

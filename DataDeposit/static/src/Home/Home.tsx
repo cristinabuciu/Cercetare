@@ -15,18 +15,23 @@ export interface IHomeProps {
 }
 
 export interface IHomeState {
-    count:number;
     searchResult:Array<Array<string>>;
     numberOfCards: number;
     isAuthenticated: boolean;
+    shouldDisplayPagination: boolean;
+    currentPage: number;
+    todosPerPage: number;
 }
 
 export default class Home extends React.Component<IHomeProps, IHomeState> {
     state = {
-        count: 0,
         searchResult: [],
         numberOfCards: 0,
-        isAuthenticated: false
+        isAuthenticated: false,
+        shouldDisplayPagination: false,
+        
+        currentPage: 1,
+        todosPerPage: 3
     };
 
     componentDidMount() {
@@ -45,7 +50,10 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         console.log("MARE HATZ");
         this.setState({
             numberOfCards: numberOfCards,
-            searchResult: searchResultItems
+            searchResult: searchResultItems,
+            todosPerPage: numberOfCardsPerPage,
+            currentPage: 1,
+            shouldDisplayPagination: true
         });
         console.log(this.state)
     }
@@ -77,8 +85,66 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         return cards;
     }
 
+    handleClick = (event) => {
+        this.setState({
+            currentPage: Number(event.target.id)
+            
+        });
+      }
+
+    handleClickArrowLeft = (event) => {
+        let nextPage = this.state.currentPage - 1;
+        if(nextPage < 1) {
+            nextPage = 1;
+        }
+        this.setState({
+            currentPage: nextPage
+        });
+    }
+
+    handleClickArrowRight = (event) => {
+        let nextPage = this.state.currentPage + 1;
+        if(nextPage > Math.ceil(this.state.searchResult.length / this.state.todosPerPage)) {
+            nextPage = Math.ceil(this.state.searchResult.length / this.state.todosPerPage);
+        }
+        this.setState({
+            currentPage: nextPage
+        });
+    }
+
     render() {
         const paddingTop = '60px';
+        const searchResult = this.showSearchCards();
+        const currentPage = this.state.currentPage;
+        const todosPerPage = this.state.todosPerPage;
+  
+        // Logic for displaying todos
+        const indexOfLastTodo = currentPage * todosPerPage;
+        const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
+        const currentTodos = searchResult.slice(indexOfFirstTodo, indexOfLastTodo);
+
+        const renderTodos = currentTodos.map((card, index) => {
+          return <div key={index}>{card}</div>;
+        });
+    
+        // Logic for displaying page numbers
+        const pageNumbers = new Array();
+        for (let i = 1; i <= Math.ceil(searchResult.length / todosPerPage); i++) {
+          pageNumbers.push(i);
+        }
+    
+        const renderPageNumbers = pageNumbers.map(number => {
+          return (
+            <li
+              key={number}
+              id={number}
+              className={this.state.currentPage === number ? "active" : ""}
+              onClick={this.handleClick}
+            >
+              {number}
+            </li>
+          );
+        });
         return (
                 //  <button onClick={() => this.setState({count: this.state.count+1})}>
                 //     This button has been clicked {this.state.count} times.
@@ -96,7 +162,20 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                         <Col md={{ size: 9, offset: 0 }}>
                             <Search setItemsForShow={this.setItemsForShow}/>
                             <hr className="hr-style" />
-                            {this.showSearchCards()}
+                                {renderTodos}
+                                <Row className={this.state.shouldDisplayPagination ? "" : "display-none"}>
+                                    <Col className="text-align-center">
+                                    <hr className="hr-style" />
+                                        <div className="pagination" unselectable="on">
+                                        <li onClick={this.handleClickArrowLeft} className="paginationButton">&laquo;</li>
+                                            {renderPageNumbers}
+                                        <li onClick={this.handleClickArrowRight} className="paginationButton">&raquo;</li>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            {/* <ul id="page-numbers">
+                                {renderPageNumbers}
+                            </ul> */}
                         </Col>
                         
                     </Row>

@@ -1,0 +1,80 @@
+import * as React from 'react';
+
+import {
+    Card, CardText, CardBody,
+    CardTitle, CardSubtitle, Button, Row, Col
+  } from 'reactstrap';
+import "../style_home.scss";
+import LeftBar from "../LeftBar/LeftBar";
+import { Container } from 'semantic-ui-react';
+import Title from '../Items/Title/Title';
+ 
+
+
+export interface IUploadPageResultProps {
+    color: string;
+    handleRepairUpload: Function;
+}
+
+export interface IUploadPageResultState {
+    buttonDropDownStatus: boolean;
+}
+
+export default class UploadPageResult extends React.Component<IUploadPageResultProps, IUploadPageResultState> {
+
+    state = {
+        buttonDropDownStatus: true
+    }
+
+
+    componentDidMount() {
+
+    }
+  
+    render() {  
+
+      return (
+        <Container className="themed-container" fluid={true}>
+            <Row lg="12">
+
+            </Row>
+            <Row md="4">
+                
+                <LeftBar color='black' modeSearch={false}/>
+                <Col md={{ size: 3, offset: 0 }}>
+                    .
+                </Col>
+                <Col md={{ size: 9, offset: 0 }}>
+                <Card>
+                    <CardBody>
+                    <CardTitle>Dataset has been uploaded successfully !</CardTitle>
+                    <CardSubtitle></CardSubtitle>
+                    <CardText>
+                        <Row>
+                        <Col className="text-align-center">
+                                <Button 
+                                    color="primary" 
+                                    outline className="upload-button-size" 
+                                    onClick={() => this.props.handleRepairUpload()}>
+                                        Upload another dataset
+                                    </Button>
+                                </Col>
+                                
+                        </Row>
+                    </CardText>
+                    
+                    </CardBody>
+                </Card>
+                </Col>
+                
+            </Row>
+    </Container>
+      )
+    }
+
+}
+
+
+
+
+

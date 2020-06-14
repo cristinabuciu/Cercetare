@@ -3,7 +3,7 @@
     {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 1,
-    "input": {"article_title": "Letting Go",
+    "article_title": "Letting Go",
             "authors": ["Atul Gawande", "Atul Doiwande", "Atul Treiwande"],
             "country": "Romania",
             "data_format": "zip",
@@ -18,13 +18,13 @@
             "avg_rating_value": 3.22,
             "ratings_number": 25,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 2,
-    "input": {"article_title": "The Real Heroes Are Dead",
+    "article_title": "The Real Heroes Are Dead",
             "authors": ["James B. Stewart", "James B. Stewart Doiwande", "James B. Stewart Treiwande"],
             "country": "Romania",
             "data_format": "zip",
@@ -39,13 +39,13 @@
             "avg_rating_value": 4.22,
             "ratings_number": 28,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 3,
-    "input": {"article_title": "The Dirty Trickster",
+    "article_title": "The Dirty Trickster",
             "authors": [" Jeffrey Toobin", " Jeffrey Tuube"],
             "country": "Japan",
             "data_format": "zip",
@@ -60,13 +60,13 @@
             "avg_rating_value": 1.22,
             "ratings_number": 25,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 4,
-    "input": {"article_title": "Nora Ephron’s Apartment: A Love Story",
+    "article_title": "Nora Ephron’s Apartment: A Love Story",
             "authors": ["Nora Ephron", "Nora Iepuran"],
             "country": "Japan",
             "data_format": "zip",
@@ -81,13 +81,13 @@
             "avg_rating_value": 3.22,
             "ratings_number": 525,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 5,
-    "input": {"article_title": "Trial by Fire",
+    "article_title": "Trial by Fire",
             "authors": ["David Grann", "David GrannPapan"],
             "country": "China",
             "data_format": "zip",
@@ -102,13 +102,13 @@
             "avg_rating_value": 5.00,
             "ratings_number": 325,
             "owner": "Dorian"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 6,
-    "input": {"article_title": "The Lottery",
+    "article_title": "The Lottery",
             "authors": ["Shirley Jackson", "Michael Jackson", "O\"shea Jackson"],
             "country": "Canada",
             "data_format": "zip",
@@ -123,12 +123,12 @@
             "avg_rating_value": 2.00,
             "ratings_number": 125,
             "owner": "Dorian"
-            }
+            
         },
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 7,
-    "input": {"article_title": "Hiroshima",
+    "article_title": "Hiroshima",
             "authors": ["John Hersey", "John Le\"boom", "Adrien Noir"],
             "country": "Canada",
             "data_format": "zip",
@@ -143,13 +143,13 @@
             "avg_rating_value": 2.00,
             "ratings_number": 825,
             "owner": "admin"
-            }
+            
         },
 
   {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 8,
-    "input": {"article_title": "Brokeback Mountain",
+    "article_title": "Brokeback Mountain",
             "authors": ["Annie Proulx", "Annie Prologe", "Annie Epilog"],
             "country": "Romania",
             "data_format": "zip",
@@ -164,14 +164,14 @@
             "avg_rating_value": 2.00,
             "ratings_number": 225,
             "owner": "admin"
-            }
+            
         },
 
     
   {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 9,
-    "input": {"article_title": "The Warp engine",
+    "article_title": "The Warp engine",
             "authors": ["Jean-Luc Picard", "Geordi LaForge", "William T. Riker"],
             "country": "France",
             "data_format": "zip",
@@ -186,13 +186,13 @@
             "avg_rating_value": 4.00,
             "ratings_number": 253,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 10,
-    "input": {"article_title": "The Hunted",
+    "article_title": "The Hunted",
             "authors": ["Jeffrey Goldberg", "Jeffrey Tube"],
             "country": "Romania",
             "data_format": "zip",
@@ -207,13 +207,13 @@
             "avg_rating_value": 4.05,
             "ratings_number": 258,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 11,
-    "input": {"article_title": "The Perils of Pearl and Olga",
+    "article_title": "The Perils of Pearl and Olga",
             "authors": ["St. Clair McKelway", "St. Josh La"],
             "country": "Russia",
             "data_format": "zip",
@@ -228,13 +228,13 @@
             "avg_rating_value": 2.00,
             "ratings_number": 2455,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 12,
-    "input": {"article_title": "Paths of Glory",
+    "article_title": "Paths of Glory",
             "authors": ["Ian Parker", "Peter Parker", "Spiderman"],
             "country": "Russia",
             "data_format": "zip",
@@ -249,13 +249,13 @@
             "avg_rating_value": 3.50,
             "ratings_number": 25425,
             "owner": "SpiderParker"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 13,
-    "input": {"article_title": "Glory to the soviet union",
+    "article_title": "Glory to the soviet union",
             "authors": ["Vladimir Putin"],
             "country": "Russia",
             "data_format": "zip",
@@ -270,13 +270,13 @@
             "avg_rating_value": 5.00,
             "ratings_number": 2455,
             "owner": "Putin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 14,
-    "input": {"article_title": "The Old Man and the Gun",
+    "article_title": "The Old Man and the Gun",
             "authors": ["David Grann"],
             "country": "Russia",
             "data_format": "zip",
@@ -291,13 +291,13 @@
             "avg_rating_value": 4.00,
             "ratings_number": 215,
             "owner": "Putin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 15,
-    "input": {"article_title": "Letter from a Region in My Mind",
+    "article_title": "Letter from a Region in My Mind",
             "authors": ["James Baldwin", "James Bond"],
             "country": "Canada",
             "data_format": "zip",
@@ -312,13 +312,13 @@
             "avg_rating_value": 3.00,
             "ratings_number": 2526,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 16,
-    "input": {"article_title": "Secrets of the Magus",
+    "article_title": "Secrets of the Magus",
             "authors": ["Mark Singer", "Jaina Proudmore"],
             "country": "Mexico",
             "data_format": "zip",
@@ -333,13 +333,13 @@
             "avg_rating_value": 3.00,
             "ratings_number": 24255,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 17,
-    "input": {"article_title": "Ghosts in the House",
+    "article_title": "Ghosts in the House",
             "authors": ["Hilton Als", "Hilton Paris"],
             "country": "Mexico",
             "data_format": "zip",
@@ -354,13 +354,13 @@
             "avg_rating_value": 4.90,
             "ratings_number": 255,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 18,
-    "input": {"article_title": "Small Change",
+    "article_title": "Small Change",
             "authors": ["Malcolm Gladwell", "Malcolm Reed", "Malcolm Merlin"],
             "country": "Canada",
             "data_format": "zip",
@@ -375,13 +375,13 @@
             "avg_rating_value": 1.90,
             "ratings_number": 89,
             "owner": "Josh"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 19,
-    "input": {"article_title": "On Impact",
+    "article_title": "On Impact",
             "authors": ["Stephen King", "Stephen McBugy", "Arnold C"],
             "country": "Canada",
             "data_format": "zip",
@@ -396,13 +396,13 @@
             "avg_rating_value": 1.90,
             "ratings_number": 96,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 20,
-    "input": {"article_title": "Man of Extremes",
+    "article_title": "Man of Extremes",
             "authors": ["Dana Goodyear", "Dana Badyear", "Dana Mehyear"],
             "country": "Romania",
             "data_format": "zip",
@@ -417,13 +417,13 @@
             "avg_rating_value": 3.90,
             "ratings_number": 74,
             "owner": "admin"
-            }
+            
         },
 
 {"date": "2020-06-12T11:49:45+0000",
     "geo_coord": "45.9432, 24.9668",
     "id": 21,
-    "input": {"article_title": "The Fourth State of Matter",
+    "article_title": "The Fourth State of Matter",
             "authors": ["Ann Beard", "Ann NoBeard", "Ann BlackBeard"],
             "country": "Japan",
             "data_format": "zip",
@@ -438,12 +438,12 @@
             "avg_rating_value": 3.29,
             "ratings_number": 285,
             "owner": "admin"
-            }
+            
         },
     {"date": "2020-06-12T11:49:45+0000",
         "geo_coord": "45.9432, 24.9668",
         "id": 22,
-        "input": {"article_title": "Izoleta pentru fiul meu ",
+        "article_title": "Izoleta pentru fiul meu ",
                 "authors": ["Catalin Izolatu", "Adela"],
                 "country": "Chile",
                 "data_format": "zip",
@@ -458,7 +458,7 @@
                 "avg_rating_value": 2.61,
                 "ratings_number": 13,
                 "owner": "admin"
-                }
+                
             }
     ]
     

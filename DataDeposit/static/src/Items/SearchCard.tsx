@@ -19,7 +19,7 @@ export interface ISearchCardProps {
     subdomain: Array<String> 
     country: string;
     data_format: string; 
-    authors: string;
+    authors: Array<String>;
     year: string;
     dataset_title: string;
     article_title: string; 
@@ -108,6 +108,17 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                 
             </Row>
             <Row>
+                <Col md={{ size: 2, offset: 0 }}>
+                    <span className="label-format">
+                        Authors: 
+                    </span>
+                </Col>
+                <Col>
+                    <span className="search-card-field padding-left-16 padding-right-16">{this.props.authors.map(txt => <span> | {txt}</span>)}</span>
+                </Col>
+                
+            </Row>
+            <Row>
                 <Col md={{ size: 2, offset: 0 }}> 
                     <Label for="titluArticol" className="label-format">Titlu Articol:</Label>
                 </Col>
@@ -126,7 +137,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     <span className="search-card-field padding-left-16 padding-right-16">{this.props.domain}</span> {this.props.subdomain.map(txt => <span> | {txt}</span>)}
                 </Col>
             </Row>
-            <Row>
+            {/* <Row>
                 <Col md={{ size: 2, offset: 0 }}> 
                     <span className="label-format">
                         Data Format: 
@@ -135,7 +146,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                 <Col>
                     <span className="search-card-field padding-left-16 padding-right-16">{this.props.data_format}</span>
                 </Col>
-            </Row>
+            </Row> */}
             <Row>
                 <Col md={{ size: 2, offset: 0 }}>
                     <span className="label-format">

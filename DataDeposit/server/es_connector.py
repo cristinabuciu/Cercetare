@@ -1,5 +1,6 @@
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 import urllib3
+import json
 
 # connector class
 class ESClass(object):
@@ -76,6 +77,42 @@ class ESClass(object):
     def get_es_index(self, index):
         s = self.es.search(index, body=ESClass.MATCH_ALL_QUERY, size=2000)
         return s['hits']['hits']#['total']
+
+    def get_es_data(self, index, domain, country, df, year):
+        DATASETS_MATCH = "{\"sort\": [ { \"dataset_title\": {\"order\": \"desc\"} } ], \
+                \"query\": { \
+                    \"bool\": { \
+                    \"must\": [ \
+                        { \
+                        \"match_phrase\": { \
+                            \"domain\": \"" + domain + "\" \
+                        } \
+                        }, \
+                        { \
+                        \"match_phrase\": { \
+                            \"country\": \" " + country +" \" \
+                        } \
+                        }, \
+                        { \
+                        \"match_phrase\": { \
+                            \"data_format\": \"" + df + "\" \
+                        } \
+                        }, \
+                        {  \
+                        \"match_phrase\": { \
+                            \"year\": \"" + year + "\" \
+                        } \
+                        } \
+                    ] \
+                    } \
+                } \
+            }"
+        a = json.loads(DATASETS_MATCH)
+        s = self.es.search(index, body=self.match_dataset("Russia"), size=2000)
+        return s['hits']['hits']#['total']
+
+    def match_dataset(self, id):
+        return {"query": { "bool": {"must": [{"wildcard": {"country": {"value": "*oma*"}}}, {"wildcard": {"domain": {"value": "*e*"}}} ]}}}
 
     # insert function
     def insert(self, index, doc_type, body):

@@ -7,7 +7,7 @@ import es_connector
 from time import sleep
 
 def getCoordinates(country):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     locations = es.get_es_index('locations')[0]['_source']
@@ -15,8 +15,9 @@ def getCoordinates(country):
     return ", ".join(str(x) for x in locations[country])
 
 def uploadDataset(params, current_user):
+    return "Succes"
     try:
-        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
         es.connect()
 
         total = es.get_es_index('last_id')[0]['_source']['id']
@@ -33,7 +34,7 @@ def uploadDataset(params, current_user):
         for k, v in params['arrayParams'].items():
             dataset_json_input[k] = v
         
-        dataset_json['input'] = dataset_json_input
+        dataset_json = dataset_json_input
         dataset_json['date'] = (datetime.now() - timedelta(hours = 3)).strftime('%Y-%m-%dT%H:%M:%S+0000')
 
         dataset_json['geo_coord'] = getCoordinates(params['notArrayParams']['country'])

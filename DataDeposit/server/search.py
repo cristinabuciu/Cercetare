@@ -20,14 +20,16 @@ def search(numbersOfItemsPerPage):
 
 
 def applyFilters(jsonParams):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
-    result = es.get_es_index('datasets')
+    result = es.get_es_data('datasets', jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'])
     datasets = []
     for dataset in result:
-        datasets.append(dataset['_source']['input'])
+        datasets.append(dataset['_source'])
     returnArray = []
+
+    jsonParams['arrayParams']['author'] = '%' if len(jsonParams['arrayParams']['author']) == 0 else jsonParams['arrayParams']['author'].replace(', ', '\', \'')
 
     idProst = 0
     for row in datasets:
