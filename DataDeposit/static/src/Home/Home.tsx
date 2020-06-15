@@ -64,7 +64,8 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         let cards = this.state.searchResult.map(item => (
             <Row>
                 <Col>
-                    <SearchCard 
+                    <SearchCard
+                        id={item[0]}
                         domain={item[1]} 
                         subdomain={item[2]} 
                         country={item[3]} 
@@ -162,20 +163,17 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                         <Col md={{ size: 9, offset: 0 }}>
                             <Search setItemsForShow={this.setItemsForShow}/>
                             <hr className="hr-style" />
-                                {renderTodos}
-                                <Row className={this.state.shouldDisplayPagination ? "" : "display-none"}>
-                                    <Col className="text-align-center">
-                                    <hr className="hr-style" />
-                                        <div className="pagination" unselectable="on">
-                                        <li onClick={this.handleClickArrowLeft} className="paginationButton">&laquo;</li>
-                                            {renderPageNumbers}
-                                        <li onClick={this.handleClickArrowRight} className="paginationButton">&raquo;</li>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            {/* <ul id="page-numbers">
-                                {renderPageNumbers}
-                            </ul> */}
+                            {renderTodos}
+                            <Row className={this.state.shouldDisplayPagination ? "" : "display-none"}>
+                                <Col className="text-align-center">
+                                <hr className="hr-style" />
+                                    <div className="pagination" unselectable="on">
+                                    <li onClick={this.handleClickArrowLeft} className="paginationButton">&laquo;</li>
+                                        {renderPageNumbers}
+                                    <li onClick={this.handleClickArrowRight} className="paginationButton">&raquo;</li>
+                                    </div>
+                                </Col>
+                            </Row>
                         </Col>
                         
                     </Row>

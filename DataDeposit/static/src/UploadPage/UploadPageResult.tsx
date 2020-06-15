@@ -5,9 +5,9 @@ import {
     CardTitle, CardSubtitle, Button, Row, Col
   } from 'reactstrap';
 import "../style_home.scss";
+import "./upload.scss";
 import LeftBar from "../LeftBar/LeftBar";
 import { Container } from 'semantic-ui-react';
-import Title from '../Items/Title/Title';
  
 
 
@@ -47,7 +47,7 @@ export default class UploadPageResult extends React.Component<IUploadPageResultP
                 <Col md={{ size: 9, offset: 0 }}>
                 <Card>
                     <CardBody>
-                    <CardTitle>Dataset has been uploaded successfully !</CardTitle>
+                    <CardTitle className="UploadResultPage">Dataset has been uploaded successfully !</CardTitle>
                     <CardSubtitle></CardSubtitle>
                     <CardText>
                         <Row>

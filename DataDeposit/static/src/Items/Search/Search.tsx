@@ -54,11 +54,11 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 BIOLOGY: ['All subdomains  ', 'BIOLOGY_1', 'BIOLOGY_2', 'BIOLOGY_3', 'BIOLOGY_4'],
                 CHEMISTRY: ['All subdomains  ', 'CHEMISTRY_1', 'CHEMISTRY_2', 'CHEMISTRY_3', 'CHEMISTRY_4'],
                 PHYSICS: ['All subdomains  ', 'PHYSICS_1', 'PHYSICS_2', 'PHYSICS_3', 'PHYSICS_4'],
-                BUSINESS: ['All subdomains  ', 'Ragnaros']
+                BUSINESS: ['All subdomains  ', 'BUSINESS_1', 'BUSINESS_2']
             },
             country: ['All countries  ', 'Romania', 'Chile', 'Japan', 'Russia', 'China', 'Canada', 'Mexico', 'Egypt'],
             dataFormat: ['All Data Formats ', 'zip', 'rar', 'tar.gz'],
-            sortBy: ['ASC', 'DESC']
+            sortBy: ['Dataset_title ASC', 'Dataset_title DESC', 'Avg_Rating_Value ASC', 'Avg_Rating_Value DESC']
         },
         domain: "All domains  ",
         subdomain: "All subdomains  ",
@@ -96,23 +96,34 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         }
     }
 
+    splitSort = (words) => {
+        var n = words.split(" ");
+        return n[n.length - 1];
+    }
+
+    splitSortName = (words) => {
+        var n = words.split(" ");
+        return n[0];
+    }
+
     searchData = () => {
         console.log(this.state.year);
         axios.post( '/getData', {
             items: this.state.resultsPerPage,
             params: {
               	notArrayParams: {
-                    domain: this.state.domain === 'All domains  ' ? '.*' : this.state.domain,
-                    country: this.state.country === 'All countries  ' ? '.*' : this.state.country,
-                    data_format: this.state.dataFormat === 'All Data Formats ' ? '.*' : this.state.dataFormat,
-                    year: this.state.year === '' ? '%' : this.state.year,
-                    dataset_title: this.state.dataset_title === '' ? '.*' : '.*' + this.state.dataset_title + '.*'
+                    domain: this.state.domain === 'All domains  ' ? '*' : this.state.domain,
+                    country: this.state.country === 'All countries  ' ? '*' : this.state.country,
+                    data_format: this.state.dataFormat === 'All Data Formats ' ? '*' : this.state.dataFormat,
+                    year: this.state.year === '' ? '*' : this.state.year + '*',
+                    dataset_title: this.state.dataset_title === '' ? '*' : '*' + this.state.dataset_title + '*'
                 },
                 arrayParams: {
-                      subdomain: this.state.subdomain === 'All subdomains  ' ? '.*' : this.state.subdomain,
+                      subdomain: this.state.subdomain === 'All subdomains  ' ? '' : this.state.subdomain,
                       author: this.state.authors
                 },
-                sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.state.sortBy
+                sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSort(this.state.sortBy),
+                sortByField: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSortName(this.state.sortBy)
               
             }
         })
@@ -172,7 +183,12 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             </Row>
             <Row className="padding-top-20">
                 <Col>
-                    <InputText nameOfDropdown="sortBy" titleDropdown={this.state.sortBy} listOfItems={this.state.searchInputOptions.sortBy} changeValue={this.changeValue} />
+                    <InputText 
+                        nameOfDropdown="sortBy" 
+                        titleDropdown={this.state.sortBy} 
+                        listOfItems={this.state.searchInputOptions.sortBy} 
+                        className="button-style-sort"
+                        changeValue={this.changeValue} />
                 
                     <NumericInput 
                         className="width-numeric-input" 

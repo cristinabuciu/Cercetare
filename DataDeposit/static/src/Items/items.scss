@@ -1,4 +1,17 @@
 
+.button-style-sort {
+  margin-left: 10px;
+  margin-right: 10px;
+
+  Button.dropdown-toggle {
+      color: black;
+      background-color: white;
+      border-color: #24557d;
+      border-radius: 10px;
+      width: auto;
+  }
+}
+
 .button-style {
     margin-left: 10px;
     margin-right: 10px;
@@ -8,7 +21,7 @@
         background-color: white;
         border-color: #24557d;
         border-radius: 10px;
-        width: 160px;
+        width: 175px;
     }
 }
 

@@ -56,7 +56,7 @@ curl -X PUT "172.22.0.2:9200/datasets?pretty" -H 'Content-Type: application/json
                 "authors": {"type": "text", "fielddata": true},
                 "country": {"type": "text", "fielddata": true},
                 "data_format": {"type": "text", "fielddata": true},
-                "dataset_title": {"type": "text", "fielddata": true},
+                "dataset_title": {"type": "text", "fields": {"raw": {"type": "keyword"}}, "fielddata": true},
                 "domain": {"type": "text", "fielddata": true},
                 "gitlink": {"type": "text", "fielddata": true},
                 "private": {"type": "boolean"},

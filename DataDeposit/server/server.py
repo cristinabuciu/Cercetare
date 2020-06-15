@@ -6,6 +6,7 @@ from upload import uploadDataset, uploadPaths
 import pgdb
 import zipfile
 from glob import glob
+import es_connector
 ############################### FLASK CONFIG ################################
 from flask import Flask, render_template, request, json, redirect, url_for, flash, session, make_response, jsonify
 from werkzeug.utils import secure_filename
@@ -64,28 +65,24 @@ def login_post():
     _username = receivedData.get('username')
     _password = receivedData.get('password')
 
-    myConnection = pgdb.Connection( host=db_hostname, user=db_username, password=db_password, database=db_database )
-    cursor = myConnection.cursor()
-    
-    cursor.execute("SELECT * from loginTable WHERE username = '%s'" % (_username))
-
+    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+    es.connect()
+    result = es.get_es_index('logintable')
     isAuthenticated = False
     currentUser = ''
     errorMessage = ""
 
-    for (_, username, password)  in cursor:
-        if _password == password: 
-            current_user = username
+    for entry in result:
+        if entry['_source']['username'] == _username and entry['_source']['password'] == _password:
+            current_user = _username
             isAuthenticated = True
             session['login'] = True
-            session['username'] = username
-            currentUser = username
+            session['username'] = _username
+            currentUser = _username
             resp = make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, errorMessage=errorMessage))
-            resp.set_cookie("current_username", username)
-            myConnection.close()
+            resp.set_cookie("current_username", _username)
             return resp
 
-    myConnection.close()
     errorMessage = "User-or-password-wrong"
     return make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, errorMessage=errorMessage))
 

@@ -85,7 +85,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                 BIOLOGY: ['BIOLOGY_1', 'BIOLOGY_2', 'BIOLOGY_3', 'BIOLOGY_4'],
                 CHEMISTRY: ['CHEMISTRY_1', 'CHEMISTRY_2', 'CHEMISTRY_3', 'CHEMISTRY_4'],
                 PHYSICS: ['PHYSICS_1', 'PHYSICS_2', 'PHYSICS_3', 'PHYSICS_4'],
-                BUSINESS: ['Ragnaros']
+                BUSINESS: ['BUSINESS_1', 'BUSINESS_2']
             },
             country: ['Romania', 'Chile', 'Japan', 'Russia', 'China', 'Canada', 'Mexico', 'Egypt'],
             dataFormat: ['zip', 'rar', 'tar.gz']
@@ -206,7 +206,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
       return (
         <Container className="themed-container" fluid={true}>
             <Row lg="12">
-                <Title titleSet={this.props.color}/>
+                {/* <Title titleSet={this.props.color}/> */}
             </Row>
             <Row md="4">
                 

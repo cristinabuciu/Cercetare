@@ -15,7 +15,6 @@ def getCoordinates(country):
     return ", ".join(str(x) for x in locations[country])
 
 def uploadDataset(params, current_user):
-    return "Succes"
     try:
         es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
         es.connect()

@@ -18,23 +18,33 @@ def search(numbersOfItemsPerPage):
 
     return jsonify(numbersOfItemsPerPage=numbersOfItemsPerPage)
 
+def filterByArray(dataset, subdomains, itemInDataset):
+    for item in subdomains: 
+        if not(any(item in word for word in dataset[itemInDataset])):
+            return False
+    return True
 
 def applyFilters(jsonParams):
     es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
-    result = es.get_es_data('datasets', jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'])
+    result = es.get_es_data('datasets', jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'], jsonParams['notArrayParams']['dataset_title'], jsonParams['sortBy'], jsonParams['sortByField'])
+    
+    if len(jsonParams['arrayParams']['subdomain']) > 0:
+        subdomainArray = jsonParams['arrayParams']['subdomain'].split(", ")
+        result = list(filter(lambda x: filterByArray(x['_source'], subdomainArray, 'subdomain'), result))
+    
+    if len(jsonParams['arrayParams']['author']) > 0:
+        authorArray = jsonParams['arrayParams']['author'].split(", ")
+        result = list(filter(lambda x: filterByArray(x['_source'], authorArray, 'authors'), result))
+
     datasets = []
     for dataset in result:
         datasets.append(dataset['_source'])
     returnArray = []
 
-    jsonParams['arrayParams']['author'] = '%' if len(jsonParams['arrayParams']['author']) == 0 else jsonParams['arrayParams']['author'].replace(', ', '\', \'')
-
-    idProst = 0
     for row in datasets:
-        idProst += 1
-        returnArray.append([idProst, row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink']])
+        returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink']])
 
     return json.dumps(returnArray)
 

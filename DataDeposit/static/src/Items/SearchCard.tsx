@@ -15,6 +15,7 @@ import "./items.scss"
 
 
 export interface ISearchCardProps {
+    id: number;
     domain: string;
     subdomain: Array<String> 
     country: string;
