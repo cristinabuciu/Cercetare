@@ -6,7 +6,7 @@ import {
     CardTitle, CardSubtitle, Button, Input, Row, Col, Badge, Form, FormGroup, FormText
   } from 'reactstrap';
 import "../style_home.scss";
-import {InputText, Switch} from '../Items/Items-components'
+import {InputText, Switch, LoaderComponent} from '../Items/Items-components'
 import LeftBar from "../LeftBar/LeftBar";
 import { Container } from 'semantic-ui-react';
 import Title from '../Items/Title/Title';
@@ -56,6 +56,7 @@ export interface IUploadPageFormState {
         short_desc: boolean;
     }
     buttonUpload: boolean;
+    loaderVisibility: boolean;
 }
 
 export default class UploadPageForm extends React.Component<IUploadPageFormProps, IUploadPageFormState> {
@@ -99,7 +100,8 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             short_desc: false
             
         },
-        buttonUpload: true
+        buttonUpload: true,
+        loaderVisibility: false
     }
     
     handleChange = date => {
@@ -139,6 +141,10 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
     }
 
     handleSubmit = () => {
+        this.setState({
+            loaderVisibility: true
+        });
+
         axios.post( '/postData', {
             params: {
               	notArrayParams: {
@@ -363,13 +369,18 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                         <FormGroup>
                             <Row className="padding-top-20">
                                 <Col className="text-align-center">
-                                <Button 
+                                    {this.state.loaderVisibility ?
+                                    <LoaderComponent visible={this.state.loaderVisibility}/> 
+                                    :                                    
+                                    <Button 
                                     color="primary" 
                                     outline className="upload-button-size" 
                                     disabled={this.state.buttonUpload}
                                     onClick={() => this.handleSubmit()}>
                                         Upload dataset
                                     </Button>
+                                    }
+                                
                                 </Col>
                             </Row>
                         </FormGroup>

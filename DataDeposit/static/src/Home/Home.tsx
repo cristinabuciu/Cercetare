@@ -128,8 +128,8 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
 
     handleClickArrowRight = (event) => {
         let nextPage = this.state.currentPage + 1;
-        if(nextPage > Math.ceil(this.state.searchResult.length / this.state.todosPerPage)) {
-            nextPage = Math.ceil(this.state.searchResult.length / this.state.todosPerPage);
+        if(nextPage > Math.ceil(this.state.numberOfCards / this.state.todosPerPage)) {
+            nextPage = Math.ceil(this.state.numberOfCards / this.state.todosPerPage);
         }
         this.setState({
             currentPage: nextPage

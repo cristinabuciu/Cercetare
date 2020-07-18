@@ -169,7 +169,6 @@ export default class Search extends React.Component<ICardProps, ICardState> {
           })
           .finally(function () {
             // always executed
-            
           }); 
       }
   
