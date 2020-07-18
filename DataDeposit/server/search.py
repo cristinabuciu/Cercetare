@@ -41,14 +41,25 @@ def applyFilters(jsonParams):
     datasets = []
     for dataset in result:
         datasets.append(dataset['_source'])
-    returnArray = []
+    if jsonParams['count'] == False:
+        indexOfLastTodo = jsonParams['currentPage'] * jsonParams['resultsPerPage']
+        indexOfFirstTodo = indexOfLastTodo - jsonParams['resultsPerPage']
 
-    for row in datasets:
+        return completeSearch(datasets, indexOfFirstTodo, indexOfLastTodo)
+    else:
+        return json.dumps(len(datasets))
+    
+
+def completeSearch(datasets, lowLimit, upLimit):
+    returnArray = []
+    # for row in datasets:
+    item = lowLimit
+    while item < upLimit and item < len(datasets):
+        row = datasets[item]
         returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink']])
+        item += 1
 
     return json.dumps(returnArray)
-
-
 
 def applyFilters1(jsonParams):
     hostname = '10.21.0.4'

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import "./items.scss";
+import Loader from 'react-loader-spinner';
 
 export const InputText = (props) => {
   const [dropdownOpen, setOpen] = useState(false);
@@ -23,6 +24,15 @@ export const InputText = (props) => {
         )}
       </DropdownMenu>
     </ButtonDropdown>
+  );
+}
+
+export const LoaderComponent = (props) => {
+
+  return (
+    <div className="loader-style">
+      <Loader type="TailSpin" color="#007BFF" height={props.height ? props.height : 100} width={props.width ? props.width : 100} visible={props.visible}/>
+  </div>
   );
 }
 

@@ -58,22 +58,13 @@
     width: 100%;
 }
 
-.search-button-size {
-    font-size: 20px;
-    padding: 12px 60px;
-}
-
-.hr-style {
-    margin-left: 20%;
-    margin-right: 20%;
-    border-color: rgb(13, 0, 134);
-}
-
 .label-format {
     font-size: 16px;
     font-weight: 700;
     padding-top: 8px;
 }
+
+////////////////////// SPECIAL DESIGN FOR BUTTONS /////////////////////////
 
 input[type="submit"][disabled=""] {
     opacity: 0.6;
@@ -117,4 +108,17 @@ button[disabled=""] {
 .upload-button-size {
     font-size: 20px;
     padding: 3px 50px;
+}
+///////////////////////////////////////////////////////////////////
+
+///////////////////////// COMMON ITEMS ////////////////////////////
+.search-button-size {
+    font-size: 20px;
+    padding: 12px 60px;
+}
+
+.hr-style {
+    margin-left: 20%;
+    margin-right: 20%;
+    border-color: rgb(13, 0, 134);
 }

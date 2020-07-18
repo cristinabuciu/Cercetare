@@ -5,15 +5,15 @@ import {
     Card, CardImg, CardText, CardBody,
     CardTitle, CardSubtitle, Button, Input, Row, Col, Badge
   } from 'reactstrap';
-import {InputText} from '../Items-components'
+import {InputText, LoaderComponent} from '../Items-components'
 import DatePicker from "react-datepicker";
 import NumericInput from 'react-numeric-input';
 import "../../style_home.scss";
- 
-
 
 export interface ICardProps {
     setItemsForShow: Function;
+    currentPage: number;
+    handleLoaderChange: Function;
 }
 
 export interface ICardState {
@@ -36,6 +36,7 @@ export interface ICardState {
     dataset_title: string | null;
     authors: string | null;
     resultsSearchArray: Array<String>;
+    resultsSearchArrayLen: number;
 }
 
 export default class Search extends React.Component<ICardProps, ICardState> {
@@ -69,7 +70,8 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         year: '',
         dataset_title: '',
         authors: '',
-        resultsSearchArray: []
+        resultsSearchArray: [],
+        resultsSearchArrayLen: 0
     }
     
     handleChange = date => {
@@ -79,8 +81,14 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     };
 
     componentDidMount() {
-        this.searchData();
+        this.searchData(true);
     }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.currentPage !== this.props.currentPage) {
+            this.searchData(false);
+        }
+      }
 
     changeValue = (e, comboBoxTitle, shouldUpdateNumber) => {
         console.log("CODRIN");
@@ -92,7 +100,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         this.state[comboBoxTitle] = '' + e;
         this.forceUpdate();
         if(shouldUpdateNumber) {
-        	this.searchData();
+        	this.searchData(true);
         }
     }
 
@@ -106,10 +114,16 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         return n[0];
     }
 
-    searchData = () => {
-        console.log(this.state.year);
+    searchData = (shouldCount, searchWasPressed = false) => {
+        console.log("AEROSMITH");
+        console.log(this.props.currentPage);
+        console.log("sdl;jfmsuidc");
+        
+        if (shouldCount == false) {
+            this.props.handleLoaderChange(true);
+        }
+
         axios.post( '/getData', {
-            items: this.state.resultsPerPage,
             params: {
               	notArrayParams: {
                     domain: this.state.domain === 'All domains  ' ? '*' : this.state.domain,
@@ -123,23 +137,39 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                       author: this.state.authors
                 },
                 sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSort(this.state.sortBy),
-                sortByField: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSortName(this.state.sortBy)
-              
+                sortByField: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSortName(this.state.sortBy),
+                count: shouldCount,
+                resultsPerPage: this.state.resultsPerPage,
+                currentPage: this.props.currentPage
             }
         })
           .then(response => {
             console.log("///////////");
             console.log(response.data);
             console.log("///////////");
-            this.setState({
-              resultsSearchArray:response.data
-            });
+
+            if (shouldCount == false) {
+                this.setState({
+                    resultsSearchArray:response.data
+                });
+                this.props.handleLoaderChange(false);
+                this.props.setItemsForShow(this.state.resultsSearchArrayLen, this.state.resultsPerPage, this.state.resultsSearchArray, searchWasPressed);
+            } else {
+                console.log("DIRE STRAITS");
+                console.log(response.data);
+                this.setState({
+                    resultsSearchArrayLen:response.data
+                });
+            }
+    
+
           })
           .catch(function (error) {
             console.log(error);
           })
           .finally(function () {
             // always executed
+            
           }); 
       }
   
@@ -200,8 +230,8 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 </Col>
                 {/* <Col md={{ size: 6, offset: 0 }}></Col>*/}
                 <Col md={{ size: 4, offset: 0 }} className="text-align-right"> 
-                    <Button color="primary" outline className="search-button-size" onClick={() => this.props.setItemsForShow(this.state.resultsSearchArray.length, this.state.resultsPerPage, this.state.resultsSearchArray)}>
-                        Search    <Badge color="secondary">{this.state.resultsSearchArray.length}</Badge>
+                    <Button color="primary" outline className="search-button-size" onClick={() => this.searchData(false, true)}>
+                        Search    <Badge color="secondary">{this.state.resultsSearchArrayLen}</Badge>
                     </Button>
                 </Col>
                     
@@ -212,7 +242,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
       </Card>
       )
     }
-
+    // 
 }
 
 

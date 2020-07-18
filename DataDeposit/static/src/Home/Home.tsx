@@ -9,6 +9,7 @@ import { Container } from 'semantic-ui-react';
 import Title from '../Items/Title/Title';
 import Search from '../Items/Search/Search';
 import SearchCard from '../Items/SearchCard';
+import {LoaderComponent} from '../Items/Items-components'
 
 export interface IHomeProps {
     greeting: string;
@@ -21,6 +22,7 @@ export interface IHomeState {
     shouldDisplayPagination: boolean;
     currentPage: number;
     todosPerPage: number;
+    loaderVisibility: boolean;
 }
 
 export default class Home extends React.Component<IHomeProps, IHomeState> {
@@ -31,7 +33,8 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         shouldDisplayPagination: false,
         
         currentPage: 1,
-        todosPerPage: 3
+        todosPerPage: 3,
+        loaderVisibility: false
     };
 
     componentDidMount() {
@@ -46,15 +49,27 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     }
 
 
-    setItemsForShow = (numberOfCards, numberOfCardsPerPage, searchResultItems) => {
-        console.log("MARE HATZ");
-        this.setState({
-            numberOfCards: numberOfCards,
-            searchResult: searchResultItems,
-            todosPerPage: numberOfCardsPerPage,
-            currentPage: 1,
-            shouldDisplayPagination: true
-        });
+    setItemsForShow = (numberOfCards, numberOfCardsPerPage, searchResultItems, searchWasPressed = false) => {
+        console.log("CEL MAI MARE HATZ");
+        if (searchWasPressed) {
+            this.setState({
+                numberOfCards: numberOfCards,
+                searchResult: searchResultItems,
+                todosPerPage: numberOfCardsPerPage,
+                currentPage: 1,
+                shouldDisplayPagination: true,
+                loaderVisibility: false
+            });
+        } else {
+            this.setState({
+                numberOfCards: numberOfCards,
+                searchResult: searchResultItems,
+                todosPerPage: numberOfCardsPerPage,
+                shouldDisplayPagination: true,
+                loaderVisibility: false
+            });
+        }
+        
         console.log(this.state)
     }
 
@@ -92,6 +107,14 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             
         });
       }
+    handleLoaderChange = (visible) => {
+        console.log("UNGURICA");
+        this.setState({
+            loaderVisibility: visible
+            
+        });
+    }
+
 
     handleClickArrowLeft = (event) => {
         let nextPage = this.state.currentPage - 1;
@@ -124,13 +147,14 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
         const currentTodos = searchResult.slice(indexOfFirstTodo, indexOfLastTodo);
 
-        const renderTodos = currentTodos.map((card, index) => {
-          return <div key={index}>{card}</div>;
-        });
+        // PAGINARE IN FRONTEND
+        // const renderTodos = currentTodos.map((card, index) => {
+        //   return <div key={index}>{card}</div>;
+        // });
     
         // Logic for displaying page numbers
         const pageNumbers = new Array();
-        for (let i = 1; i <= Math.ceil(searchResult.length / todosPerPage); i++) {
+        for (let i = 1; i <= Math.ceil(this.state.numberOfCards / todosPerPage); i++) {
           pageNumbers.push(i);
         }
     
@@ -161,19 +185,30 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                             .
                         </Col>
                         <Col md={{ size: 9, offset: 0 }}>
-                            <Search setItemsForShow={this.setItemsForShow}/>
+                            <Search 
+                                setItemsForShow={this.setItemsForShow}
+                                currentPage={this.state.currentPage}
+                                handleLoaderChange={this.handleLoaderChange}
+                            />
                             <hr className="hr-style" />
-                            {renderTodos}
-                            <Row className={this.state.shouldDisplayPagination ? "" : "display-none"}>
-                                <Col className="text-align-center">
-                                <hr className="hr-style" />
-                                    <div className="pagination" unselectable="on">
-                                    <li onClick={this.handleClickArrowLeft} className="paginationButton">&laquo;</li>
-                                        {renderPageNumbers}
-                                    <li onClick={this.handleClickArrowRight} className="paginationButton">&raquo;</li>
-                                    </div>
-                                </Col>
-                            </Row>
+                            {this.state.loaderVisibility ? <LoaderComponent visible={this.state.loaderVisibility}/>
+                            : 
+                            <>
+                                {searchResult}
+                                <Row className={this.state.shouldDisplayPagination ? "" : "display-none"}>
+                                    <Col className="text-align-center">
+                                    <hr className="hr-style" />
+                                        <div className="pagination" unselectable="on">
+                                        <li onClick={this.handleClickArrowLeft} className="paginationButton">&laquo;</li>
+                                            {renderPageNumbers}
+                                        <li onClick={this.handleClickArrowRight} className="paginationButton">&raquo;</li>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </>
+                            }
+
+                            
                         </Col>
                         
                     </Row>

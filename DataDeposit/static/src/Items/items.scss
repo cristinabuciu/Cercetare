@@ -90,3 +90,11 @@
   .react-switch-label:active .react-switch-button {
     width: 60px;
   }
+
+  .loader-style {
+    width: 100%;
+    height: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
