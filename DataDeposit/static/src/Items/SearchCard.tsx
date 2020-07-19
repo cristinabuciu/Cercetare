@@ -10,6 +10,8 @@ import NumericInput from 'react-numeric-input';
 import "../style_home.scss";
 import StarRatings from 'react-star-ratings';
 import { Nav } from 'react-bootstrap';
+import { NavLink } from 'reactstrap';
+import { NavLink as Link } from 'react-router-dom';
 import "./items.scss"
  
 
@@ -90,13 +92,6 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                         name='rating'
                     />
                     </div>
-                    {/* <Tooltip 
-                        placement="top" 
-                        isOpen={this.state.setTooltipOpen} 
-                        target="TooltipStars" 
-                        toggle={() => this.tooltipOpen(!this.state.setTooltipOpen)}>
-                        {this.state.ratingAvgValue}
-                    </Tooltip> */}
                 </Col>
             </Row>
             <Row>
@@ -104,7 +99,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     <Label for="titluDataset" className="label-format">Titlu Dataset:</Label>
                 </Col>
                 <Col>
-                    <Nav.Link href="/home" id="titluDataset">{this.props.dataset_title}</Nav.Link>
+                    <NavLink tag={Link} to={'/datasetView/' + this.props.id}>{this.props.dataset_title}</NavLink>
                 </Col>
                 
             </Row>

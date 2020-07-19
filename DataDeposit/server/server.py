@@ -1,7 +1,7 @@
 # server.py
 import os
 import sys
-from search import search, applyFilters
+from search import search, applyFilters, findItem
 from upload import uploadDataset, uploadPaths
 import pgdb
 import zipfile
@@ -57,6 +57,12 @@ def postData():
     _params = receivedData.get('params')
     return "Succes_Si_Nu_Prea"
     # return uploadDataset(_params, current_user)
+
+@app.route('/getItem', methods = ['GET'])
+def getItem():
+    _id = request.args['id']
+
+    return findItem(_id)
 
 @app.route("/login_post", methods=['POST'])
 def login_post():

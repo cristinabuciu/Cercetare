@@ -110,6 +110,12 @@ class ESClass(object):
         # a = json.loads(DATASETS_MATCH)
         s = self.es.search(index, body=self.match_dataset(domain, country, data_format, year, dataset_title, order, orderField), size=2000)
         return s['hits']['hits']#['total']
+    
+    def get_es_data_by_id(self, index, id):
+        searchJson = {"query": { "match": {"id": id } } }
+
+        s = self.es.search(index, body=searchJson, size=2000)
+        return s['hits']['hits']#['total']
 
     def match_dataset(self, domain, country, data_format, year, dataset_title, order, orderField):
         searchJson = {"query": { "bool": {"must": [

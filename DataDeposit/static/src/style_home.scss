@@ -33,6 +33,10 @@
     padding-top: 20px;
 }
 
+.margin-right-5 {
+    margin-right: 5px;
+}
+
 .margin-top-20 {
     margin-top: 20px;
 }
@@ -43,6 +47,10 @@
 
 .margin-top-10 {
     margin-top: 10px;
+}
+
+.margin-bottom-10p {
+    margin-bottom: 10%;
 }
 
 .padding-top-5 {
@@ -121,4 +129,9 @@ button[disabled=""] {
     margin-left: 20%;
     margin-right: 20%;
     border-color: rgb(13, 0, 134);
+}
+
+.star-size {
+    border: none;
+    outline: 0;
 }
