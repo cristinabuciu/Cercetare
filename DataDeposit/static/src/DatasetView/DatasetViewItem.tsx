@@ -1,4 +1,5 @@
 import * as React from 'react';
+import axios from 'axios';
 
 import {
     Card, Label, CardText, CardBody,
@@ -57,7 +58,28 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
         this.setState({
             shouldGiveRating: false
         });
-        
+        axios.post( '/updateReview', {
+            params: {
+                id: this.props.id,
+                rating: this.state.rating
+            }
+        })
+          .then(response => {
+            console.log("Phill ");
+            console.log(response.data);
+            console.log("ANother");
+            
+            this.setState({
+                shouldDisplayLoading: false
+            });
+
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          }); 
     }
 
     render() {  
@@ -84,7 +106,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                                 activeColor="#ffd700"
                                 a11y={true}
                             />
-                            
+                            {/* https://www.npmjs.com/package/react-rating-stars-component */}
                             </div>
                             {this.state.shouldGiveRating ? <Button color="primary" outline className="rating-button-size" onClick={() => this.onSubmitRating()}>
                                 <FontAwesomeIcon className="margin-right-5" icon={faStar} />

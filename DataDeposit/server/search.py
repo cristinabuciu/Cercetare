@@ -71,6 +71,9 @@ def findItem(id):
     for dataset in result:
         datasets.append(dataset['_source'])
     
+    if len(datasets) > 1:
+        print("WARNING !! -> same id to more than 1 item")
+    
     for row in datasets:
         returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink']])
     

@@ -2,7 +2,7 @@
 import os
 import sys
 from search import search, applyFilters, findItem
-from upload import uploadDataset, uploadPaths
+from upload import uploadDataset, uploadPaths, updateReviewByID
 import pgdb
 import zipfile
 from glob import glob
@@ -57,6 +57,13 @@ def postData():
     _params = receivedData.get('params')
     return "Succes_Si_Nu_Prea"
     # return uploadDataset(_params, current_user)
+
+@app.route('/updateReview', methods = ['POST'])
+def updateReview():
+    receivedData = json.loads(request.data.decode('utf-8'))
+    _params = receivedData.get('params')
+
+    return updateReviewByID(_params)
 
 @app.route('/getItem', methods = ['GET'])
 def getItem():

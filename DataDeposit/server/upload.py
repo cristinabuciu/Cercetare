@@ -6,6 +6,34 @@ from datetime import datetime, timedelta
 import es_connector
 from time import sleep
 
+def updateReviewByID(params):
+    try:
+        es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+        es.connect()
+
+        result = es.get_es_data_by_id('datasets', params['id'])
+
+        datasets = []
+        ids = []
+        for dataset in result:
+            datasets.append(dataset['_source'])
+            ids.append(dataset['_id'])
+        
+        if len(datasets) > 1:
+            print("WARNING !! -> same id to more than 1 item")
+        currentRatingValue = datasets[0]['avg_rating_value']
+        currentNumberOfRatings = datasets[0]['ratings_number']
+
+        newNumberOfRatings = currentNumberOfRatings + 1
+        newRatingValue = (currentRatingValue * currentNumberOfRatings + params['rating']) / newNumberOfRatings
+
+        # NU STIU SA FAC UPDATE (fara sa stric ceva)
+        # es.update('datasets', '_doc', dataset_json)
+
+        return "Succes"
+    except:
+        return "Eroare" 
+
 def getCoordinates(country):
     es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
