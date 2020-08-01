@@ -10,14 +10,15 @@
             "dataset_title": "Letting Go Dataset",
             "domain": "MEDICINE",
             "gitlink": "www.ex.com",
-            "private": true,
+            "private": false,
             "short_desc": "What should medicine do when it can’t save your life?",
             "subdomain": ["MEDICINE_3"],
             "year": "2020",
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 3.22,
             "ratings_number": 25,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "private_"
             
         },
 
@@ -38,7 +39,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 4.22,
             "ratings_number": 28,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "private_"
             
         },
 
@@ -59,7 +61,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 1.22,
             "ratings_number": 25,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "private_"
             
         },
 
@@ -80,7 +83,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 3.22,
             "ratings_number": 525,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "path_/home/wow-pc/Desktop/final.png"
             
         },
 
@@ -101,7 +105,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 5.00,
             "ratings_number": 325,
-            "owner": "Dorian"
+            "owner": "Dorian",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
 
@@ -122,7 +127,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 2.00,
             "ratings_number": 125,
-            "owner": "Dorian"
+            "owner": "Dorian",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
 {"date": "2020-06-12T11:49:45+0000",
@@ -142,7 +148,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 2.00,
             "ratings_number": 825,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "path_/home/wow-pc/Desktop/final.png"
             
         },
 
@@ -163,7 +170,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 2.00,
             "ratings_number": 225,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
 
@@ -185,7 +193,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 4.00,
             "ratings_number": 253,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "path_/home/wow-pc/Desktop/final.png"
             
         },
 
@@ -206,7 +215,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 4.05,
             "ratings_number": 258,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
 
@@ -227,7 +237,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 2.00,
             "ratings_number": 2455,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "path_/home/wow-pc/Desktop/final.png"
             
         },
 
@@ -248,7 +259,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 3.50,
             "ratings_number": 25425,
-            "owner": "SpiderParker"
+            "owner": "SpiderParker",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
 
@@ -269,7 +281,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 5.00,
             "ratings_number": 2455,
-            "owner": "Putin"
+            "owner": "Putin",
+            "downloadPath": "path_/home/wow-pc/Desktop/final.png"
             
         },
 
@@ -290,7 +303,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 4.00,
             "ratings_number": 215,
-            "owner": "Putin"
+            "owner": "Putin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
 
@@ -311,7 +325,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 3.00,
             "ratings_number": 2526,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
 
@@ -332,7 +347,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 3.00,
             "ratings_number": 24255,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "path_/home/wow-pc/Desktop/final.png"
             
         },
 
@@ -353,7 +369,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 4.90,
             "ratings_number": 255,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
 
@@ -374,7 +391,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 1.90,
             "ratings_number": 89,
-            "owner": "Josh"
+            "owner": "Josh",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
 
@@ -388,14 +406,15 @@
             "dataset_title": "On Impact Dataset",
             "domain": "BIOLOGY",
             "gitlink": "www.ex.com",
-            "private": true,
+            "private": false,
             "short_desc": "After an accident, the novelist had to learn to write again.",
             "subdomain": ["BIOLOGY_3"],
             "year": "2003",
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 1.90,
             "ratings_number": 96,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
 
@@ -409,14 +428,15 @@
             "dataset_title": "Man of Extremes Dataset",
             "domain": "IT",
             "gitlink": "www.ex.com",
-            "private": true,
+            "private": false,
             "short_desc": "The return of James Cameron.",
             "subdomain": ["IT_4"],
             "year": "2008",
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 3.90,
             "ratings_number": 74,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
 
@@ -437,7 +457,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 3.29,
             "ratings_number": 285,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
             
         },
     {"date": "2020-06-12T11:49:45+0000",
@@ -450,15 +471,37 @@
                 "dataset_title": "Tusea Romaniei Dataset",
                 "domain": "ARCHITECTURE",
                 "gitlink": "www.curat.com",
-                "private": true,
+                "private": false,
                 "short_desc": "Ce sapun romanii cand se uita la sport, dieta si o izoleta? Bravo, ai virus!",
                 "subdomain": ["ARCHITECTURE_2"],
                 "year": "2014",
                 "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
                 "avg_rating_value": 2.61,
                 "ratings_number": 13,
-                "owner": "admin"
+                "owner": "admin",
+                "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
                 
-            }
+            },
+        {"date": "2020-06-12T11:49:45+0000",
+            "geo_coord": "45.9432, 24.9668",
+            "id": 23,
+            "article_title": "The 100years war ",
+                    "authors": ["Aang", "Soka"],
+                    "country": "Chile",
+                    "data_format": "zip",
+                    "dataset_title": "The 100years war Dataset",
+                    "domain": "ARCHITECTURE",
+                    "gitlink": "www.curat.com",
+                    "private": true,
+                    "short_desc": "Firelord will come",
+                    "subdomain": ["ARCHITECTURE_2"],
+                    "year": "2014",
+                    "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
+                    "avg_rating_value": 2.61,
+                    "ratings_number": 13,
+                    "owner": "admin",
+                    "downloadPath": "link_https://www.youtube.com/watch?v=wObqrlY21yA"
+                    
+                }
     ]
     

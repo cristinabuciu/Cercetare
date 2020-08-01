@@ -175,7 +175,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     render() {  
 
       return (
-        <Card>
+        <Card className="z-depth-1-half">
         <CardBody>
           <CardTitle></CardTitle>
           <CardSubtitle></CardSubtitle>

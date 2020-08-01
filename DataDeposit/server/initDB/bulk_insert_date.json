@@ -10,14 +10,15 @@
             "dataset_title": "Trump Solo Dataset",
             "domain": "MEDICINE",
             "gitlink": "www.ex.com",
-            "private": true,
+            "private": false,
             "short_desc": "Searching for Donald Trump's soul.",
             "subdomain": ["MEDICINE_3"],
             "year": "2020",
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 3.22,
             "ratings_number": 25,
-            "owner": "john"
+            "owner": "john",
+            "downloadPath": "link_https://www.youtube.com/watch?v=ua59gbaq5U8"
             
         },
 
@@ -38,7 +39,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 4.22,
             "ratings_number": 28,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=ua59gbaq5U8"
             
         },
 
@@ -59,7 +61,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 5.00,
             "ratings_number": 25,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=ua59gbaq5U8"
             
         },
 
@@ -80,7 +83,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 3.22,
             "ratings_number": 525,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=ua59gbaq5U8"
             
         },
 
@@ -101,7 +105,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 5.00,
             "ratings_number": 325,
-            "owner": "Dorian"
+            "owner": "Dorian",
+            "downloadPath": "link_https://www.youtube.com/watch?v=ua59gbaq5U8"
             
         },
 
@@ -122,7 +127,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 2.00,
             "ratings_number": 125,
-            "owner": "Dorian"
+            "owner": "Dorian",
+            "downloadPath": "link_https://www.youtube.com/watch?v=ua59gbaq5U8"
             
         },
 {"date": "2020-06-18T11:49:45+0000",
@@ -142,7 +148,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 2.00,
             "ratings_number": 825,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=v2AC41dglnM"
             
         },
 
@@ -163,7 +170,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 2.00,
             "ratings_number": 225,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=v2AC41dglnM"
             
         },
 
@@ -185,7 +193,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 4.00,
             "ratings_number": 253,
-            "owner": "admin"
+            "owner": "admin",
+            "downloadPath": "link_https://www.youtube.com/watch?v=v2AC41dglnM"
             
         },
 
@@ -206,7 +215,8 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 4.05,
             "ratings_number": 258,
-            "owner": "john"
+            "owner": "john",
+            "downloadPath": "link_https://www.youtube.com/watch?v=jH1RNk8954Q"
             
         },
 
@@ -227,9 +237,31 @@
             "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
             "avg_rating_value": 2.00,
             "ratings_number": 2455,
-            "owner": "john"
+            "owner": "john",
+            "downloadPath": "link_https://www.youtube.com/watch?v=jH1RNk8954Q"
             
-        }
+        },
+        {"date": "2020-07-20T11:49:45+0000",
+            "geo_coord": "45.9432, 24.9668",
+            "id": 34,
+            "article_title": "A Pickpocket’s Tale",
+                    "authors": ["Adam Green", "Adam Red", "Adam West", "Worgen Au"],
+                    "country": "Yemen",
+                    "data_format": "zip",
+                    "dataset_title": "A Pickpocket’s Tale Dataset",
+                    "domain": "BIOLOGY",
+                    "gitlink": "www.ex.com",
+                    "private": false,
+                    "short_desc": "The spectacular thefts of Apollo Robbins.",
+                    "subdomain": ["BIOLOGY_1"],
+                    "year": "1980",
+                    "full_desc": "hgnviusejrhscgmrhnvkgmiutrm",
+                    "avg_rating_value": 4.60,
+                    "ratings_number": 3524,
+                    "owner": "admin",
+                    "downloadPath": "link_https://www.youtube.com/watch?v=jH1RNk8954Q"
+                    
+                }
 
 
     ]

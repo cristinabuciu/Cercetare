@@ -74,7 +74,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
     render() {  
 
       return (
-        <Card className="margin-top-20">
+        <Card className="margin-top-20 z-depth-hoverable">
         <CardBody>
           <CardTitle></CardTitle>
           <CardSubtitle></CardSubtitle>

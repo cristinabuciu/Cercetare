@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, Collapse, Card, CardBody } from 'reactstrap';
 import "./items.scss";
 import Loader from 'react-loader-spinner';
 
@@ -56,6 +56,25 @@ export const Switch = ({ isOn, handleToggle, onColor }) => {
     </>
   );
 };
+
+export const TooltipButton = (props) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => setIsOpen(!isOpen);
+
+  return (
+    <div className={props.className ? props.className : ""}>
+      <Button color="primary" onClick={toggle} style={{ marginBottom: '1rem' }}>{props.ButtonName}</Button>
+      <Collapse isOpen={isOpen}>
+          <Card>
+          <CardBody>
+            {props.body}
+          </CardBody>
+          </Card>
+      </Collapse>
+    </div>
+  );
+}
 
 // export default class CurrencySelector extends Component {
 //     constructor(props) {

@@ -3,12 +3,15 @@ import * as React from 'react';
 import axios from 'axios';
 import {
     Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Input, Row, Col, Badge, Form, FormGroup, FormText
+    CardTitle, CardSubtitle, Button, Input, Row, Col, Badge, Form, FormGroup, FormText, Label, Collapse
   } from 'reactstrap';
 import "../style_home.scss";
-import {InputText, Switch, LoaderComponent} from '../Items/Items-components'
+import "./upload.scss";
+import {InputText, Switch, LoaderComponent, TooltipButton} from '../Items/Items-components'
 import LeftBar from "../LeftBar/LeftBar";
 import { Container } from 'semantic-ui-react';
+import { faLink, faDownload, faPortrait } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Title from '../Items/Title/Title';
  
 
@@ -16,6 +19,8 @@ import Title from '../Items/Title/Title';
 export interface IUploadPageFormProps {
     color: string;
     changeToSuccess: Function;
+    authorsTooltip?: string;
+    contAccess?: string;
 }
 
 export interface IUploadPageFormState {
@@ -47,6 +52,11 @@ export interface IUploadPageFormState {
         };
         country: Array<String>;
         dataFormat: Array<String>;
+    };
+    uploadOption: {
+        private: boolean;
+        link: boolean;
+        upload: boolean;
     };
     validInputs: {
         dataset_title: boolean;
@@ -90,6 +100,12 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             },
             country: ['Romania', 'Chile', 'Japan', 'Russia', 'China', 'Canada', 'Mexico', 'Egypt'],
             dataFormat: ['zip', 'rar', 'tar.gz']
+        },
+
+        uploadOption: {
+            private: false,
+            link: false,
+            upload: false
         },
 
         validInputs: {
@@ -168,7 +184,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             }
         })
           .then(response => {
-            console.log("//CCCCCCCCCCCCCCCCC//");
+            console.log("//CCCCCCCCCCCCCCCC//");
             console.log(response.data);
             console.log("/CCCCCCCCCCCCCCCCCCCC/");
             let file = this.state.fileToBeSent;
@@ -205,6 +221,41 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         // .post("/uploadFile", formData)
         // .then(res => console.log(res))
         // .catch(err => console.warn(err));
+    }
+
+    updateUploadOptions = (privateMode : boolean, linkMode : boolean, uploadMode : boolean) => {
+        const newUploadOptions = { 
+            private: privateMode,
+            link: linkMode,
+            upload: uploadMode
+        };
+
+        this.setState({
+            uploadOption: newUploadOptions
+        });
+    }
+
+    radioHit = (e) => {
+
+        switch(e.target.id) {
+        case 'private':
+            this.updateUploadOptions(true, false, false);
+            break;
+        case 'link':
+            this.updateUploadOptions(false, true, false);
+            break;
+        case 'upload':
+            this.updateUploadOptions(false, false, true);
+            break;
+        default:
+            debugger;
+            console.log("No match for radio button in upload !!!");
+            return;
+        }
+
+        console.log(this.state.uploadOption.link);
+        console.log(this.state.uploadOption.private);
+        console.log(this.state.uploadOption.upload);
     }
   
     render() {  
@@ -264,12 +315,16 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         invalid={this.state.validInputs.dataset_authors}
                                         onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_authors')}
                                         onChange={e => this.changeValue(e.target.value, 'dataset_authors')}/>
+                                    <TooltipButton 
+                                        className="padding-top-10"
+                                        ButtonName="Show more info" 
+                                        body={this.props.authorsTooltip}/>
                                 </Col>
                                 
                             </Row>
                         </FormGroup>
                         <FormGroup>
-                            <Row className="padding-top-20">
+                            <Row>
                                 <Col >
                                     <Input 
                                         type="text" 
@@ -359,13 +414,103 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                         </FormGroup>
                         <FormGroup>
                             <Row className="padding-top-20">
-                                <Col >
-                                    <input type="file"
-                                        name="myFile"
-                                        onChange={this.uploadFile} />
-                                </Col>
+                                    <Col sm="4">
+                                        <Card body className={this.state.uploadOption.private ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
+                                            <FormGroup check className="margin-top-5">
+                                                <Label check>
+                                                <Input 
+                                                    id="private"
+                                                    type="radio" 
+                                                    name="radio2" 
+                                                    onClick={this.radioHit}
+                                                    className="margin-top-5" />{' '}
+                                                Private contact
+                                                </Label>
+                                                <>  </><FontAwesomeIcon icon={faPortrait} />
+                                            </FormGroup>
+                                        </Card>
+                                        </Col>
+                                        <Col sm="4">
+                                        <Card body className={this.state.uploadOption.link ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
+                                            <FormGroup check className="margin-top-5">
+                                                <Label check>
+                                                <Input 
+                                                    id="link"
+                                                    onClick={this.radioHit}
+                                                    type="radio" 
+                                                    name="radio2" 
+                                                    className="margin-top-5" />{' '}
+                                                Download link 
+                                                </Label>
+                                                <>  </><FontAwesomeIcon icon={faLink} />
+                                                <Input
+                                                    type="url"
+                                                    name="url"
+                                                    id="downloadURL"
+                                                    disabled={!this.state.uploadOption.link}
+                                                    placeholder="Download Link..."
+                                                />
+                                            </FormGroup>
+                                        </Card>
+                                        </Col>
+                                        <Col sm="4">
+                                        <Card body className={this.state.uploadOption.upload ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
+                                            <FormGroup check disabled className="margin-top-5">
+                                                <Label check>
+                                                <Input
+                                                    id="upload"
+                                                    onClick={this.radioHit}
+                                                    type="radio" 
+                                                    name="radio2" 
+                                                    className="margin-top-5" />{' '}
+                                                Upload dataset
+                                                </Label>
+                                                <>  </><FontAwesomeIcon icon={faDownload} />
+                                                <Col >
+                                                    <Input 
+                                                        type="file" 
+                                                        disabled={!this.state.uploadOption.upload}
+                                                        name="myFile" 
+                                                        id="myFile" 
+                                                        onChange={this.uploadFile} />
+                                                </Col>
+                                            </FormGroup>
+                                        </Card>
+                                        </Col>
                             </Row>
                         </FormGroup>
+                        <FormGroup>
+                            <Row className="padding-top-20">
+                                {/* <Col >
+                                    <Input 
+                                        type="text"
+                                        // invalid={this.state.validInputs.dataset_title}
+                                        name="Data-integ" 
+                                        id="Data-integ" 
+                                        placeholder="Data integrity and authenticity" 
+                                        // onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
+                                        // onChange={e => this.changeValue(e.target.value, 'dataset_title')}
+                                        />
+                                </Col> */}
+                                <Col >
+                                <Input 
+                                        type="text"
+                                        // invalid={this.state.validInputs.dataset_title}
+                                        name="Cont-access"
+                                        id="Cont-access" 
+                                        placeholder="Continuity of access" 
+                                        // onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
+                                        // onChange={e => this.changeValue(e.target.value, 'dataset_title')}
+                                        />
+                                    <TooltipButton 
+                                        body={this.props.contAccess}
+                                        className="padding-top-10"
+                                        ButtonName="Show more info" />
+                                    
+                                </Col>                                
+                            </Row>
+                        </FormGroup>
+
                         <FormGroup>
                             <Row className="padding-top-20">
                                 <Col className="text-align-center">
