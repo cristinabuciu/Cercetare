@@ -25,9 +25,9 @@ def filterByArray(dataset, subdomains, itemInDataset):
     return True
 
 def applyFilters(jsonParams):
-    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
-
+    
     result = es.get_es_data('datasets', jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'], jsonParams['notArrayParams']['dataset_title'], jsonParams['sortBy'], jsonParams['sortByField'])
     
     if len(jsonParams['arrayParams']['subdomain']) > 0:
@@ -56,13 +56,24 @@ def completeSearch(datasets, lowLimit, upLimit):
     item = lowLimit
     while item < upLimit and item < len(datasets):
         row = datasets[item]
-        returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink']])
+        hasDownloadLink = 0
+        downloadPath = ''
+        if row['downloadPath'].startswith('link'):
+            hasDownloadLink = 1
+            downloadPath = row['downloadPath'][5:]
+        elif row['downloadPath'].startswith('private'):
+            hasDownloadLink = 2
+        elif row['downloadPath'].startswith('path'):
+            hasDownloadLink = 3
+            downloadPath = row['downloadPath'][5:]
+
+        returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink'], hasDownloadLink, downloadPath, row['owner']])
         item += 1
 
     return json.dumps(returnArray)
 
 def findItem(id):
-    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     result = es.get_es_data_by_id('datasets', id)

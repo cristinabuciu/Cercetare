@@ -24,6 +24,10 @@ db_password = 'secret'
 db_database = 'database'
 current_user = 'admin'
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -78,7 +82,7 @@ def login_post():
     _username = receivedData.get('username')
     _password = receivedData.get('password')
 
-    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
     result = es.get_es_index('logintable')
     isAuthenticated = False

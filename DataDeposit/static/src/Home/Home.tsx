@@ -92,6 +92,10 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                         short_desc={item[9]}
                         avg_rating={item[10]}
                         gitlink={item[11]}
+                        downloadPath={item[13]}
+                        shouldHaveDownloadButton={item[12] === 1 || item[12] === 3 }
+                        shouldHaveDownloadLink={item[12] === 1}
+                        owner={item[14]}
                     />
                 </Col>
             </Row>

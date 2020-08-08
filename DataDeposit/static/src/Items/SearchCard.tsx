@@ -25,10 +25,14 @@ export interface ISearchCardProps {
     authors: Array<String>;
     year: string;
     dataset_title: string;
-    article_title: string; 
+    article_title?: string; 
     short_desc: string;
     avg_rating: number;
-    gitlink: string;
+    gitlink?: string;
+    downloadPath: string;
+    shouldHaveDownloadButton: boolean;
+    shouldHaveDownloadLink: boolean;
+    owner: string;
 }
 
 
@@ -169,12 +173,32 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
             </Row>
             <Row>
                 <Col className="text-align-center">
-                    <a href={this.state.uploadedFileLink} target="_blank" rel="noopener noreferrer" download>
+                    {this.props.shouldHaveDownloadButton ? 
+                    <>{
+                        this.props.shouldHaveDownloadLink ? 
+                        <a target="_blank" href={this.props.downloadPath}>
+                            <Button color="primary" outline className="download-button-size">
+                                <i className="fas fa-download"/>
+                                Download Page
+                            </Button>
+                        </a>
+                        :
+                        <a href={this.state.uploadedFileLink} target="_blank" rel="noopener noreferrer" download>
+                            <Button color="primary" outline className="download-button-size">
+                                <i className="fas fa-download"/>
+                                Download File
+                            </Button>
+                        </a>
+                    }</>
+                    :
+                    <>Contact <b>{this.props.owner}</b> for more information</>
+                    }
+                    {/* <a href={this.state.uploadedFileLink} target="_blank" rel="noopener noreferrer" download>
                     <Button color="primary" outline className="download-button-size">
                             <i className="fas fa-download"/>
                             Download File
                         </Button>
-                    </a>
+                    </a>  */}
                     {/* <Button color="primary" outline className="download-button-size" onClick={() => this.dlDataset()}>
                         Download
                     </Button> */}

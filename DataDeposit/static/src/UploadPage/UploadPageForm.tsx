@@ -20,7 +20,9 @@ export interface IUploadPageFormProps {
     color: string;
     changeToSuccess: Function;
     authorsTooltip?: string;
-    contAccess?: string;
+    contAccess?: any;
+    dataInteg?: any;
+    dataReuse?: any;
 }
 
 export interface IUploadPageFormState {
@@ -481,7 +483,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                         </FormGroup>
                         <FormGroup>
                             <Row className="padding-top-20">
-                                {/* <Col >
+                                <Col >
                                     <Input 
                                         type="text"
                                         // invalid={this.state.validInputs.dataset_title}
@@ -491,7 +493,13 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         // onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
                                         // onChange={e => this.changeValue(e.target.value, 'dataset_title')}
                                         />
-                                </Col> */}
+                                        <TooltipButton 
+                                            body={this.props.dataInteg}
+                                            className="padding-top-10"
+                                            ButtonName="Show more info" />
+                                </Col>
+                            </Row>
+                            <Row className="padding-top-10">
                                 <Col >
                                 <Input 
                                         type="text"
@@ -504,6 +512,24 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         />
                                     <TooltipButton 
                                         body={this.props.contAccess}
+                                        className="padding-top-10"
+                                        ButtonName="Show more info" />
+                                    
+                                </Col>                                
+                            </Row>
+                            <Row className="padding-top-10">
+                                <Col >
+                                <Input 
+                                        type="text"
+                                        // invalid={this.state.validInputs.dataset_title}
+                                        name="data-reuse"
+                                        id="data-reuse" 
+                                        placeholder="Data Reuse" 
+                                        // onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
+                                        // onChange={e => this.changeValue(e.target.value, 'dataset_title')}
+                                        />
+                                    <TooltipButton 
+                                        body={this.props.dataReuse}
                                         className="padding-top-10"
                                         ButtonName="Show more info" />
                                     
