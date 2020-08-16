@@ -59,8 +59,7 @@ def postData():
     global current_user
     receivedData = json.loads(request.data.decode('utf-8'))
     _params = receivedData.get('params')
-    return "Succes_Si_Nu_Prea"
-    # return uploadDataset(_params, current_user)
+    return uploadDataset(_params, current_user)
 
 @app.route('/updateReview', methods = ['POST'])
 def updateReview():

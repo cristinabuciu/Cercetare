@@ -96,6 +96,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                         shouldHaveDownloadButton={item[12] === 1 || item[12] === 3 }
                         shouldHaveDownloadLink={item[12] === 1}
                         owner={item[14]}
+                        
                     />
                 </Col>
             </Row>

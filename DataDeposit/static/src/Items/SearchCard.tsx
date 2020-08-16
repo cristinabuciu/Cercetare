@@ -118,14 +118,14 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                 </Col>
                 
             </Row>
-            <Row>
+            {/* <Row>
                 <Col md={{ size: 2, offset: 0 }}> 
                     <Label for="titluArticol" className="label-format">Titlu Articol:</Label>
                 </Col>
                 <Col>
                     <Nav.Link href="#" onClick={() => this.openPdf()} id="titluArticol">{this.props.article_title + " " + this.props.year}</Nav.Link>
                 </Col>
-            </Row>
+            </Row> */}
             <Row>
                 <Col md={{ size: 2, offset: 0 }}>
                     <span className="label-format">
@@ -137,16 +137,6 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     <span className="search-card-field padding-left-16 padding-right-16">{this.props.domain}</span> {this.props.subdomain.map(txt => <span> | {txt}</span>)}
                 </Col>
             </Row>
-            {/* <Row>
-                <Col md={{ size: 2, offset: 0 }}> 
-                    <span className="label-format">
-                        Data Format: 
-                    </span>
-                </Col>
-                <Col>
-                    <span className="search-card-field padding-left-16 padding-right-16">{this.props.data_format}</span>
-                </Col>
-            </Row> */}
             <Row>
                 <Col md={{ size: 2, offset: 0 }}>
                     <span className="label-format">
@@ -154,7 +144,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     </span>
                 </Col>
                 <Col>
-                    <span className="search-card-field padding-left-16 padding-right-16">{this.props.country}</span>
+                    <span className="search-card-field padding-left-16 padding-right-16">{this.props.country + " " + this.props.year}</span>
                 </Col>
                 
             </Row>
@@ -163,15 +153,15 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     <Input type="textarea" name="text" id="description" placeholder="Short Description" className="margin-top-10" disabled={true} value={this.props.short_desc}/>
                 </Col>
             </Row>
-            <Row>
+            {/* <Row>
             <Col md={{ size: 2, offset: 0 }}> 
                     <Label for="gitLink" className="label-format">Gitlink:</Label>
                 </Col>
                 <Col>
                     <Nav.Link href="/home" id="gitLink">{this.props.gitlink}</Nav.Link>
                 </Col>
-            </Row>
-            <Row>
+            </Row> */}
+            <Row className="padding-top-10">
                 <Col className="text-align-center">
                     {this.props.shouldHaveDownloadButton ? 
                     <>{

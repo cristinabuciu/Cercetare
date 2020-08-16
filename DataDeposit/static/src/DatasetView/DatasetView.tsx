@@ -55,7 +55,8 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
           })
           .finally(function () {
             // always executed
-          }); 
+          });
+          this.props.history
     }
 
     render() {  

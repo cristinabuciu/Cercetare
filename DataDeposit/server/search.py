@@ -56,16 +56,17 @@ def completeSearch(datasets, lowLimit, upLimit):
     item = lowLimit
     while item < upLimit and item < len(datasets):
         row = datasets[item]
-        hasDownloadLink = 0
+        hasDownloadLink = 2
         downloadPath = ''
-        if row['downloadPath'].startswith('link'):
-            hasDownloadLink = 1
-            downloadPath = row['downloadPath'][5:]
-        elif row['downloadPath'].startswith('private'):
-            hasDownloadLink = 2
-        elif row['downloadPath'].startswith('path'):
-            hasDownloadLink = 3
-            downloadPath = row['downloadPath'][5:]
+        if 'downloadPath' in row:
+            if row['downloadPath'].startswith('link'):
+                hasDownloadLink = 1
+                downloadPath = row['downloadPath'][5:]
+            elif row['downloadPath'].startswith('private'):
+                hasDownloadLink = 2
+            elif row['downloadPath'].startswith('path'):
+                hasDownloadLink = 3
+                downloadPath = row['downloadPath'][5:]
 
         returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink'], hasDownloadLink, downloadPath, row['owner']])
         item += 1
