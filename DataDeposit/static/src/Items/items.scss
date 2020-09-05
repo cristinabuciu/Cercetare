@@ -1,3 +1,4 @@
+@import "../style_home.scss";
 
 .button-style-sort {
   margin-left: 10px;
@@ -98,3 +99,155 @@
     justify-content: center;
     align-items: center;
 }
+
+.spanSpecial {
+  margin-right: 8px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: rgba(0, 0, 0, 0.4);
+
+}
+
+////////////////////// MODAL ITEMS //////////////////////////
+
+.spanDomain {
+  @extend .spanSpecial;
+  color: rgb(32, 190, 255);
+}
+
+.quick-view-span {
+    text-transform: none;
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 12px;
+    padding: 0px 12px;
+
+    width: 100%;
+    display: inherit;
+    align-items: inherit;
+    justify-content: inherit;
+
+}
+
+.quick-view-button {
+    background-color: white;
+    margin-right: 6px;
+    padding: 0px;
+
+    color: rgba(0, 0, 0, 0.87);
+    box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 3px 1px -2px rgba(0,0,0,0.12);
+    background-color: #e0e0e0;
+
+    color: rgba(0, 0, 0, 0.87);
+    padding: 6px 16px;
+    font-size: 0.875rem;
+    min-width: 64px;
+    box-sizing: border-box;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 500;
+    line-height: 1.75;
+    border-radius: 25px;
+    letter-spacing: 0.02857em;
+
+    border: 0;
+    margin: 0;
+    display: inline-flex;
+    outline: none;
+    padding: 0;
+    position: relative;
+    align-items: center;
+    user-select: none;
+    vertical-align: middle;
+    -moz-appearance: none;
+    justify-content: center;
+    text-decoration: none;
+    background-color: transparent;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+
+}
+
+.modal-default {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+}
+
+.modal-title {
+  font-size: 20px;
+    line-height: 24px;
+    font-weight: 700;
+    color: rgb(0, 0, 0);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.modal-subtitle {
+  font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.column-title {
+  color: rgb(32, 33, 36);
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.column-list {
+  text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.column-section {
+  @extend .modal-default;
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    column-gap: 80px;
+    margin-bottom: 24px;
+}
+
+.column-item {
+    margin-bottom: 8px;
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: 400;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    color: rgba(0, 0, 0, 0.5);
+
+    .column-data {
+        min-width: 100px;
+        color: rgba(0, 0, 0, 0.5);
+        margin-right: 8px;
+    
+    }
+
+}
+
+/////////////////////////////////////////////////////////////
+//////////////////// RESPONSIVE ITEMS ///////////////////////
+
+@media all and (max-width: 1350px) {
+  .resizable-1350 { display: none; }
+}
+
+@media all and (max-width: 1050px) {
+  .resizable-1050 { display: none; }
+}
+
+//////////////////////////////////////////////////////////////

@@ -153,7 +153,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     resultsSearchArray:response.data
                 });
                 this.props.handleLoaderChange(false);
-                this.props.setItemsForShow(this.state.resultsSearchArrayLen, this.state.resultsPerPage, this.state.resultsSearchArray, searchWasPressed);
+                this.props.setItemsForShow(this.state.resultsSearchArrayLen, this.state.resultsPerPage, this.state.resultsSearchArray, searchWasPressed, false, this.state.resultsSearchArrayLen == 0);
             } else {
                 console.log("DIRE STRAITS");
                 console.log(response.data);

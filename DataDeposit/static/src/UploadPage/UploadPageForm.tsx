@@ -199,8 +199,11 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             // .then(res => console.log(res))
             // .catch(err => console.warn(err));
 
-            this.props.changeToSuccess();
-
+            if (response.data === 'Succes') {
+                this.props.changeToSuccess();
+            } else {
+                this.props.changeToSuccess(false);
+            }
           })
           .catch(function (error) {
             console.log(error);

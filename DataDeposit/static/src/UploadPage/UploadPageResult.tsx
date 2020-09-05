@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import {
     Card, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Row, Col
+    CardTitle, CardSubtitle, Button, Row, Col, Alert
   } from 'reactstrap';
 import "../style_home.scss";
 import "./upload.scss";
@@ -14,6 +14,7 @@ import { Container } from 'semantic-ui-react';
 export interface IUploadPageResultProps {
     color: string;
     handleRepairUpload: Function;
+    wasSuccess: boolean;
 }
 
 export interface IUploadPageResultState {
@@ -47,7 +48,21 @@ export default class UploadPageResult extends React.Component<IUploadPageResultP
                 <Col md={{ size: 9, offset: 0 }}>
                 <Card>
                     <CardBody>
-                    <CardTitle className="UploadResultPage">Dataset has been uploaded successfully !</CardTitle>
+                    <CardTitle className="UploadResultPage">
+                        {this.props.wasSuccess ? 
+                        <Alert color="success">
+                            Dataset has been uploaded successfully !
+                        </Alert>
+                        :
+                        <><Alert color="danger">
+                            Error: Dataset has not been uploaded  !
+                        </Alert>
+                        <Alert color="warning">
+                            If this didn't happend before please try again
+                        </Alert></>
+                        }
+                        
+                    </CardTitle>
                     <CardSubtitle></CardSubtitle>
                     <CardText>
                         <Row>

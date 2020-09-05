@@ -58,7 +58,7 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
             </Nav>
 
             <Nav defaultActiveKey="/home" className="flex-column margin-top-50">
-                <Nav.Link href="/home">About project</Nav.Link>
+                <Nav.Link href="/aboutus">About project</Nav.Link>
                 <Nav.Link eventKey="link-1">Contact us</Nav.Link>
                 <Nav.Link eventKey="link-2">Privacy Policy</Nav.Link>
                 <Nav.Link eventKey="link-2">Sponsors</Nav.Link>

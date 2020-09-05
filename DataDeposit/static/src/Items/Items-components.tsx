@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, Collapse, Card, CardBody } from 'reactstrap';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, Collapse, Card, CardBody,
+  Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Input } from 'reactstrap';
+import { NavLink } from 'reactstrap';
+import { NavLink as Link } from 'react-router-dom';
 import "./items.scss";
 import Loader from 'react-loader-spinner';
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export const InputText = (props) => {
   const [dropdownOpen, setOpen] = useState(false);
@@ -72,6 +77,102 @@ export const TooltipButton = (props) => {
           </CardBody>
           </Card>
       </Collapse>
+    </div>
+  );
+}
+
+export const ModalQuickView = (props) => {
+  const {
+    buttonLabel,
+    className,
+    buttonClassName,
+    modalTitle,
+    authors,
+    year,
+    owner,
+    subdomain,
+    short_desc
+  } = props;
+
+  const [modal, setModal] = useState(false);
+
+  const toggle = () => setModal(!modal);
+
+  return (
+    <div>
+      <Button onClick={toggle} className={buttonClassName}>
+        <span className="quick-view-span">
+        <span className="padding-right-10">
+          <FontAwesomeIcon icon={faEye}/>
+          </span> <span className="resizable-1350">{buttonLabel}</span> </span></Button>
+      <Modal isOpen={modal} toggle={toggle} className={className} size="lg">
+      <ModalHeader toggle={toggle} className="modal-title">{modalTitle}</ModalHeader>
+        <ModalBody>
+          <Row>
+            <Col>
+              <div className="column-section">
+                <div className="overflow-hidden">
+                  <div className="column-title">
+                    Metadata
+                  </div>
+                  <span className="column-item">
+                    <span className="column-data">
+                    <FontAwesomeIcon icon={faEye}/> Created:
+                    </span>
+                    {year ? year : "-"}
+                  </span>
+
+                  <span className="column-item">
+                    <span className="column-data">
+                      <FontAwesomeIcon icon={faEye}/> Uploaded by:
+                    </span>
+                    {owner ? owner : "-"}
+                  </span>
+
+                  <span className="column-item">
+                    <span className="column-data">
+                      <FontAwesomeIcon icon={faEye}/> Tags:
+                    </span>
+                    <div className="overflow-hidden">
+                      {subdomain ? subdomain.map(txt => <div className="column-list">{txt}</div>) : "-"}
+                    </div>
+                  </span>
+
+                  <span className="column-item">
+                    <span className="column-data">
+                      <FontAwesomeIcon icon={faEye}/> Authors:
+                    </span>
+                    <div className="overflow-hidden">
+                      {authors ? authors.map(txt => <div className="column-list">{txt}</div>) : "-"}
+                    </div>
+                  </span>
+                </div>
+                <div className="overflow-hidden">
+                  <div className="column-title">
+                    Files
+                  </div>
+                  <span className="column-item">
+                    <span className="column-data">
+                      Total Size
+                    </span>
+                    20
+                  </span>
+                </div>
+
+              </div>
+            </Col>
+          </Row>
+          <Row>
+              <Col>
+                  <Input type="textarea" name="text" id="description" placeholder="Short Description" className="margin-top-10" disabled={true} value={short_desc}/>
+              </Col>
+          </Row>
+        </ModalBody>
+        <ModalFooter><NavLink tag={Link} to={'/datasetView/' + props.id}><Button color="primary">Go to Dataset</Button></NavLink>
+          {' '}
+          <Button color="secondary" onClick={toggle}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 }

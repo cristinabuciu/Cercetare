@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 
 import './Home.scss';
 import LeftBar from "../LeftBar/LeftBar";
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Alert } from 'reactstrap';
 import { Container } from 'semantic-ui-react';
 import Title from '../Items/Title/Title';
 import Search from '../Items/Search/Search';
@@ -23,6 +23,8 @@ export interface IHomeState {
     currentPage: number;
     todosPerPage: number;
     loaderVisibility: boolean;
+    wasError: boolean;
+    wasInfo: boolean;
 }
 
 export default class Home extends React.Component<IHomeProps, IHomeState> {
@@ -34,7 +36,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         
         currentPage: 1,
         todosPerPage: 3,
-        loaderVisibility: false
+        loaderVisibility: false,
+        wasError: false,
+        wasInfo: false
     };
 
     componentDidMount() {
@@ -49,8 +53,26 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     }
 
 
-    setItemsForShow = (numberOfCards, numberOfCardsPerPage, searchResultItems, searchWasPressed = false) => {
+    setItemsForShow = (numberOfCards, numberOfCardsPerPage, searchResultItems, searchWasPressed = false, itWasAnError = false, itWasAnInfo = false) => {
         console.log("CEL MAI MARE HATZ");
+        if (itWasAnError) {
+            this.setState({
+                shouldDisplayPagination: false,
+                wasError: true
+            });
+
+            return;
+        }
+        // debugger;
+        if (itWasAnInfo) {
+            this.setState({
+                shouldDisplayPagination: false,
+                wasInfo: true
+            });
+
+            return;
+        }
+
         if (searchWasPressed) {
             this.setState({
                 numberOfCards: numberOfCards,
@@ -115,8 +137,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     handleLoaderChange = (visible) => {
         console.log("UNGURICA");
         this.setState({
-            loaderVisibility: visible
-            
+            loaderVisibility: visible,
+            wasError: false,
+            wasInfo: false
         });
     }
 
@@ -200,6 +223,22 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                             : 
                             <>
                                 {searchResult}
+                                <Row className={this.state.wasError ? "" : "display-none"}>
+                                    <Col>
+                                        <Alert color="danger" className="text-align-center">
+                                            There was an error at search !
+                                        </Alert>
+                                    </Col>
+                                </Row>
+
+                                <Row className={this.state.wasInfo ? "" : "display-none"}>
+                                    <Col>
+                                        <Alert color="info" className="text-align-center">
+                                            No items found !
+                                        </Alert>
+                                    </Col>
+                                </Row>
+                                
                                 <Row className={this.state.shouldDisplayPagination ? "" : "display-none"}>
                                     <Col className="text-align-center">
                                     <hr className="hr-style" />

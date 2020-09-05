@@ -10,15 +10,18 @@ export interface IUploadPageProps {
 
 export interface IUploadPageState {
     isResultReady: boolean;
+    wasSuccess: boolean;
 }
 
 export default class UploadPage extends React.Component<IUploadPageProps, IUploadPageState> {
     state = {
-        isResultReady: false
+        isResultReady: false,
+        wasSuccess: false
     }
-    changeToSuccess = () => {
+    changeToSuccess = (really : boolean = true) => {
         this.setState({
-            isResultReady: true
+            isResultReady: true,
+            wasSuccess: really
         });
     }
 
@@ -101,6 +104,7 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
             <UploadPageResult
                 color={this.props.color}
                 handleRepairUpload={this.handleRepairUpload}
+                wasSuccess={this.state.wasSuccess}
                 />
                 :
             <UploadPageForm 
