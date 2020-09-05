@@ -8,6 +8,7 @@ import { Card } from 'reactstrap';
 import { BackTop } from 'antd';
 import ErrorBoundary from './error/error-boundary';
 import { HashRouter as Router } from 'react-router-dom';
+import ScrollUpButton from "react-scroll-up-button";
 
 import 'react-toastify/dist/ReactToastify.css';
 import './app.scss';
@@ -34,6 +35,16 @@ export class App extends React.Component<{greeting: string}, {count:number}> {
                 <Card className="jh-card card-ala-prost">
                   <ErrorBoundary>
                     <AppRoutes />
+                    <ScrollUpButton
+                        StopPosition={0}
+                        ShowAtPosition={150}
+                        EasingType='easeOutCubic'
+                        AnimationDuration={500}
+                        ContainerClassName='ScrollUpButton__Container'
+                        TransitionClassName='ScrollUpButton__Toggled'
+                        style={{}}
+                        ToggledStyle={{}}
+                        />
                   </ErrorBoundary>
                 </Card>
                 <Footer />
