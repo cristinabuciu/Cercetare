@@ -66,7 +66,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         country: "All countries  ",
         dataFormat: "All Data Formats ",
         sortBy: "Sort By  ",
-        resultsPerPage: 3,
+        resultsPerPage: 7,
         year: '',
         dataset_title: '',
         authors: '',

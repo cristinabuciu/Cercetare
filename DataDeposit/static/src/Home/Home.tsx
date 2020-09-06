@@ -118,7 +118,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                         shouldHaveDownloadButton={item[12] === 1 || item[12] === 3 }
                         shouldHaveDownloadLink={item[12] === 1}
                         owner={item[14]}
-                        
+                        privateItem={item[15]}
                     />
                 </Col>
             </Row>
@@ -171,9 +171,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         const todosPerPage = this.state.todosPerPage;
   
         // Logic for displaying todos
-        const indexOfLastTodo = currentPage * todosPerPage;
-        const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
-        const currentTodos = searchResult.slice(indexOfFirstTodo, indexOfLastTodo);
+        // const indexOfLastTodo = currentPage * todosPerPage;
+        // const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
+        // const currentTodos = searchResult.slice(indexOfFirstTodo, indexOfLastTodo);
 
         // PAGINARE IN FRONTEND
         // const renderTodos = currentTodos.map((card, index) => {

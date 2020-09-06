@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, Collapse, Card, CardBody,
-  Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Input } from 'reactstrap';
+  Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Input, Alert } from 'reactstrap';
 import { NavLink } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import "./items.scss";
 import Loader from 'react-loader-spinner';
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faLink, faStar, faPortrait, faCalendar, faUser, faFile, faFileDownload, faGlobe, faDatabase, faEye, faTags, faFemale, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export const InputText = (props) => {
@@ -91,7 +91,12 @@ export const ModalQuickView = (props) => {
     year,
     owner,
     subdomain,
-    short_desc
+    short_desc,
+    country,
+    data_format,
+    downloadType,
+    avg_rating,
+    privateItem
   } = props;
 
   const [modal, setModal] = useState(false);
@@ -100,7 +105,7 @@ export const ModalQuickView = (props) => {
 
   return (
     <div>
-      <Button onClick={toggle} className={buttonClassName}>
+      <Button color="primary" onClick={toggle} className={buttonClassName}>
         <span className="quick-view-span">
         <span className="padding-right-10">
           <FontAwesomeIcon icon={faEye}/>
@@ -117,21 +122,21 @@ export const ModalQuickView = (props) => {
                   </div>
                   <span className="column-item">
                     <span className="column-data">
-                    <FontAwesomeIcon icon={faEye}/> Created:
+                    <FontAwesomeIcon icon={faCalendar}/> Created:
                     </span>
                     {year ? year : "-"}
                   </span>
 
                   <span className="column-item">
                     <span className="column-data">
-                      <FontAwesomeIcon icon={faEye}/> Uploaded by:
+                      <FontAwesomeIcon icon={faUser}/> Uploaded by:
                     </span>
                     {owner ? owner : "-"}
                   </span>
 
                   <span className="column-item">
                     <span className="column-data">
-                      <FontAwesomeIcon icon={faEye}/> Tags:
+                      <FontAwesomeIcon icon={faTags}/> Tags:
                     </span>
                     <div className="overflow-hidden">
                       {subdomain ? subdomain.map(txt => <div className="column-list">{txt}</div>) : "-"}
@@ -140,11 +145,17 @@ export const ModalQuickView = (props) => {
 
                   <span className="column-item">
                     <span className="column-data">
-                      <FontAwesomeIcon icon={faEye}/> Authors:
+                      <FontAwesomeIcon icon={faPortrait}/> Authors:
                     </span>
                     <div className="overflow-hidden">
                       {authors ? authors.map(txt => <div className="column-list">{txt}</div>) : "-"}
                     </div>
+                  </span>
+                  <span className="column-item">
+                    <span className="column-data">
+                      <FontAwesomeIcon icon={faGlobe}/> Country:
+                    </span>
+                    {country ? country : "-"}
                   </span>
                 </div>
                 <div className="overflow-hidden">
@@ -153,13 +164,32 @@ export const ModalQuickView = (props) => {
                   </div>
                   <span className="column-item">
                     <span className="column-data">
-                      Total Size
+                    <FontAwesomeIcon icon={faStar}/> Files rating:
                     </span>
-                    20
+                      {avg_rating ? avg_rating : "0"}
+                  </span>
+                  <span className="column-item">
+                    <span className="column-data">
+                    <FontAwesomeIcon icon={faFile}/> Data format:
+                    </span>
+                      {data_format ? data_format : "-"}
+                  </span>
+                  <span className="column-item">
+                    <span className="column-data">
+                    <FontAwesomeIcon icon={faFileDownload}/> Download Type:
+                    </span>
+                      {downloadType ? downloadType : "No download"}
                   </span>
                 </div>
 
               </div>
+            </Col>
+          </Row>
+          <Row className={privateItem ? "" : "display-none"}>
+            <Col>
+                <Alert color="warning" className="text-align-center">
+                    Warning: This dataset is private !
+                </Alert>
             </Col>
           </Row>
           <Row>
@@ -171,6 +201,8 @@ export const ModalQuickView = (props) => {
         <ModalFooter><NavLink tag={Link} to={'/datasetView/' + props.id}><Button color="primary">Go to Dataset</Button></NavLink>
           {' '}
           <Button color="secondary" onClick={toggle}>Cancel</Button>
+          <NavLink tag={Link} to={'/datasetView/' + props.id}><Button color="link"><FontAwesomeIcon icon={faFlag}/></Button></NavLink>
+          {' '}
         </ModalFooter>
       </Modal>
     </div>

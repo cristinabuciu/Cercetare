@@ -15,10 +15,11 @@ import { NavLink } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import "./items.scss"
  
-
+import { translate, Translate } from 'react-jhipster';
 
 export interface ISearchCardProps {
     id: number;
+    privateItem: boolean;
     domain: string;
     subdomain: Array<String> 
     country: string;
@@ -175,11 +176,11 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
           
     //     </CardBody>
     //   </Card>
-
+    // Titlu Dataset:
         <Card className="margin-top-20 z-depth-hoverable">
             <Row>
                 <Col xs="0" md="0" lg="2" className="resizable-1050"> 
-                     <Label for="titluDataset" className="label-format">Titlu Dataset:</Label>
+                     <Label for="titluDataset" className="label-format"><Translate contentKey="login.form.rememberme" /></Label>
                  </Col>
                  <Col xs="6" lg="7">
                      <NavLink tag={Link} to={'/datasetView/' + this.props.id}>{this.props.dataset_title}</NavLink>
@@ -187,6 +188,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                  <Col xs="2" lg="1" className="text-align-right">
                     <ModalQuickView 
                         id={this.props.id}
+                        privateItem={this.props.privateItem}
                         buttonLabel="Quick"
                         domain={this.props.domain}
                         subdomain={this.props.subdomain}
@@ -198,6 +200,16 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                         owner={this.props.owner}
                         modalTitle={this.props.dataset_title}
                         authors={this.props.authors}
+                        downloadType={this.props.shouldHaveDownloadButton ? 
+                            <>{
+                                this.props.shouldHaveDownloadLink ? 
+                                <><a target="_blank" href={this.props.downloadPath}><FontAwesomeIcon icon={faLink} />Download Link</a></>
+                                :
+                                <span><FontAwesomeIcon icon={faDatabase} />  Download File</span>
+                            }</>
+                            :
+                            <>No download</>
+                            }
                         buttonClassName="quick-view-button" />
                 </Col>
                 <Col xs="4" lg="2">

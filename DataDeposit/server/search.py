@@ -20,7 +20,7 @@ def search(numbersOfItemsPerPage):
 
 def filterByArray(dataset, subdomains, itemInDataset):
     for item in subdomains: 
-        if not(any(item in word for word in dataset[itemInDataset])):
+        if not(any(item.lower() in word.lower() for word in dataset[itemInDataset])):
             return False
     return True
 
@@ -68,7 +68,7 @@ def completeSearch(datasets, lowLimit, upLimit):
                 hasDownloadLink = 3
                 downloadPath = row['downloadPath'][5:]
 
-        returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink'], hasDownloadLink, downloadPath, row['owner']])
+        returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink'], hasDownloadLink, downloadPath, row['owner'], row['private']])
         item += 1
 
     return json.dumps(returnArray)
