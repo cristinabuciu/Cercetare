@@ -176,3 +176,10 @@ textarea[disabled=""] {
     -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15) !important;
     box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15) !important;
 }
+
+//////////////////////////////////////////////////////////////////////
+//////////////////////// MEDIA RESPONSIVE ////////////////////////////
+
+@media all and (max-width: 1050px) {
+    .resizable-1050 { display: none; }
+}

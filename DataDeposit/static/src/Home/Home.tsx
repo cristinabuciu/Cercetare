@@ -208,7 +208,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                     </Row>
                     <Row md="4">
                         
-                        <LeftBar color='black' modeSearch={true}/>
+                        <LeftBar 
+                            className='resizable-1050' 
+                            modeSearch={true}/>
                         <Col md={{ size: 3, offset: 0 }}>
                             .
                         </Col>

@@ -272,7 +272,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             </Row>
             <Row md="4">
                 
-                <LeftBar color='black' modeSearch={false}/>
+                <LeftBar className='resizable-1050' modeSearch={false}/>
                 <Col md={{ size: 3, offset: 0 }}>
                     .
                 </Col>

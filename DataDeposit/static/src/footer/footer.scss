@@ -36,4 +36,10 @@
       font-size: 1.1em;
     }
   }
+
+  .column-list {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 }
