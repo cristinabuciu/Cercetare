@@ -43,7 +43,7 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
   
     render() {
         const { activeItem } = this.state
-        const className = this.props.className ? this.props.className : "" + " leftBat-fixed-style vertical-line";
+        const className = "leftBat-fixed-style vertical-line";
         return (
             <Col className={className} md={{ size: 3, offset: 0 }}>
                 <Nav className="flex-column">
