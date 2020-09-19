@@ -6,10 +6,11 @@ import {
     CardTitle, CardSubtitle, Button, Input, Row, Col, Tooltip
   } from 'reactstrap';
 import ReactStars from "react-rating-stars-component";
-import StarRatings from 'react-star-ratings';
+import Rating from 'react-rating';
 import { faStar, faStarHalf } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {LoaderComponent} from '../Items/Items-components'
+import { LoaderComponent } from '../Items/Items-components'
+import CommentTabs from "./CommentTabs"
 
 import Title from '../Items/Title/Title';
 
@@ -43,88 +44,19 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
         shouldDisplayLoading: true
     }
 
-    onStarClick(newRating) {
-        console.log("EMINEM");
-        if (this.state.shouldGiveRating) {
-            this.setState({
-                rating: newRating
-            });
-            console.log(newRating);
-        }
-    }
-
-    onSubmitRating = () => {
-        console.log("GTA V");
-        this.setState({
-            shouldGiveRating: false
-        });
-        axios.post( '/updateReview', {
-            params: {
-                id: this.props.id,
-                rating: this.state.rating
-            }
-        })
-          .then(response => {
-            console.log("Phill ");
-            console.log(response.data);
-            console.log("ANother");
-            
-            this.setState({
-                shouldDisplayLoading: false
-            });
-
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            // always executed
-          }); 
-    }
-
     render() {  
 
         return (
+            <Row>
             <Col md={{ size: 9, offset: 0 }}>
                 <Title className="margin-top-50 margin-bottom-10p" titleSet={this.props.dataset_title}/>
-                
-                <Col className="text-align-center">
-                    <Card style={{ width: '18rem' }}>
-                        <CardBody>
-                            <Row><Col>
-                            <div>
-                            <ReactStars
-                                count={5}
-                                classNames="star-size"
-                                onChange={this.onStarClick.bind(this)}
-                                size={35}
-                                edit={this.state.shouldGiveRating}
-                                isHalf={true}
-                                emptyIcon={<i className="far fa-star"></i>}
-                                halfIcon={<FontAwesomeIcon icon={faStarHalf} />}
-                                fullIcon={<FontAwesomeIcon icon={faStar} />}
-                                activeColor="#ffd700"
-                                a11y={true}
-                            />
-                            {/* https://www.npmjs.com/package/react-rating-stars-component */}
-                            </div>
-                            {this.state.shouldGiveRating ? <Button color="primary" outline className="rating-button-size" onClick={() => this.onSubmitRating()}>
-                                <FontAwesomeIcon className="margin-right-5" icon={faStar} />
-                                Send Rating
-                            </Button> :
-                            this.state.shouldDisplayLoading ? 
-                                <LoaderComponent 
-                                    visible={this.state.shouldDisplayLoading}
-                                    height="30"
-                                    width="30" /> :
-                            "Thank you ! :)"
-                            }
-                            </Col></Row>
-                        </CardBody>
-                    </Card>
-                </Col>
 
             </Col>
+            <Col md="12">
+                <CommentTabs
+                    id={this.props.id} />
+            </Col>
+            </Row>
         )
     }
 }

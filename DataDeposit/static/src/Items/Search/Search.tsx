@@ -10,6 +10,9 @@ import DatePicker from "react-datepicker";
 import NumericInput from 'react-numeric-input';
 import "../../style_home.scss";
 
+import Select from 'react-select'
+import makeAnimated from 'react-select/animated';
+
 export interface ICardProps {
     setItemsForShow: Function;
     currentPage: number;
@@ -174,6 +177,13 @@ export default class Search extends React.Component<ICardProps, ICardState> {
   
     render() {  
 
+        const options = [
+            { value: 'chocolate', label: 'Chocolate' },
+            { value: 'strawberry', label: 'Strawberry' },
+            { value: 'vanilla', label: 'Vanilla' }
+          ]
+        const animatedComponents = makeAnimated();
+
       return (
         <Card className="z-depth-1-half">
         <CardBody>
@@ -185,7 +195,15 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 <InputText nameOfDropdown="domain" titleDropdown={this.state.domain} listOfItems={this.state.searchInputOptions.domain} changeValue={this.changeValue} />
             </Col>
             <Col>
-                <InputText nameOfDropdown="subdomain" titleDropdown={this.state.subdomain} listOfItems={this.state.searchInputOptions.subdomain} changeValue={this.changeValue} />
+                {/* <InputText nameOfDropdown="subdomain" titleDropdown={this.state.subdomain} listOfItems={this.state.searchInputOptions.subdomain} changeValue={this.changeValue} /> */}
+                {/* https://react-select.com/home#getting-started */}
+                <Select
+                    closeMenuOnSelect={false}
+                    components={animatedComponents}
+                    defaultValue={[options[4], options[5]]}
+                    isMulti
+                    options={options}
+                    />
                 </Col>
                 
                 <Col>

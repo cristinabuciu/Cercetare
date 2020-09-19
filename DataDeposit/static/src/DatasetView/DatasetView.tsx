@@ -68,7 +68,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                         <Col md={{ size: 3, offset: 0 }}>
                             .
                         </Col>
-                        
+                        <Col md="9">
                         {this.state.shoudLoad ? <DatasetViewLoading />
                         :
                         <DatasetViewItem 
@@ -86,6 +86,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                             gitlink={this.state.searchResult[11]}
                         />
                         }
+                        </Col>
                             
                         
                     </Row>
