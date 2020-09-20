@@ -7,6 +7,8 @@ import ReactStars from "react-rating-stars-component";
 import { faStarHalf, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Row, Col, TabContent, TabPane, Nav, NavItem, CardTitle, CardBody, Card, NavLink, Alert } from 'reactstrap';
+import NumericInput from 'react-numeric-input';
+import {InputText, LoaderComponent} from '../Items/Items-components'
 
 export interface ICommentTabsProps {
     id: number;
@@ -16,8 +18,11 @@ export interface ICommentTabsState {
     activeTab: string;
     currentPage: number;
     numberOfCards: number;
+    todosPerPage: number | null;
     shouldDisplayPagination: boolean;
     wasInfo: boolean;
+    sortBy: String;
+    sortByList: Array<String>;
 }
 
 export default class CommentTabs extends React.Component<ICommentTabsProps, ICommentTabsState> {
@@ -29,6 +34,8 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         todosPerPage: 5,
         shouldDisplayPagination: false,
         wasInfo: false,
+        sortBy: "Sort By  ",
+        sortByList: ['Dataset_title ASC', 'Dataset_title DESC', 'Avg_Rating_Value ASC', 'Avg_Rating_Value DESC'],
 
         comments: [
             {id: 1, value: 3.5, author: "landiggity", title: "Hatz", body: "This is my first comment on this forum so don't be a dick", date: "20-10-2020"},
@@ -106,6 +113,10 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         return cards;
     }
 
+    changeValueSort = (e) => {
+        debugger;
+    }
+
     render() {
         const searchResult = this.showSearchCards();
         const todosPerPage = this.state.todosPerPage;
@@ -153,6 +164,28 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                 <TabPane tabId="1">
                     <Row>
                     <Col sm="12">
+                    <Row>
+                        <Col md="12">
+                            <div className="review-body">
+                                <hr className="hr-style-review" />
+                                <NumericInput 
+                                    className="width-numeric-input" 
+                                    step={1} 
+                                    min={3} 
+                                    max={50} 
+                                    value={this.state.todosPerPage}
+                                    onChange={value => this.setState({todosPerPage: value })} />
+                                    <InputText 
+                                        nameOfDropdown="sortBy" 
+                                        titleDropdown={this.state.sortBy} 
+                                        listOfItems={this.state.sortByList} 
+                                        className="button-style-sort"
+                                        changeValue={this.changeValueSort} 
+                                        />
+                            </div>
+                        </Col>
+                    
+                    </Row>
 
                         {this.state.shouldDisplayPagination ? searchResult : <></>}
 

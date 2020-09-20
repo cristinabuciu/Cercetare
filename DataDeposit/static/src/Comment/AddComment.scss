@@ -3,14 +3,9 @@ $nc-blue: #00BDFC;
 $nc-bl-dark: #0093C4;
 $red: #FC3F00;
 
-body {
-  font-family: 'PT Sans', sans-serif;
-  padding: 2rem;
-}
-button {
+.button-add-comment {
   border: none;
   border-radius: 0.25rem;
-  font-size: 0.75rem;
   font-weight: bold;
   padding: 0.75em; // 12px/16px
   display: inline-block;
@@ -24,6 +19,20 @@ button {
     outline: none;
   }
 }
+
+.button-style-sort {
+  margin-left: 10px;
+  margin-right: 10px;
+
+  Button.dropdown-toggle {
+      color: black;
+      background-color: white;
+      border-color: #24557d;
+      border-radius: 10px;
+      width: auto;
+  }
+}
+
 .comment-box {
   max-width: 37.5rem;
   color: #fff;

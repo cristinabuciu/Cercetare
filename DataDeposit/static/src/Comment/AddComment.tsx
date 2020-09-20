@@ -135,7 +135,7 @@ export interface ICommentFormState {}
             <textarea placeholder="Comment" required ></textarea>
           </div>
           <div className="comment-form-actions">
-            <button type="submit">Post Comment</button>
+            <button type="submit" className="button-add-comment">Post Comment</button>
           </div>
         </Form>
       );

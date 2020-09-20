@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react'
 import axios from 'axios';
 import "./AddComment.scss"
 
-import { Comment, Avatar } from 'antd'
 import { Link } from 'react-router-dom'
 import StarRatings from 'react-star-ratings';
 import {
@@ -64,7 +63,7 @@ export interface ICommentProps {
 
 export interface ICommentState {}
 
-export default class AddComment extends React.Component<ICommentProps, ICommentState> {
+export default class Comment extends React.Component<ICommentProps, ICommentState> {
 
     render () {
 

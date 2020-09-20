@@ -1,6 +1,13 @@
 @import "react-datepicker/dist/react-datepicker";
 @import "react-datepicker/dist/react-datepicker-cssmodules";
 
+body {
+    font-family: 'PT Sans', sans-serif;
+    padding: 2rem;
+}
+
+///////////////////////////////////////////////////////////////
+
 .overflow-hidden {
     overflow: hidden;
 }
