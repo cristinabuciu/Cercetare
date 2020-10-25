@@ -64,14 +64,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             return;
         }
         // debugger;
-        if (itWasAnInfo) {
-            this.setState({
-                shouldDisplayPagination: false,
-                wasInfo: true
-            });
-
-            return;
-        }
 
         if (searchWasPressed) {
             this.setState({
@@ -90,6 +82,15 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                 shouldDisplayPagination: true,
                 loaderVisibility: false
             });
+        }
+
+        if (itWasAnInfo) {
+            this.setState({
+                shouldDisplayPagination: false,
+                wasInfo: true
+            });
+
+            // return;
         }
         
         console.log(this.state)
@@ -211,10 +212,10 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                         <LeftBar 
                             className='resizable-1050' 
                             modeSearch={true}/>
-                        <Col md={{ size: 3, offset: 0 }}>
+                        <Col md={{ size: 2, offset: 0 }}>
                             .
                         </Col>
-                        <Col md={{ size: 9, offset: 0 }}>
+                        <Col md={{ size: 10, offset: 0 }}>
                             <Search 
                                 setItemsForShow={this.setItemsForShow}
                                 currentPage={this.state.currentPage}

@@ -9,6 +9,8 @@ import Loader from 'react-loader-spinner';
 import { faStarHalf, faStar, faPortrait, faCalendar, faUser, faFile, faFileDownload, faGlobe, faDatabase, faEye, faTags, faFemale, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+import Select from 'react-select'
+import makeAnimated from 'react-select/animated';
 
 export const InputText = (props) => {
   const [dropdownOpen, setOpen] = useState(false);
@@ -42,6 +44,25 @@ export const LoaderComponent = (props) => {
   </div>
   );
 }
+
+export const CustomSelect = (props) => {
+
+  const animatedComponents = makeAnimated();
+
+  return (
+    <Select
+        closeMenuOnSelect={false}
+        components={animatedComponents}
+        defaultValue={[props.options[4], props.options[5]]}
+        onChange={props.handleChange}
+        isMulti
+        value={props.value}
+        options={props.options}
+        placeholder="All subdomains"
+        />
+  );
+}
+
 
 export const Switch = ({ isOn, handleToggle, onColor }) => {
   return (
@@ -200,11 +221,14 @@ export const ModalQuickView = (props) => {
               </Col>
           </Row>
         </ModalBody>
-        <ModalFooter><NavLink tag={Link} to={'/datasetView/' + props.id}><Button color="primary">Go to Dataset</Button></NavLink>
-          {' '}
-          <Button color="secondary" onClick={toggle}>Cancel</Button>
+        <ModalFooter>
           <NavLink tag={Link} to={'/datasetView/' + props.id}><Button color="link"><FontAwesomeIcon icon={faFlag}/></Button></NavLink>
           {' '}
+
+          <NavLink tag={Link} to={'/datasetView/' + props.id}><Button color="primary">Go to Dataset</Button></NavLink>
+          {' '}
+          <Button color="secondary" onClick={toggle}>Cancel</Button>
+          
         </ModalFooter>
       </Modal>
     </div>

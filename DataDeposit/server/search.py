@@ -20,7 +20,7 @@ def search(numbersOfItemsPerPage):
 
 def filterByArray(dataset, subdomains, itemInDataset):
     for item in subdomains: 
-        if not(any(item.lower() in word.lower() for word in dataset[itemInDataset])):
+        if not(any(item['label'].lower() in word.lower() for word in dataset[itemInDataset])):
             return False
     return True
 
@@ -30,9 +30,10 @@ def applyFilters(jsonParams):
     
     result = es.get_es_data('datasets', jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'], jsonParams['notArrayParams']['dataset_title'], jsonParams['sortBy'], jsonParams['sortByField'])
     
-    if len(jsonParams['arrayParams']['subdomain']) > 0:
-        subdomainArray = jsonParams['arrayParams']['subdomain'].split(", ")
-        result = list(filter(lambda x: filterByArray(x['_source'], subdomainArray, 'subdomain'), result))
+    if jsonParams['arrayParams']['subdomain'] and len(jsonParams['arrayParams']['subdomain']) > 0:
+        # subdomainArray = jsonParams['arrayParams']['subdomain'].split(", ")
+        # result = list(filter(lambda x: filterByArray(x['_source'], subdomainArray, 'subdomain'), result))
+        result = list(filter(lambda x: filterByArray(x['_source'], jsonParams['arrayParams']['subdomain'], 'subdomain'), result))
     
     if len(jsonParams['arrayParams']['author']) > 0:
         authorArray = jsonParams['arrayParams']['author'].split(", ")

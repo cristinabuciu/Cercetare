@@ -5,13 +5,10 @@ import {
     Card, CardImg, CardText, CardBody,
     CardTitle, CardSubtitle, Button, Input, Row, Col, Badge
   } from 'reactstrap';
-import {InputText, LoaderComponent} from '../Items-components'
+import {InputText, LoaderComponent, CustomSelect} from '../Items-components'
 import DatePicker from "react-datepicker";
 import NumericInput from 'react-numeric-input';
 import "../../style_home.scss";
-
-import Select from 'react-select'
-import makeAnimated from 'react-select/animated';
 
 export interface ICardProps {
     setItemsForShow: Function;
@@ -30,7 +27,7 @@ export interface ICardState {
         sortBy: Array<String>;
     };
     domain: string;
-    subdomain: string;
+    subdomain: Array<String>;
     country: string;
     dataFormat: string;
     sortBy: string;
@@ -43,29 +40,33 @@ export interface ICardState {
 }
 
 export default class Search extends React.Component<ICardProps, ICardState> {
-
+    // const options = [
+    //     { value: 'chocolate', label: 'Chocolate' },
+    //     { value: 'strawberry', label: 'Strawberry' },
+    //     { value: 'vanilla', label: 'Vanilla' }
+    //   ]
     state = {
         buttonDropDownStatus: true,
         startDate: new Date(),
         searchInputOptions: {
             domain: ['All domains  ', 'IT', 'MEDICINE', 'ARCHITECTURE', 'BIOLOGY', 'CHEMISTRY', 'PHYSICS', 'BUSINESS'],
-            subdomain: ['All subdomains  '],
+            subdomain: [],
             subdomainList: {
-                'All domains  ': ['All subdomains  '],
-                IT: ['All subdomains  ', 'IT_1', 'IT_2', 'IT_3', 'IT_4'],
-                MEDICINE: ['All subdomains  ', 'MEDICINE_1', 'MEDICINE_2', 'MEDICINE_3', 'MEDICINE_4'],
-                ARCHITECTURE: ['All subdomains  ', 'ARCHITECTURE_1', 'ARCHITECTURE_2', 'ARCHITECTURE_3', 'ARCHITECTURE_4'],
-                BIOLOGY: ['All subdomains  ', 'BIOLOGY_1', 'BIOLOGY_2', 'BIOLOGY_3', 'BIOLOGY_4'],
-                CHEMISTRY: ['All subdomains  ', 'CHEMISTRY_1', 'CHEMISTRY_2', 'CHEMISTRY_3', 'CHEMISTRY_4'],
-                PHYSICS: ['All subdomains  ', 'PHYSICS_1', 'PHYSICS_2', 'PHYSICS_3', 'PHYSICS_4'],
-                BUSINESS: ['All subdomains  ', 'BUSINESS_1', 'BUSINESS_2']
+                'All domains  ': [],
+                IT: [{ value: 'IT_1', label: 'IT_1' }, { value: 'IT_2', label: 'IT_2' }, { value: 'IT_3', label: 'IT_3' }, { value: 'IT_4', label: 'IT_4' }],
+                MEDICINE: [{ value: 'MEDICINE_1', label: 'MEDICINE_1' }, { value: 'MEDICINE_2', label: 'MEDICINE_2' }, { value: 'MEDICINE_3', label: 'MEDICINE_3' }, { value: 'MEDICINE_4', label: 'MEDICINE_4' }, { value: 'MEDICINE_5', label: 'MEDICINE_5' }],
+                ARCHITECTURE: [{ value: 'ARCHITECTURE_1', label: 'ARCHITECTURE_1' }, { value: 'ARCHITECTURE_2', label: 'ARCHITECTURE_2' }, { value: 'ARCHITECTURE_3', label: 'ARCHITECTURE_3' }, { value: 'ARCHITECTURE_4', label: 'ARCHITECTURE_4' }],
+                BIOLOGY: [{ value: 'BIOLOGY_1', label: 'BIOLOGY_1' }, { value: 'BIOLOGY_2', label: 'BIOLOGY_2' }, { value: 'BIOLOGY_3', label: 'BIOLOGY_3' }, { value: 'BIOLOGY_4', label: 'BIOLOGY_4' }],
+                CHEMISTRY: [{ value: 'CHEMISTRY_1', label: 'CHEMISTRY_1' }, { value: 'CHEMISTRY_2', label: 'CHEMISTRY_2' }, { value: 'CHEMISTRY_3', label: 'CHEMISTRY_3' }, { value: 'CHEMISTRY_4', label: 'CHEMISTRY_4' }],
+                PHYSICS: [{ value: 'PHYSICS_1', label: 'PHYSICS_1' }, { value: 'PHYSICS_2', label: 'PHYSICS_2' }, { value: 'PHYSICS_3', label: 'PHYSICS_3' }, { value: 'PHYSICS_4', label: 'PHYSICS_4' }],
+                BUSINESS: [{ value: 'BUSINESS_1', label: 'BUSINESS_1' }, { value: 'BUSINESS_2', label: 'BUSINESS_2' }]
             },
             country: ['All countries  ', 'Romania', 'Chile', 'Japan', 'Russia', 'China', 'Canada', 'Mexico', 'Egypt'],
             dataFormat: ['All Data Formats ', 'zip', 'rar', 'tar.gz'],
             sortBy: ['Dataset_title ASC', 'Dataset_title DESC', 'Avg_Rating_Value ASC', 'Avg_Rating_Value DESC']
         },
         domain: "All domains  ",
-        subdomain: "All subdomains  ",
+        subdomain: [],
         country: "All countries  ",
         dataFormat: "All Data Formats ",
         sortBy: "Sort By  ",
@@ -91,14 +92,17 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         if (prevProps.currentPage !== this.props.currentPage) {
             this.searchData(false);
         }
-      }
+    }
 
     changeValue = (e, comboBoxTitle, shouldUpdateNumber) => {
         console.log("CODRIN");
         console.log(e);
         if(comboBoxTitle === 'domain') {
             this.state.searchInputOptions.subdomain = this.state.searchInputOptions.subdomainList[e];
-            this.state.subdomain = "All subdomains  ";
+            this.setState({
+                subdomain: []
+            });
+            // this.state.subdomain = "All subdomains  ";
         }
         this.state[comboBoxTitle] = '' + e;
         this.forceUpdate();
@@ -136,7 +140,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     dataset_title: this.state.dataset_title === '' ? '*' : '*' + this.state.dataset_title + '*'
                 },
                 arrayParams: {
-                      subdomain: this.state.subdomain === 'All subdomains  ' ? '' : this.state.subdomain,
+                      subdomain: this.state.subdomain, //=== 'All subdomains  ' ? '' : this.state.subdomain,
                       author: this.state.authors
                 },
                 sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSort(this.state.sortBy),
@@ -150,7 +154,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             console.log("///////////");
             console.log(response.data);
             console.log("///////////");
-
+            debugger;
             if (shouldCount == false) {
                 this.setState({
                     resultsSearchArray:response.data
@@ -173,16 +177,23 @@ export default class Search extends React.Component<ICardProps, ICardState> {
           .finally(function () {
             // always executed
           }); 
-      }
-  
-    render() {  
+    }
+    
 
-        const options = [
-            { value: 'chocolate', label: 'Chocolate' },
-            { value: 'strawberry', label: 'Strawberry' },
-            { value: 'vanilla', label: 'Vanilla' }
-          ]
-        const animatedComponents = makeAnimated();
+    
+    handleSelectChange = value => {
+        // this.setValue(value);
+        debugger;
+        console.log(value);
+        this.setState({
+            subdomain: value
+        }, () => {
+            this.searchData(true);
+        });
+    };
+    
+
+    render() { 
 
       return (
         <Card className="z-depth-1-half">
@@ -191,26 +202,27 @@ export default class Search extends React.Component<ICardProps, ICardState> {
           <CardSubtitle></CardSubtitle>
           <CardText>
             <Row>
-            <Col>
-                <InputText nameOfDropdown="domain" titleDropdown={this.state.domain} listOfItems={this.state.searchInputOptions.domain} changeValue={this.changeValue} />
-            </Col>
-            <Col>
-                {/* <InputText nameOfDropdown="subdomain" titleDropdown={this.state.subdomain} listOfItems={this.state.searchInputOptions.subdomain} changeValue={this.changeValue} /> */}
-                {/* https://react-select.com/home#getting-started */}
-                <Select
-                    closeMenuOnSelect={false}
-                    components={animatedComponents}
-                    defaultValue={[options[4], options[5]]}
-                    isMulti
-                    options={options}
+                <Col className="text-align-left">
+                    <InputText nameOfDropdown="domain" titleDropdown={this.state.domain} listOfItems={this.state.searchInputOptions.domain} changeValue={this.changeValue} />
+                </Col>
+                <Col className="text-align-center">
+                    <InputText nameOfDropdown="country" titleDropdown={this.state.country} listOfItems={this.state.searchInputOptions.country} changeValue={this.changeValue} />
+                </Col>
+                <Col className="text-align-right">
+                    <InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.searchInputOptions.dataFormat} changeValue={this.changeValue}  />
+                </Col>
+            </Row>
+            <Row className="padding-top-20">
+                <Col>
+                    {/* <InputText nameOfDropdown="subdomain" titleDropdown={this.state.subdomain} listOfItems={this.state.searchInputOptions.subdomain} changeValue={this.changeValue} /> */}
+                    {/* https://react-select.com/home#getting-started */}
+
+                    <CustomSelect 
+                        options={this.state.searchInputOptions.subdomain}
+                        value={this.state.subdomain}
+                        handleChange={this.handleSelectChange}
                     />
-                </Col>
-                
-                <Col>
-                <InputText nameOfDropdown="country" titleDropdown={this.state.country} listOfItems={this.state.searchInputOptions.country} changeValue={this.changeValue} />
-                </Col>
-                <Col>
-                <InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.searchInputOptions.dataFormat} changeValue={this.changeValue}  />
+
                 </Col>
             </Row>
             <Row className="padding-top-20">
@@ -226,7 +238,6 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     <Input type="text" name="Dataset-title" id="Dataset-title" placeholder="Dataset title" 
                         onChange={e => this.changeValue(e.target.value, 'dataset_title', true)}/>
                 </Col>
-                
             </Row>
             <Row className="padding-top-20">
                 <Col>

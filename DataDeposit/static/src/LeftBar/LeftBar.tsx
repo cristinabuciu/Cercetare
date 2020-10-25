@@ -45,7 +45,7 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
         const { activeItem } = this.state
         const className = "leftBat-fixed-style vertical-line";
         return (
-            <Col className={className} md={{ size: 3, offset: 0 }}>
+            <Col className={className} md={{ size: 2, offset: 0 }}>
                 <Nav className="flex-column">
                     {this.state.isAuthenticated ? 
                     <>

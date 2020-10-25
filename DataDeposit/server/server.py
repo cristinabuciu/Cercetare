@@ -23,6 +23,13 @@ db_username = 'root'
 db_password = 'secret'
 db_database = 'database'
 current_user = 'admin'
+# jinja typescript
+
+# Butonul Upload -> poate mai mic?
+
+# La upload avem 3 butoane pe o linie (Country, DOmain, Dataformat)
+# Trebuie regandit sistemul de upload fisiere
+
 
 @app.errorhandler(404)
 def page_not_found(e):

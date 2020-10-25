@@ -4,9 +4,9 @@ import classnames from 'classnames';
 import AddComment from "../Comment/AddComment";
 import Comment from "../Comment/Comment";
 import ReactStars from "react-rating-stars-component";
-import { faStarHalf, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStarHalf, faHatWizard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Row, Col, TabContent, TabPane, Nav, NavItem, CardTitle, CardBody, Card, NavLink, Alert } from 'reactstrap';
+import { Row, Col, TabContent, TabPane, Nav, NavItem, Button, CardBody, Card, NavLink, Alert } from 'reactstrap';
 import NumericInput from 'react-numeric-input';
 import {InputText, LoaderComponent} from '../Items/Items-components'
 
@@ -166,7 +166,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                     <Col sm="12">
                     <Row>
                         <Col md="12">
-                            <div className="review-body">
+                            <div className="review-body text-align-center">
                                 <hr className="hr-style-review" />
                                 <NumericInput 
                                     className="width-numeric-input" 
@@ -182,6 +182,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                                         className="button-style-sort"
                                         changeValue={this.changeValueSort} 
                                         />
+                                <Button color="link"><FontAwesomeIcon icon={faHatWizard}/></Button>
                             </div>
                         </Col>
                     
