@@ -63,12 +63,14 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             },
             country: ['All countries  ', 'Romania', 'Chile', 'Japan', 'Russia', 'China', 'Canada', 'Mexico', 'Egypt'],
             dataFormat: ['All Data Formats ', 'zip', 'rar', 'tar.gz'],
-            sortBy: ['Dataset_title ASC', 'Dataset_title DESC', 'Avg_Rating_Value ASC', 'Avg_Rating_Value DESC']
+            sortBy: ['Dataset_title ASC', 'Dataset_title DESC', 'Avg_Rating_Value ASC', 'Avg_Rating_Value DESC'],
+            downloadFrom: ['All Downloads ', 'Download Link', 'Download File', 'No Download']
         },
         domain: "All domains  ",
         subdomain: [],
         country: "All countries  ",
         dataFormat: "All Data Formats ",
+        downloadFrom: "All Downloads ",
         sortBy: "Sort By  ",
         resultsPerPage: 7,
         year: '',
@@ -137,7 +139,8 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     country: this.state.country === 'All countries  ' ? '*' : this.state.country,
                     data_format: this.state.dataFormat === 'All Data Formats ' ? '*' : this.state.dataFormat,
                     year: this.state.year === '' ? '*' : this.state.year + '*',
-                    dataset_title: this.state.dataset_title === '' ? '*' : '*' + this.state.dataset_title + '*'
+                    dataset_title: this.state.dataset_title === '' ? '*' : '*' + this.state.dataset_title + '*',
+                    downloadFrom: this.state.downloadFrom === 'All Downloads ' ? '*' : this.state.downloadFrom,
                 },
                 arrayParams: {
                       subdomain: this.state.subdomain, //=== 'All subdomains  ' ? '' : this.state.subdomain,
@@ -154,16 +157,14 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             console.log("///////////");
             console.log(response.data);
             console.log("///////////");
-            debugger;
             if (shouldCount == false) {
                 this.setState({
                     resultsSearchArray:response.data
+                }, () => {
+                    this.props.handleLoaderChange(false);
+                    this.props.setItemsForShow(this.state.resultsSearchArrayLen, this.state.resultsPerPage, this.state.resultsSearchArray, searchWasPressed, false, this.state.resultsSearchArrayLen == 0);
                 });
-                this.props.handleLoaderChange(false);
-                this.props.setItemsForShow(this.state.resultsSearchArrayLen, this.state.resultsPerPage, this.state.resultsSearchArray, searchWasPressed, false, this.state.resultsSearchArrayLen == 0);
             } else {
-                console.log("DIRE STRAITS");
-                console.log(response.data);
                 this.setState({
                     resultsSearchArrayLen:response.data
                 });
@@ -171,8 +172,9 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     
 
           })
-          .catch(function (error) {
+          .catch( error => {
             console.log(error);
+            this.props.setItemsForShow(0, 0, [], searchWasPressed, true, false);
           })
           .finally(function () {
             // always executed
@@ -210,6 +212,9 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 </Col>
                 <Col className="text-align-right">
                     <InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.searchInputOptions.dataFormat} changeValue={this.changeValue}  />
+                </Col>
+                <Col className="text-align-right">
+                    <InputText nameOfDropdown="downloadFrom" titleDropdown={this.state.downloadFrom} listOfItems={this.state.searchInputOptions.downloadFrom} changeValue={this.changeValue}  />
                 </Col>
             </Row>
             <Row className="padding-top-20">

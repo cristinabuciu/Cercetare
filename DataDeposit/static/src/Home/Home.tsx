@@ -55,15 +55,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
 
     setItemsForShow = (numberOfCards, numberOfCardsPerPage, searchResultItems, searchWasPressed = false, itWasAnError = false, itWasAnInfo = false) => {
         console.log("CEL MAI MARE HATZ");
-        if (itWasAnError) {
-            this.setState({
-                shouldDisplayPagination: false,
-                wasError: true
-            });
-
-            return;
-        }
-        // debugger;
 
         if (searchWasPressed) {
             this.setState({
@@ -91,6 +82,13 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             });
 
             // return;
+        }
+
+        if (itWasAnError) {
+            this.setState({
+                shouldDisplayPagination: false,
+                wasError: true
+            });
         }
         
         console.log(this.state)

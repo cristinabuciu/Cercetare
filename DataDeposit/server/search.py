@@ -31,14 +31,14 @@ def applyFilters(jsonParams):
     result = es.get_es_data('datasets', jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'], jsonParams['notArrayParams']['dataset_title'], jsonParams['sortBy'], jsonParams['sortByField'])
     
     if jsonParams['arrayParams']['subdomain'] and len(jsonParams['arrayParams']['subdomain']) > 0:
-        # subdomainArray = jsonParams['arrayParams']['subdomain'].split(", ")
-        # result = list(filter(lambda x: filterByArray(x['_source'], subdomainArray, 'subdomain'), result))
         result = list(filter(lambda x: filterByArray(x['_source'], jsonParams['arrayParams']['subdomain'], 'subdomain'), result))
     
     if len(jsonParams['arrayParams']['author']) > 0:
         authorArray = jsonParams['arrayParams']['author'].split(", ")
         result = list(filter(lambda x: filterByArray(x['_source'], authorArray, 'authors'), result))
-
+    
+    # TODO: ADAUGA FILTRUL PENTRU DOWNLOAD TYPE
+    
     datasets = []
     for dataset in result:
         datasets.append(dataset['_source'])

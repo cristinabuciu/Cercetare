@@ -23,8 +23,8 @@ export interface ILeftBarState {
 export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarState> {
 
     state = { activeItem: 'bio',
-    isAuthenticated: false
- }
+        isAuthenticated: false
+    }
 
     componentDidMount() {
         this.state.isAuthenticated = false;
