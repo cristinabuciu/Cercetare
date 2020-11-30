@@ -10,3 +10,84 @@
 .sellGear-title {
     font-size: 30px;
 }
+
+///////////////////////////////////////////////////////////
+
+.pageHeader-Title-Image {
+    font-family: Inter,sans-serif;
+    border-bottom: 0;
+    border-radius: 4px 4px 0 0;
+    box-sizing: border-box;
+    color: white;
+    height: 300px;
+    position: relative;
+}
+
+.pageHeader-Title-Toolbar {
+    position: relative;
+}
+
+/////////////////////////////////////////////////////////@extend
+
+.pageHeader-Title {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    z-index: 30;
+    position: relative;
+    top: 1px;
+}
+
+.ala-de-sus {
+    align-items: center;
+    margin: 15px 0 20px;
+    opacity: .8;
+    padding: 0 25px;
+
+    p {
+        font-size: 12px;
+        text-transform: capitalize;
+        span {
+            margin-right: 16px;
+        }
+    }
+}
+
+.image-title {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+    overflow: hidden;
+    z-index: 0;
+    border-radius: 4px 4px 0px 0px;
+    
+}
+
+.image-box {
+    z-index: 2!important;
+    height: 184px;
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    width: 100%;
+}
+
+.title-in-image {
+    padding: 0 25px 10px;
+    margin-top: 32px;
+    z-index: 10;
+    h3 {
+        font-family: zeitung,sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: .25px;
+        line-height: 1.25;
+        margin-bottom: 8px;
+        text-decoration: none;
+    }
+}
+

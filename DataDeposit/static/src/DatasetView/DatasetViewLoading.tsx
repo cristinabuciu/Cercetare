@@ -5,7 +5,7 @@ import {
     CardTitle, CardSubtitle, Button, Input, Row, Col, Tooltip
   } from 'reactstrap';
 
-import Title from '../Items/Title/Title';
+import { Title } from '../Items/Title/Title';
 import {LoaderComponent} from '../Items/Items-components'
 
 import './DatasetView.scss';

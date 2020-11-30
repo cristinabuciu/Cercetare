@@ -104,6 +104,41 @@ export const TooltipButton = (props) => {
   );
 }
 
+export const HorizontalList = (props) => {
+  const initialList = [
+    {
+      id: 'a',
+      name: '30,000 views',
+    },
+    {
+      id: 'b',
+      name: '4,028 downloads',
+    },
+    {
+      id: 'c',
+      name: '3 updates',
+    },
+  ];
+
+  const items = () => (
+    <div>
+      {initialList.map(item => (
+        <li className="horizontal-list-item" key={item.id}>{item.name}</li>
+      ))}
+    </div>
+  ); 
+
+  return (
+    <div className={props.className ? props.className : ""}>
+      <ul className="horizontal-list">
+        {initialList.map(item => (
+          <li className="horizontal-list-item" key={item.id}>{item.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export const ModalQuickView = (props) => {
   const {
     buttonLabel,

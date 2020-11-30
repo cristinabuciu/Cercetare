@@ -40,11 +40,6 @@ export interface ICardState {
 }
 
 export default class Search extends React.Component<ICardProps, ICardState> {
-    // const options = [
-    //     { value: 'chocolate', label: 'Chocolate' },
-    //     { value: 'strawberry', label: 'Strawberry' },
-    //     { value: 'vanilla', label: 'Vanilla' }
-    //   ]
     state = {
         buttonDropDownStatus: true,
         startDate: new Date(),
@@ -104,7 +99,6 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             this.setState({
                 subdomain: []
             });
-            // this.state.subdomain = "All subdomains  ";
         }
         this.state[comboBoxTitle] = '' + e;
         this.forceUpdate();
@@ -176,17 +170,12 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             console.log(error);
             this.props.setItemsForShow(0, 0, [], searchWasPressed, true, false);
           })
-          .finally(function () {
+          .finally( () => {
             // always executed
           }); 
     }
-    
 
-    
     handleSelectChange = value => {
-        // this.setValue(value);
-        debugger;
-        console.log(value);
         this.setState({
             subdomain: value
         }, () => {
@@ -219,9 +208,6 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             </Row>
             <Row className="padding-top-20">
                 <Col>
-                    {/* <InputText nameOfDropdown="subdomain" titleDropdown={this.state.subdomain} listOfItems={this.state.searchInputOptions.subdomain} changeValue={this.changeValue} /> */}
-                    {/* https://react-select.com/home#getting-started */}
-
                     <CustomSelect 
                         options={this.state.searchInputOptions.subdomain}
                         value={this.state.subdomain}
@@ -275,7 +261,6 @@ export default class Search extends React.Component<ICardProps, ICardState> {
       </Card>
       )
     }
-    // 
 }
 
 

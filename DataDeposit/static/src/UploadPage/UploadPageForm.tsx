@@ -12,7 +12,7 @@ import LeftBar from "../LeftBar/LeftBar";
 import { Container } from 'semantic-ui-react';
 import { faLink, faDownload, faPortrait } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Title from '../Items/Title/Title';
+import { Title } from '../Items/Title/Title';
  
 
 

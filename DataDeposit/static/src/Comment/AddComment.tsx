@@ -22,7 +22,7 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
         showComments: false,
         rating: 0,
         comments: [
-            {id: 1, author: "landiggity", body: "This is my first comment on this forum so don't be a dick"},
+            {id: 1, author: "landiggity", body: "This is my first comment on this forum so don't be rude"},
             {id: 2, author: "scarlett-jo", body: "That's a mighty fine comment you've got there my good looking fellow..."},
             {id: 3, author: "rosco", body: "What is the meaning of all of this 'React' mumbo-jumbo?"}
         ]

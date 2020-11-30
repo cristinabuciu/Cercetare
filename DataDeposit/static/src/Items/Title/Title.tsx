@@ -12,15 +12,34 @@ export interface ITitleProps {
 
 export interface ITitleState {}
 
-export default class Title extends React.Component<ITitleProps, ITitleState> {
-  
-    render() {  
-      const propsClassName = this.props.className ? " " + this.props.className : "";
-      return (
-        <Col md={{ size: 12, offset: 0 }} className="text-align-center quick-title">
-            <h3 className={"sellGear-title" + propsClassName}>{this.props.titleSet}</h3>
-        </Col>
-      )
-    }
+export const Title = (props) => {
 
+    const propsClassName = props.className ? " " + props.className : "";
+    return (
+      <Col md={{ size: 12, offset: 0 }} className="text-align-center quick-title">
+          <h3 className={"sellGear-title" + propsClassName}>{props.titleSet}</h3>
+      </Col>
+    );
+}
+
+export const ImageTitle = (props) => {
+
+  const propsClassName = props.className ? " " + props.className : "";
+    return (
+      <Col md={{ size: 12, offset: 0 }} className="text-align-center pageHeader-Title">
+          <div className="pageHeader-Title-Image">
+            <div>
+              <img src={'static/dist/content/images/' + props.image} className="image-title" />
+            </div>
+            <div className="image-box">
+              <div className="ala-de-sus text-align-left">
+                <p> <span>Public</span> </p>
+              </div>
+              <div className="title-in-image text-align-left">
+                <h3 className={"sellGear-title" + propsClassName}>{props.titleSet}</h3>
+              </div>
+            </div>
+          </div>
+      </Col>
+    );
 }

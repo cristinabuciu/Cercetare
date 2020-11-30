@@ -6,7 +6,7 @@ import './Home.scss';
 import LeftBar from "../LeftBar/LeftBar";
 import { Row, Col, Alert } from 'reactstrap';
 import { Container } from 'semantic-ui-react';
-import Title from '../Items/Title/Title';
+import { Title } from '../Items/Title/Title';
 import Search from '../Items/Search/Search';
 import SearchCard from '../Items/SearchCard';
 import {LoaderComponent} from '../Items/Items-components'

@@ -38,7 +38,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         sortByList: ['Dataset_title ASC', 'Dataset_title DESC', 'Avg_Rating_Value ASC', 'Avg_Rating_Value DESC'],
 
         comments: [
-            {id: 1, value: 3.5, author: "landiggity", title: "Hatz", body: "This is my first comment on this forum so don't be a dick", date: "20-10-2020"},
+            {id: 1, value: 3.5, author: "landiggity", title: "Hatz", body: "This is my first comment on this forum so don't be rude", date: "20-10-2020"},
             {id: 2, value: 1, author: "scarlett-jo", title: "Inoanta Chelutu", body: "That's a mighty fine comment you've got there my good looking fellow...", date: "20-10-2020"},
             {id: 3, value: 4, author: "rosco", title: "Swalala", body: "What is the meaning of all of this 'React' mumbo-jumbo?", date: "20-10-2020"}
         ]
@@ -46,7 +46,6 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
 
     componentDidMount() {
         const numberOfCardsLen = this.state.comments.length;
-        debugger;
         if (numberOfCardsLen > 0) {
             this.setState({
                 numberOfCards: numberOfCardsLen,

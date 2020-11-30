@@ -65,10 +65,10 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                     <Row md="4">
                         
                         <LeftBar className='resizable-1050' modeSearch={false}/>
-                        <Col md={{ size: 3, offset: 0 }}>
+                        <Col md={{ size: 2, offset: 0 }}>
                             .
                         </Col>
-                        <Col md="9">
+                        <Col md="10">
                         {this.state.shoudLoad ? <DatasetViewLoading />
                         :
                         <DatasetViewItem 
@@ -84,6 +84,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                             short_desc={this.state.searchResult[9]}
                             avg_rating={this.state.searchResult[10]}
                             gitlink={this.state.searchResult[11]}
+                            owner={this.state.searchResult[12]}
                         />
                         }
                         </Col>

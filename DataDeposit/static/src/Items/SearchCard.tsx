@@ -180,7 +180,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
         <Card className="margin-top-20 z-depth-hoverable">
             <Row>
                 <Col xs="0" md="0" lg="2" className="resizable-1050"> 
-                     <Label for="titluDataset" className="label-format">Titlu Dataset:</Label>
+                     <Label for="titluDataset" className="label-format">Dataset title:</Label>
                  </Col>
                  <Col xs="6" lg="7">
                      <NavLink tag={Link} to={'/datasetView/' + this.props.id}>{this.props.dataset_title}</NavLink>
