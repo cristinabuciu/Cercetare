@@ -43,17 +43,35 @@ export interface IDatasetViewLoadingState {
     rating: number;
     shouldGiveRating: boolean;
     shouldDisplayLoading: boolean;
+    userID: string;
 }
 
 export default class DatasetViewLoading extends React.Component<IDatasetViewLoadingProps, IDatasetViewLoadingState> {
     state = {
         rating: 0,
         shouldGiveRating: true,
-        shouldDisplayLoading: true
+        shouldDisplayLoading: true,
+        userID: "0"
     }
 
     componentDidMount () {
-    
+        axios.get( '/getUserID', {
+            params: {
+                user: this.props.owner
+            }
+        })
+          .then(response => {
+            this.setState({
+                userID: response.data
+            });
+            debugger;
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally( () => {
+            // always executed
+          });
     }
 
     goBack = () =>{
@@ -74,8 +92,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                         titleSet={this.props.dataset_title}
                         image={this.props.domain + "_domain.jpg"}
                         subtitle={"Last updated " + this.props.lastUpdatedAt}
-                        profileID={2} />
-                         {/*adauga din backend id.ul unui user in loc de '2'  */}
+                        profileID={this.state.userID} />
                 </Col>
             </Row>
             <Row>

@@ -1,7 +1,7 @@
 # server.py
 import os
 import sys
-from search import search, applyFilters, findItem, getAllDomainsAndTags
+from search import search, applyFilters, findItem, getAllDomainsAndTags, findUserID
 from upload import uploadDataset, uploadPaths, updateReviewByID
 import pgdb
 import zipfile
@@ -82,6 +82,11 @@ def getItem():
 
     return findItem(_id)
 
+@app.route('/getUserID', methods = ['GET'])
+def getUserID():
+    _user = request.args['user']
+
+    return findUserID(_user)
 
 @app.route('/getDomainsAndTags', methods = ['GET'])
 def getDomainsAndTags():

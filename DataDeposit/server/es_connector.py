@@ -122,6 +122,12 @@ class ESClass(object):
 
         s = self.es.search(index, body=searchJson, size=2000)
         return s['hits']['hits']#['total']
+    
+    def get_es_data_by_userName(self, index, username):
+        searchJson = {"query": { "match": {"username": username } } }
+
+        s = self.es.search(index, body=searchJson, size=2000)
+        return s['hits']['hits']#['total']
 
     def match_dataset(self, domain, country, data_format, year, dataset_title, order, orderField):
         searchJson = {"query": { "bool": {"must": [

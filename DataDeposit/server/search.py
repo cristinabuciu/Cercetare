@@ -146,6 +146,17 @@ def getAllDomainsAndTags():
     return json.dumps([domains, tags])
 
 
+def findUserID(user):
+
+    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+    es.connect()
+
+    found = es.get_es_data_by_userName("logintable", user)
+    if not(found):
+        return "0"
+    else:
+        return str(found[0]['_source']['id'])
+
 
 # def applyFilters1(jsonParams):
 #     hostname = '10.21.0.4'
