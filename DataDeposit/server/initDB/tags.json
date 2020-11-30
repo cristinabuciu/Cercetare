@@ -1,0 +1,142 @@
+[
+    {
+        "domainName": "IT",
+        "tagName": "Coding"
+    },
+    {
+        "domainName": "IT",
+        "tagName": "Games"
+    },
+    {
+        "domainName": "IT",
+        "tagName": "Programming"
+    },
+    {
+        "domainName": "IT",
+        "tagName": "Technology"
+    },
+    {
+        "domainName": "IT",
+        "tagName": "Automation"
+    },
+    {
+        "domainName": "MEDICINE",
+        "tagName": "Health"
+    },
+    {
+        "domainName": "MEDICINE",
+        "tagName": "Surgery"
+    },
+    {
+        "domainName": "MEDICINE",
+        "tagName": "Hospital"
+    },
+    {
+        "domainName": "MEDICINE",
+        "tagName": "Pharmacy"
+    },
+    {
+        "domainName": "MEDICINE",
+        "tagName": "Wellness"
+    },
+    {
+        "domainName": "ARCHITECTURE",
+        "tagName": "Design"
+    },
+    {
+        "domainName": "ARCHITECTURE",
+        "tagName": "Art"
+    },
+    {
+        "domainName": "ARCHITECTURE",
+        "tagName": "Construction"
+    },
+    {
+        "domainName": "ARCHITECTURE",
+        "tagName": "Decor"
+    },
+    {
+        "domainName": "ARCHITECTURE",
+        "tagName": "Building"
+    },
+    {
+        "domainName": "BIOLOGY",
+        "tagName": "Science"
+    },
+    {
+        "domainName": "BIOLOGY",
+        "tagName": "Microbiology"
+    },
+    {
+        "domainName": "BIOLOGY",
+        "tagName": "Laboratory"
+    },
+    {
+        "domainName": "BIOLOGY",
+        "tagName": "Research"
+    },
+    {
+        "domainName": "BIOLOGY",
+        "tagName": "Molecularbiology"
+    },
+    {
+        "domainName": "CHEMISTRY",
+        "tagName": "Organic chemistry"
+    },
+    {
+        "domainName": "CHEMISTRY",
+        "tagName": "Biochemistry"
+    },
+    {
+        "domainName": "CHEMISTRY",
+        "tagName": "Experiment"
+    },
+    {
+        "domainName": "CHEMISTRY",
+        "tagName": "Melting"
+    },
+    {
+        "domainName": "CHEMISTRY",
+        "tagName": "Redaction"
+    },
+    {
+        "domainName": "PHYSICS",
+        "tagName": "Astronomy"
+    },
+    {
+        "domainName": "PHYSICS",
+        "tagName": "Space"
+    },
+    {
+        "domainName": "PHYSICS",
+        "tagName": "Univers"
+    },
+    {
+        "domainName": "PHYSICS",
+        "tagName": "Quantumphysics"
+    },
+    {
+        "domainName": "PHYSICS",
+        "tagName": "Cosmology"
+    },
+    {
+        "domainName": "BUSINESS",
+        "tagName": "Entrepreneur"
+    },
+    {
+        "domainName": "BUSINESS",
+        "tagName": "Motivation"
+    },
+    {
+        "domainName": "BUSINESS",
+        "tagName": "Marketing"
+    },
+    {
+        "domainName": "BUSINESS",
+        "tagName": "Money"
+    },
+    {
+        "domainName": "BUSINESS",
+        "tagName": "Inspiration"
+    }
+]

@@ -55,6 +55,23 @@
     }
 }
 
+.ala-de-sus-din-dr {
+    display: flex;
+    border: none;
+    box-sizing: border-box;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    z-index: 25;
+
+    img {
+        width: 40px;
+        height: 40px;
+        margin-right: 8px;
+        border-radius: 50%;
+    }
+}
+
 .image-title {
     position: absolute;
     right: 0px;
@@ -89,5 +106,18 @@
         margin-bottom: 8px;
         text-decoration: none;
     }
+}
+
+.subtitle-image {
+    font-family: Inter,sans-serif;
+    color: #fff;
+    display: flex;
+    font-size: 14px;
+    line-height: 36px;
+    align-items: center;
+    padding: 0 25px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 20;
 }
 

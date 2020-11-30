@@ -56,7 +56,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
           .finally(function () {
             // always executed
           });
-          this.props.history
+
     }
 
     render() {  
@@ -85,6 +85,12 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                             avg_rating={this.state.searchResult[10]}
                             gitlink={this.state.searchResult[11]}
                             owner={this.state.searchResult[12]}
+                            downloadType={''}
+                            lastUpdatedAt={this.state.searchResult[13]}
+
+                            shouldHaveDownloadButton={this.state.searchResult[14] === 1 || this.state.searchResult[14] === 3 }
+                            shouldHaveDownloadLink={this.state.searchResult[14] === 1}
+                            downloadPath={this.state.searchResult[15]}
                         />
                         }
                         </Col>

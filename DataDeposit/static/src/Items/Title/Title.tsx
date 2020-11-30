@@ -25,6 +25,8 @@ export const Title = (props) => {
 export const ImageTitle = (props) => {
 
   const propsClassName = props.className ? " " + props.className : "";
+  const profileID = props.profileID ? props.profileID : "1";
+
     return (
       <Col md={{ size: 12, offset: 0 }} className="text-align-center pageHeader-Title">
           <div className="pageHeader-Title-Image">
@@ -35,8 +37,14 @@ export const ImageTitle = (props) => {
               <div className="ala-de-sus text-align-left">
                 <p> <span>Public</span> </p>
               </div>
+              <div className="ala-de-sus-din-dr text-align-left">
+                <img src={'static/dist/content/images/profilePicture/' + profileID + "_avatar.jpg"} />
+              </div>
               <div className="title-in-image text-align-left">
                 <h3 className={"sellGear-title" + propsClassName}>{props.titleSet}</h3>
+              </div>
+              <div className="subtitle-image">
+                    {props.subtitle ? props.subtitle : ""}
               </div>
             </div>
           </div>

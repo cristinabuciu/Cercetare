@@ -4,7 +4,7 @@ import sys
 from flask import jsonify, json
 import pgdb
 import es_connector
-
+import time
 
 def search(numbersOfItemsPerPage):
     hostname = '10.21.0.4'
@@ -25,7 +25,7 @@ def filterByArray(dataset, subdomains, itemInDataset):
     return True
 
 def applyFilters(jsonParams):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
     
     result = es.get_es_data('datasets', jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'], jsonParams['notArrayParams']['dataset_title'], jsonParams['sortBy'], jsonParams['sortByField'])
@@ -74,8 +74,26 @@ def completeSearch(datasets, lowLimit, upLimit):
 
     return json.dumps(returnArray)
 
+def calculateLastUpdatedAt(unixTime):
+    
+    currentTime = int(time.time())
+    elapsedTime = currentTime - unixTime
+    if elapsedTime < 60:
+        return str(elapsedTime) + " seconds ago"
+    elif elapsedTime < 60 * 60:
+        return str(int(elapsedTime / 60)) + " minutes ago"
+    elif elapsedTime < 24 * 60 * 60:
+        return str(int(elapsedTime / (60 * 60))) + " hours ago"
+    elif elapsedTime < 30 * 24 * 60 * 60:
+        return str(int(elapsedTime / (24 * 60 * 60))) + " days ago"
+    elif elapsedTime < 12 * 30 * 24 * 60 * 60:
+        return str(int(elapsedTime / (30 * 24 * 60 * 60))) + " months ago"
+    else:
+        return str(int(elapsedTime / (12 * 30 * 24 * 60 * 60))) + " years ago"
+
+
 def findItem(id):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     result = es.get_es_data_by_id('datasets', id)
@@ -88,11 +106,44 @@ def findItem(id):
         print("WARNING !! -> same id to more than 1 item")
     
     for row in datasets:
-        returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink']])
+        elapsedTime = calculateLastUpdatedAt(1606748523) # int(row['lastUpdatedAt'])
+
+        hasDownloadLink = 2
+        downloadPath = ''
+        if 'downloadPath' in row:
+            if row['downloadPath'].startswith('link'):
+                hasDownloadLink = 1
+                downloadPath = row['downloadPath'][5:]
+            elif row['downloadPath'].startswith('private'):
+                hasDownloadLink = 2
+            elif row['downloadPath'].startswith('path'):
+                hasDownloadLink = 3
+                downloadPath = row['downloadPath'][5:]
+
+        returnArray.append([row['id'], row['domain'], row['subdomain'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink'], row['owner'], elapsedTime, hasDownloadLink, downloadPath])
     
     return json.dumps(returnArray)
 
 
+def getAllDomainsAndTags():
+    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+    es.connect()
+
+    result = es.get_es_index('domains')
+    domains = []
+    for domain in result:
+        domains.append(domain['_source']['domainName'])
+    
+    result = es.get_es_index('tags')
+    tags = {}
+    for tag in result:
+        if tag['_source']['domainName'] in tags:
+            tags[tag['_source']['domainName']].append({"value": tag['_source']['tagName'], "label": tag['_source']['tagName']})
+        else:
+            tags[tag['_source']['domainName']] = [{"value": tag['_source']['tagName'], "label": tag['_source']['tagName']}]
+        
+    
+    return json.dumps([domains, tags])
 
 
 

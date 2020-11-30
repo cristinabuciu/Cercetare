@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { LoaderComponent, HorizontalList } from '../Items/Items-components'
 import CommentTabs from "./CommentTabs"
 
-import { faStarHalf, faStar, faPortrait, faCalendar, faUser, faFile, faFileDownload, faGlobe, faDatabase, faEye, faTags, faFemale, faFlag } from "@fortawesome/free-solid-svg-icons";
+import { faLink, faStar, faPortrait, faCalendar, faUser, faFile, faFileDownload, faGlobe, faDatabase, faEye, faTags, faFemale, faFlag } from "@fortawesome/free-solid-svg-icons";
 
 import { ImageTitle, Title } from '../Items/Title/Title';
 
@@ -31,6 +31,12 @@ export interface IDatasetViewLoadingProps {
     avg_rating: number;
     gitlink: string;
     owner: string;
+    downloadType: string;
+    lastUpdatedAt: string;
+
+    downloadPath: string;
+    shouldHaveDownloadButton: boolean;
+    shouldHaveDownloadLink: boolean;
 }
 
 export interface IDatasetViewLoadingState {
@@ -46,12 +52,16 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
         shouldDisplayLoading: true
     }
 
+    componentDidMount () {
+    
+    }
+
     goBack = () =>{
         window.history.back();
       }
 
     render() {  
-
+        
         return (
             <>
             <Row>
@@ -62,37 +72,27 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                     <ImageTitle 
                         className="margin-top-50 margin-bottom-10p" 
                         titleSet={this.props.dataset_title}
-                        image={this.props.domain + "_domain.jpg"} />
+                        image={this.props.domain + "_domain.jpg"}
+                        subtitle={"Last updated " + this.props.lastUpdatedAt}
+                        profileID={2} />
+                         {/*adauga din backend id.ul unui user in loc de '2'  */}
                 </Col>
             </Row>
             <Row>
                 <Col>
                 <Card className="margin-top-20">
-                    <CardTitle><Title titleSet="Description" /></CardTitle>
+                    <CardTitle><Title titleSet="About" /></CardTitle>
                     <CardBody>
                     <Row >
                         <Col>
-                            {this.props.short_desc}
-
-                            <Row>
-                                <Col>
+                            
                                 <div className="column-section">
                                     <div className="overflow-hidden">
-                                    <div className="column-title">
-                                        Metadata
-                                    </div>
                                     <span className="column-item">
                                         <span className="column-data">
-                                        <FontAwesomeIcon icon={faCalendar}/> Created:
+                                        <FontAwesomeIcon icon={faCalendar}/> Domain:
                                         </span>
-                                        {this.props.year ? this.props.year : "-"}
-                                    </span>
-
-                                    <span className="column-item">
-                                        <span className="column-data">
-                                        <FontAwesomeIcon icon={faUser}/> Uploaded by:
-                                        </span>
-                                        {this.props.owner ? this.props.owner : "-"}
+                                        {this.props.domain ? this.props.domain : "-"}
                                     </span>
 
                                     <span className="column-item">
@@ -112,17 +112,109 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                                         {this.props.authors ? this.props.authors.map(txt => <div className="column-list">{txt}</div>) : "-"}
                                         </div>
                                     </span>
+
+                                    <span className="column-item">
+                                        <span className="column-data">
+                                        <FontAwesomeIcon icon={faPortrait}/> Article title:
+                                        </span>
+                                        {this.props.article_title ? this.props.article_title : "-"}
+                                    </span>
+
                                     <span className="column-item">
                                         <span className="column-data">
                                         <FontAwesomeIcon icon={faGlobe}/> Country:
                                         </span>
                                         {this.props.country ? this.props.country : "-"}
                                     </span>
+                                    
+                                    <span className="column-item">
+                                        <span className="column-data">
+                                        <FontAwesomeIcon icon={faCalendar}/> Created:
+                                        </span>
+                                        {this.props.year ? this.props.year : "-"}
+                                    </span>
+
+                                    </div>
+
+                                    <div className="overflow-hidden">
+                                        <span className="column-item">
+                                            <span className="column-data">
+                                            <FontAwesomeIcon icon={faStar}/> Rating:
+                                            </span>
+                                            {this.props.avg_rating ? this.props.avg_rating : "0"}
+                                        </span>
+                                        <span className="column-item">
+                                            <span className="column-data">
+                                            <FontAwesomeIcon icon={faFile}/> Data format:
+                                            </span>
+                                            {this.props.data_format ? this.props.data_format : "-"}
+                                        </span>
+                                        <span className="column-item">
+                                            <span className="column-data">
+                                            <FontAwesomeIcon icon={faFileDownload}/> Download Type:
+                                            </span>
+                                            {this.props.shouldHaveDownloadButton ? 
+                                                <>{
+                                                    this.props.shouldHaveDownloadLink ? 
+                                                    <><a target="_blank" href={this.props.downloadPath}><FontAwesomeIcon icon={faLink} />Download Link</a></>
+                                                    :
+                                                    <span><FontAwesomeIcon icon={faDatabase} />  Download File</span>
+                                                }</>
+                                                :
+                                                <>No download!</>
+                                                }
+                                        </span>
+                                        <span className="column-item">
+                                            <span className="column-data">
+                                            <FontAwesomeIcon icon={faGlobe}/> Gitlink:
+                                            </span>
+                                            {this.props.gitlink ? this.props.gitlink : "-"}
+                                        </span>
+
+                                        <span className="column-item">
+                                            <span className="column-data">
+                                            <FontAwesomeIcon icon={faUser}/> Uploaded by:
+                                            </span>
+                                            {this.props.owner ? this.props.owner : "-"}
+                                        </span>
                                     </div>
 
                                 </div>
-                                </Col>
-                            </Row>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            {this.props.short_desc}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <div className="column-title margin-top-10">
+                                Data integrity and authenticity
+                            </div>
+                            <div>
+                                *add integrity and authenticity*
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <div className="column-title margin-top-10">
+                                Continuity of access
+                            </div>
+                            <div>
+                                *add continuity*
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <div className="column-title margin-top-10">
+                                Data reuse
+                            </div>
+                            <div>
+                                *add data reuse*
+                            </div>
                         </Col>
                     </Row>
                     </CardBody>

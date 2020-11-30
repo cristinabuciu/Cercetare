@@ -35,7 +35,8 @@ export interface IUploadPageFormState {
     dataset_authors: string;
     year: number;
     domain: string;
-    subdomain: string;
+    otherDomain: string | null;
+    subdomain: Array<String>;
     dataFormat: string;
     country: string;
     valueSwitch: boolean;
@@ -43,18 +44,10 @@ export interface IUploadPageFormState {
     uploadInputOptions: {
         domain: Array<String>;
         subdomain: Array<String>;
-        subdomainList: {
-            IT: Array<String>;
-            MEDICINE: Array<String>;
-            ARCHITECTURE: Array<String>;
-            BIOLOGY: Array<String>;
-            CHEMISTRY: Array<String>;
-            PHYSICS: Array<String>;
-            BUSINESS: Array<String>;
-        };
         country: Array<String>;
         dataFormat: Array<String>;
     };
+    shouldEnterNewDomain: boolean;
     uploadOption: {
         private: boolean;
         link: boolean;
@@ -85,25 +78,26 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         year: 0,
         valueSwitch: false,
         domain: "Select Domain  ",
+        otherDomain: null,
         country: "Select Country  ",
-        subdomain: "Select Subdomains  ",
+        subdomain: ["Select Subdomains  "],
         dataFormat: "Select Dataformat  ",
         uploadInputOptions: {
-            domain: ['IT', 'MEDICINE', 'ARCHITECTURE', 'BIOLOGY', 'CHEMISTRY', 'PHYSICS', 'BUSINESS'],
+            domain: [],//['IT', 'MEDICINE', 'ARCHITECTURE', 'BIOLOGY', 'CHEMISTRY', 'PHYSICS', 'BUSINESS'],
             subdomain: [],
             subdomainList: {
-                IT: ['IT_1', 'IT_2', 'IT_3', 'IT_4'],
-                MEDICINE: ['MEDICINE_1', 'MEDICINE_2', 'MEDICINE_3', 'MEDICINE_4'],
-                ARCHITECTURE: ['ARCHITECTURE_1', 'ARCHITECTURE_2', 'ARCHITECTURE_3', 'ARCHITECTURE_4'],
-                BIOLOGY: ['BIOLOGY_1', 'BIOLOGY_2', 'BIOLOGY_3', 'BIOLOGY_4'],
-                CHEMISTRY: ['CHEMISTRY_1', 'CHEMISTRY_2', 'CHEMISTRY_3', 'CHEMISTRY_4'],
-                PHYSICS: ['PHYSICS_1', 'PHYSICS_2', 'PHYSICS_3', 'PHYSICS_4'],
-                BUSINESS: ['BUSINESS_1', 'BUSINESS_2']
+                // IT: ['IT_1', 'IT_2', 'IT_3', 'IT_4'],
+                // MEDICINE: ['MEDICINE_1', 'MEDICINE_2', 'MEDICINE_3', 'MEDICINE_4'],
+                // ARCHITECTURE: ['ARCHITECTURE_1', 'ARCHITECTURE_2', 'ARCHITECTURE_3', 'ARCHITECTURE_4'],
+                // BIOLOGY: ['BIOLOGY_1', 'BIOLOGY_2', 'BIOLOGY_3', 'BIOLOGY_4'],
+                // CHEMISTRY: ['CHEMISTRY_1', 'CHEMISTRY_2', 'CHEMISTRY_3', 'CHEMISTRY_4'],
+                // PHYSICS: ['PHYSICS_1', 'PHYSICS_2', 'PHYSICS_3', 'PHYSICS_4'],
+                // BUSINESS: ['BUSINESS_1', 'BUSINESS_2']
             },
             country: ['Romania', 'Chile', 'Japan', 'Russia', 'China', 'Canada', 'Mexico', 'Egypt'],
             dataFormat: ['zip', 'rar', 'tar.gz']
         },
-
+        shouldEnterNewDomain: false,
         uploadOption: {
             private: false,
             link: false,
@@ -129,13 +123,48 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
     };
 
     componentDidMount() {
+        axios.get( '/getDomainsAndTags', {
+            params: {}
+        })
+          .then(response => {
+            // ['All domains  '].push(response.data)
 
+            let domains = response.data[0].concat("Other");
+            this.state.uploadInputOptions.domain = domains;
+
+            for(var domain in response.data[1]) {
+                if(domain in this.state.uploadInputOptions.subdomainList) {
+                    this.state.uploadInputOptions.subdomainList[domain].concat(response.data[1][domain]);
+                } else {
+                    this.state.uploadInputOptions.subdomainList[domain] = response.data[1][domain];
+                }
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally( () => {
+            // always executed
+            this.forceUpdate();
+          });
     }
 
     changeValue = (e, comboBoxTitle, shouldUpdate = false) => {
         if(comboBoxTitle === 'domain') {
-            this.state.uploadInputOptions.subdomain = this.state.uploadInputOptions.subdomainList[e];
-            this.state.subdomain ="Select Subdomains  ";
+
+            if (e === 'Other') {
+                this.setState({
+                    shouldEnterNewDomain: true
+                });
+            }
+            else {
+                this.state.uploadInputOptions.subdomain = this.state.uploadInputOptions.subdomainList[e];
+                this.setState({
+                    subdomain: [],
+                    shouldEnterNewDomain: false,
+                    otherDomain: null
+                });
+            }
         }
         this.state[comboBoxTitle] = e;
         
@@ -166,7 +195,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         axios.post( '/postData', {
             params: {
               	notArrayParams: {
-                    domain: this.state.domain,
+                    domain: this.state.otherDomain ? this.state.otherDomain : this.state.domain,
                     country: this.state.country,
                     data_format: this.state.dataFormat,
                     year: this.state.year,
@@ -179,7 +208,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                     ratings_number: 0
                 },
                 arrayParams: {
-                        subdomain: this.state.subdomain.split(", "),
+                        subdomain: this.state.subdomain,
                         authors: this.state.dataset_authors.split(", ")
                 },
                 private: this.state.valueSwitch
@@ -373,16 +402,22 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                         </FormGroup>
                         <FormGroup>
                             <Row className="padding-top-20">
-                                <Col className="text-align-left">
+                                <Col className="text-align-left" md="3">
                                     <InputText nameOfDropdown="domain" titleDropdown={this.state.domain} listOfItems={this.state.uploadInputOptions.domain} changeValue={this.changeValue} className="button-style-upload" />
+                                </Col>
+                                <Col className="text-align-left">
+                                    {this.state.shouldEnterNewDomain ? 
+                                    <Input type="text" name="newDomain" id="newDomain" placeholder="Enter new domain" 
+                                    onChange={e => this.changeValue(e.target.value, 'otherDomain')}
+                                    /> : <></>}
                                 </Col>
                             </Row>
                         </FormGroup>
                         <FormGroup>
                             <Row className="padding-top-20">
-                                <Col className="text-align-left">
+                                {/* <Col className="text-align-left">
                                     <InputText nameOfDropdown="subdomain" titleDropdown={this.state.subdomain} listOfItems={this.state.uploadInputOptions.subdomain} changeValue={this.changeValue} className="button-style-upload" />
-                                </Col>
+                                </Col> */}
                             </Row>
                         </FormGroup>
                         <FormGroup>

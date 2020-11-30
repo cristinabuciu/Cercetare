@@ -44,17 +44,17 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         buttonDropDownStatus: true,
         startDate: new Date(),
         searchInputOptions: {
-            domain: ['All domains  ', 'IT', 'MEDICINE', 'ARCHITECTURE', 'BIOLOGY', 'CHEMISTRY', 'PHYSICS', 'BUSINESS'],
+            domain: ['All domains  '],//['All domains  ', 'IT', 'MEDICINE', 'ARCHITECTURE', 'BIOLOGY', 'CHEMISTRY', 'PHYSICS', 'BUSINESS'],
             subdomain: [],
             subdomainList: {
-                'All domains  ': [],
-                IT: [{ value: 'IT_1', label: 'IT_1' }, { value: 'IT_2', label: 'IT_2' }, { value: 'IT_3', label: 'IT_3' }, { value: 'IT_4', label: 'IT_4' }],
-                MEDICINE: [{ value: 'MEDICINE_1', label: 'MEDICINE_1' }, { value: 'MEDICINE_2', label: 'MEDICINE_2' }, { value: 'MEDICINE_3', label: 'MEDICINE_3' }, { value: 'MEDICINE_4', label: 'MEDICINE_4' }, { value: 'MEDICINE_5', label: 'MEDICINE_5' }],
-                ARCHITECTURE: [{ value: 'ARCHITECTURE_1', label: 'ARCHITECTURE_1' }, { value: 'ARCHITECTURE_2', label: 'ARCHITECTURE_2' }, { value: 'ARCHITECTURE_3', label: 'ARCHITECTURE_3' }, { value: 'ARCHITECTURE_4', label: 'ARCHITECTURE_4' }],
-                BIOLOGY: [{ value: 'BIOLOGY_1', label: 'BIOLOGY_1' }, { value: 'BIOLOGY_2', label: 'BIOLOGY_2' }, { value: 'BIOLOGY_3', label: 'BIOLOGY_3' }, { value: 'BIOLOGY_4', label: 'BIOLOGY_4' }],
-                CHEMISTRY: [{ value: 'CHEMISTRY_1', label: 'CHEMISTRY_1' }, { value: 'CHEMISTRY_2', label: 'CHEMISTRY_2' }, { value: 'CHEMISTRY_3', label: 'CHEMISTRY_3' }, { value: 'CHEMISTRY_4', label: 'CHEMISTRY_4' }],
-                PHYSICS: [{ value: 'PHYSICS_1', label: 'PHYSICS_1' }, { value: 'PHYSICS_2', label: 'PHYSICS_2' }, { value: 'PHYSICS_3', label: 'PHYSICS_3' }, { value: 'PHYSICS_4', label: 'PHYSICS_4' }],
-                BUSINESS: [{ value: 'BUSINESS_1', label: 'BUSINESS_1' }, { value: 'BUSINESS_2', label: 'BUSINESS_2' }]
+                'All domains  ': []
+                // IT: [{ value: 'IT_1', label: 'IT_1' }, { value: 'IT_2', label: 'IT_2' }, { value: 'IT_3', label: 'IT_3' }, { value: 'IT_4', label: 'IT_4' }],
+                // MEDICINE: [{ value: 'MEDICINE_1', label: 'MEDICINE_1' }, { value: 'MEDICINE_2', label: 'MEDICINE_2' }, { value: 'MEDICINE_3', label: 'MEDICINE_3' }, { value: 'MEDICINE_4', label: 'MEDICINE_4' }, { value: 'MEDICINE_5', label: 'MEDICINE_5' }],
+                // ARCHITECTURE: [{ value: 'ARCHITECTURE_1', label: 'ARCHITECTURE_1' }, { value: 'ARCHITECTURE_2', label: 'ARCHITECTURE_2' }, { value: 'ARCHITECTURE_3', label: 'ARCHITECTURE_3' }, { value: 'ARCHITECTURE_4', label: 'ARCHITECTURE_4' }],
+                // BIOLOGY: [{ value: 'BIOLOGY_1', label: 'BIOLOGY_1' }, { value: 'BIOLOGY_2', label: 'BIOLOGY_2' }, { value: 'BIOLOGY_3', label: 'BIOLOGY_3' }, { value: 'BIOLOGY_4', label: 'BIOLOGY_4' }],
+                // CHEMISTRY: [{ value: 'CHEMISTRY_1', label: 'CHEMISTRY_1' }, { value: 'CHEMISTRY_2', label: 'CHEMISTRY_2' }, { value: 'CHEMISTRY_3', label: 'CHEMISTRY_3' }, { value: 'CHEMISTRY_4', label: 'CHEMISTRY_4' }],
+                // PHYSICS: [{ value: 'PHYSICS_1', label: 'PHYSICS_1' }, { value: 'PHYSICS_2', label: 'PHYSICS_2' }, { value: 'PHYSICS_3', label: 'PHYSICS_3' }, { value: 'PHYSICS_4', label: 'PHYSICS_4' }],
+                // BUSINESS: [{ value: 'BUSINESS_1', label: 'BUSINESS_1' }, { value: 'BUSINESS_2', label: 'BUSINESS_2' }]
             },
             country: ['All countries  ', 'Romania', 'Chile', 'Japan', 'Russia', 'China', 'Canada', 'Mexico', 'Egypt'],
             dataFormat: ['All Data Formats ', 'zip', 'rar', 'tar.gz'],
@@ -82,6 +82,31 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     };
 
     componentDidMount() {
+
+        axios.get( '/getDomainsAndTags', {
+            params: {}
+        })
+          .then(response => {
+            // ['All domains  '].push(response.data)
+            this.state.searchInputOptions.domain = ['All domains  '].concat(response.data[0])
+            
+            for(var domain in response.data[1]) {
+                if(domain in this.state.searchInputOptions.subdomainList) {
+                    this.state.searchInputOptions.subdomainList[domain].concat(response.data[1][domain]);
+                } else {
+                    this.state.searchInputOptions.subdomainList[domain] = response.data[1][domain];
+                }
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally( () => {
+            // always executed
+            this.forceUpdate();
+          });
+
+
         this.searchData(true);
     }
 

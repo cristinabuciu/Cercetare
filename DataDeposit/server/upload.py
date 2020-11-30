@@ -4,11 +4,11 @@ import sys
 import pgdb
 from datetime import datetime, timedelta
 import es_connector
-from time import sleep
+from time import sleep, time
 
 def updateReviewByID(params):
     try:
-        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
         es.connect()
 
         result = es.get_es_data_by_id('datasets', params['id'])
@@ -35,7 +35,7 @@ def updateReviewByID(params):
         return "Eroare" 
 
 def getCoordinates(country):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     locations = es.get_es_index('locations')[0]['_source']
@@ -44,7 +44,7 @@ def getCoordinates(country):
 
 def uploadDataset(params, current_user):
     try:
-        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
         es.connect()
 
         total = es.get_es_index('last_id')[0]['_source']['id']
@@ -68,10 +68,19 @@ def uploadDataset(params, current_user):
 
         dataset_json['id'] = currentID
 
+        dataset_json['lastUpdatedAt'] = str(int(time()))
+
         es.insert('datasets', '_doc', dataset_json)
         es.delete_index('last_id')
         sleep(2)
         es.insert('last_id', '_doc', {'id': currentID})
+
+        domain = params['notArrayParams']['domain'].upper()
+
+        found = es.get_es_data_by_domainName("domains", domain)
+        if not(found):
+            es.insert('domains', '_doc', {"domainName": domain})
+        
         return "Succes"
     except:
         return "Eroare" 

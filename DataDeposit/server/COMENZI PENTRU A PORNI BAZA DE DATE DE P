@@ -46,7 +46,7 @@ curl -X PUT "172.23.0.2:9200/datasets" -H 'Content-Type: application/json' -d'{
   }
 }'
 
-curl -X PUT "172.23.0.2:9200/datasets?pretty" -H 'Content-Type: application/json' -d'
+curl -X PUT "172.22.0.2:9200/datasets?pretty" -H 'Content-Type: application/json' -d'
 {
     "mappings" : {
         "_doc": {"properties" : {
@@ -67,7 +67,12 @@ curl -X PUT "172.23.0.2:9200/datasets?pretty" -H 'Content-Type: application/json
                 "avg_rating_value": {"type": "float"},
                 "ratings_number": {"type": "integer"},
                 "owner": {"type": "text", "fielddata": true},
-                "downloadPath": {"type": "text", "fielddata": true}
+                "downloadPath": {"type": "text", "fielddata": true},
+                "lastUpdatedAt": {"type": "text", "fielddata": true},
+                "dataReuse": {"type": "text", "fielddata": true},
+                "dataIntegrity": {"type": "text", "fielddata": true},
+                "continuityAccess": {"type": "text", "fielddata": true},
+                "views": {"type": "text", "fielddata": true}
         }}
     }
 }
