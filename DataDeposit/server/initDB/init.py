@@ -6,7 +6,7 @@ import pprint
 
 
 locations = {}
-IP = '172.22.0.2'
+IP = '172.23.0.2'
 
 #################### ADAUGARE LOCATII ##################
 with open("locations_mapping/locations.json", 'r') as f:

@@ -2,7 +2,7 @@ import es_connector
 import pprint
 
 
-# es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+# es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
 # es.connect()
 
 # es.insert('sergiu', '_doc', {'hatz':'hatz'})
@@ -23,7 +23,7 @@ locations = {}
 with open("locations_mapping/locations.json", 'r') as f:
     data = json.load(f)
 
-    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
     es.insert('locations', '_doc', data)
 

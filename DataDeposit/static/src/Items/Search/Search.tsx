@@ -162,7 +162,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     downloadFrom: this.state.downloadFrom === 'All Downloads ' ? '*' : this.state.downloadFrom,
                 },
                 arrayParams: {
-                      subdomain: this.state.subdomain, //=== 'All subdomains  ' ? '' : this.state.subdomain,
+                      tags: this.state.subdomain, //=== 'All subdomains  ' ? '' : this.state.subdomain,
                       author: this.state.authors
                 },
                 sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSort(this.state.sortBy),
@@ -237,6 +237,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                         options={this.state.searchInputOptions.subdomain}
                         value={this.state.subdomain}
                         handleChange={this.handleSelectChange}
+                        placeholder="All subdomains"
                     />
 
                 </Col>

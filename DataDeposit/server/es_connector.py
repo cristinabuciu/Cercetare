@@ -123,6 +123,15 @@ class ESClass(object):
         s = self.es.search(index, body=searchJson, size=2000)
         return s['hits']['hits']#['total']
     
+    def get_es_data_by_domainName_and_tagName(self, index, domainName, tagName):
+        searchJson = {"query": {"bool": {"must": [
+            {"match": {"domainName": domainName}},
+            {"match": {"tagName": tagName}}
+            ]}}}
+
+        s = self.es.search(index, body=searchJson, size=2000)
+        return s['hits']['hits']#['total']
+    
     def get_es_data_by_userName(self, index, username):
         searchJson = {"query": { "match": {"username": username } } }
 

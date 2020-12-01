@@ -7,7 +7,7 @@ import {
   } from 'reactstrap';
 import "../style_home.scss";
 import "./upload.scss";
-import {InputText, Switch, LoaderComponent, TooltipButton} from '../Items/Items-components'
+import {InputText, Switch, LoaderComponent, TooltipButton, CustomCreatableSelect} from '../Items/Items-components'
 import LeftBar from "../LeftBar/LeftBar";
 import { Container } from 'semantic-ui-react';
 import { faLink, faDownload, faPortrait } from "@fortawesome/free-solid-svg-icons";
@@ -56,12 +56,15 @@ export interface IUploadPageFormState {
     validInputs: {
         dataset_title: boolean;
         dataset_authors: boolean;
-        article_title: boolean;
         year: boolean;
         short_desc: boolean;
     }
     buttonUpload: boolean;
     loaderVisibility: boolean;
+    dataReuse: string;
+    contAccess: string;
+    dataIntegrity: string;
+    downloadPath: string;
 }
 
 export default class UploadPageForm extends React.Component<IUploadPageFormProps, IUploadPageFormState> {
@@ -80,8 +83,13 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         domain: "Select Domain  ",
         otherDomain: null,
         country: "Select Country  ",
-        subdomain: ["Select Subdomains  "],
+        subdomain: [],
         dataFormat: "Select Dataformat  ",
+        dataReuse: '',
+        contAccess: '',
+        dataIntegrity: '',
+        downloadPath: '',
+
         uploadInputOptions: {
             domain: [],//['IT', 'MEDICINE', 'ARCHITECTURE', 'BIOLOGY', 'CHEMISTRY', 'PHYSICS', 'BUSINESS'],
             subdomain: [],
@@ -107,7 +115,6 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         validInputs: {
             dataset_title: false,
             dataset_authors: false,
-            article_title: false,
             year: false,
             short_desc: false
             
@@ -151,9 +158,10 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
 
     changeValue = (e, comboBoxTitle, shouldUpdate = false) => {
         if(comboBoxTitle === 'domain') {
-
+            this.state.uploadInputOptions.subdomain = [];
             if (e === 'Other') {
                 this.setState({
+                    subdomain: [],
                     shouldEnterNewDomain: true
                 });
             }
@@ -205,10 +213,14 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                     gitlink: this.state.gitlink,
                     full_desc: '...',
                     avg_rating_value: 0,
-                    ratings_number: 0
+                    ratings_number: 0,
+                    dataReuse: this.state.dataReuse,
+                    dataIntegrity: this.state.dataIntegrity,
+                    continuityAccess: this.state.contAccess,
+                    downloadPath: this.state.downloadPath,
                 },
                 arrayParams: {
-                        subdomain: this.state.subdomain,
+                        tags: this.state.subdomain,
                         authors: this.state.dataset_authors.split(", ")
                 },
                 private: this.state.valueSwitch
@@ -291,6 +303,29 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         console.log(this.state.uploadOption.private);
         console.log(this.state.uploadOption.upload);
     }
+
+    handleSelectChange = value => {
+        this.setState({
+            subdomain: value
+        });
+    }
+
+    handleCreateSelectChange = (newValue: any, actionMeta: any) => {
+        console.group('Value Changed');
+        console.log(newValue);
+        console.log(`action: ${actionMeta.action}`);
+        console.groupEnd();
+        this.setState({
+            subdomain: newValue
+        });
+      };
+
+    handleCreateSelectInputChange = (inputValue: any, actionMeta: any) => {
+        console.group('Input Changed');
+        console.log(inputValue);
+        console.log(`action: ${actionMeta.action}`);
+        console.groupEnd();
+      };
   
     render() {  
 
@@ -365,9 +400,10 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         name="article-title" 
                                         id="Article-title" 
                                         placeholder="Article title" 
-                                        invalid={this.state.validInputs.article_title}
-                                        onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'article_title')}
+                                        // invalid={this.state.validInputs.article_title}
+                                        // onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'article_title')}
                                         onChange={e => this.changeValue(e.target.value, 'article_title')}/>
+                                        <FormText>This field is optional</FormText>
                                 </Col>
                                 
                             </Row>
@@ -418,6 +454,15 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                 {/* <Col className="text-align-left">
                                     <InputText nameOfDropdown="subdomain" titleDropdown={this.state.subdomain} listOfItems={this.state.uploadInputOptions.subdomain} changeValue={this.changeValue} className="button-style-upload" />
                                 </Col> */}
+                                <Col>
+                                    <CustomCreatableSelect 
+                                        options={this.state.uploadInputOptions.subdomain}
+                                        value={this.state.subdomain}
+                                        handleChange={this.handleCreateSelectChange}
+                                        onInputChange={this.handleCreateSelectInputChange}
+                                        placeholder="Select subdomain"
+                                    />
+                                </Col>
                             </Row>
                         </FormGroup>
                         <FormGroup>
@@ -433,7 +478,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                     <Input 
                                         type="textarea" 
                                         name="text" 
-                                        maxLength="200"  
+                                        maxLength="1000"  
                                         id="description" 
                                         placeholder="Short Description" 
                                         className="margin-top-10" 
@@ -489,6 +534,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                                     id="downloadURL"
                                                     disabled={!this.state.uploadOption.link}
                                                     placeholder="Download Link..."
+                                                    onChange={e => this.changeValue('link_' + e.target.value, 'downloadPath')}
                                                 />
                                             </FormGroup>
                                         </Card>
@@ -529,7 +575,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         id="Data-integ" 
                                         placeholder="Data integrity and authenticity" 
                                         // onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
-                                        // onChange={e => this.changeValue(e.target.value, 'dataset_title')}
+                                        onChange={e => this.changeValue(e.target.value, 'dataIntegrity')}
                                         />
                                         <TooltipButton 
                                             body={this.props.dataInteg}
@@ -546,7 +592,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         id="Cont-access" 
                                         placeholder="Continuity of access" 
                                         // onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
-                                        // onChange={e => this.changeValue(e.target.value, 'dataset_title')}
+                                        onChange={e => this.changeValue(e.target.value, 'contAccess') }
                                         />
                                     <TooltipButton 
                                         body={this.props.contAccess}
@@ -564,7 +610,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         id="data-reuse" 
                                         placeholder="Data Reuse" 
                                         // onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
-                                        // onChange={e => this.changeValue(e.target.value, 'dataset_title')}
+                                        onChange={e => this.changeValue(e.target.value, 'dataReuse')}
                                         />
                                     <TooltipButton 
                                         body={this.props.dataReuse}

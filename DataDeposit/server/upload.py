@@ -8,7 +8,7 @@ from time import sleep, time
 
 def updateReviewByID(params):
     try:
-        es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
         es.connect()
 
         result = es.get_es_data_by_id('datasets', params['id'])
@@ -35,7 +35,7 @@ def updateReviewByID(params):
         return "Eroare" 
 
 def getCoordinates(country):
-    es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     locations = es.get_es_index('locations')[0]['_source']
@@ -44,7 +44,7 @@ def getCoordinates(country):
 
 def uploadDataset(params, current_user):
     try:
-        es = es_connector.ESClass(server='172.22.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
         es.connect()
 
         total = es.get_es_index('last_id')[0]['_source']['id']
@@ -57,9 +57,12 @@ def uploadDataset(params, current_user):
         
         for k, v in params['notArrayParams'].items():
             dataset_json_input[k] = v
-        
+        dataset_json_input['views'] = '0'
+
         for k, v in params['arrayParams'].items():
             dataset_json_input[k] = v
+        
+        dataset_json_input['tags'] = list(map(lambda x: x['value'], dataset_json_input['tags']))
         
         dataset_json = dataset_json_input
         dataset_json['date'] = (datetime.now() - timedelta(hours = 3)).strftime('%Y-%m-%dT%H:%M:%S+0000')
@@ -71,16 +74,36 @@ def uploadDataset(params, current_user):
         dataset_json['lastUpdatedAt'] = str(int(time()))
 
         es.insert('datasets', '_doc', dataset_json)
+        
+        ### UPDATE LAST DATASET ID
         es.delete_index('last_id')
         sleep(2)
         es.insert('last_id', '_doc', {'id': currentID})
 
+        ### UPDATE DOMAINS
         domain = params['notArrayParams']['domain'].upper()
 
-        found = es.get_es_data_by_domainName("domains", domain)
-        if not(found):
+        isDomainNew = not(es.get_es_data_by_domainName("domains", domain))
+        if isDomainNew:
             es.insert('domains', '_doc', {"domainName": domain})
         
+        ### UPDATE TAGS
+        tags = params['arrayParams']['tags']
+
+        if not(isDomainNew):
+            for tag in tags:
+                tagName = tag['value'].lower()
+                tagName = tagName.capitalize()
+                isTagNew = not(es.get_es_data_by_domainName_and_tagName("tags", domain, tagName))
+
+                if isTagNew:
+                    es.insert('tags', '_doc', {"domainName": domain, "tagName": tag})
+        else:
+            for tag in tags:
+                tagName = tag['value'].lower()
+                tagName = tagName.capitalize()
+                es.insert('tags', '_doc', {"domainName": domain, "tagName": tag})
+    
         return "Succes"
     except:
         return "Eroare" 

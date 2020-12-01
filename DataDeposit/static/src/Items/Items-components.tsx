@@ -10,6 +10,7 @@ import { faStarHalf, faStar, faPortrait, faCalendar, faUser, faFile, faFileDownl
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable';
 import makeAnimated from 'react-select/animated';
 
 export const InputText = (props) => {
@@ -58,7 +59,31 @@ export const CustomSelect = (props) => {
         isMulti
         value={props.value}
         options={props.options}
-        placeholder="All subdomains"
+        placeholder={props.placeholder}
+        isSearchable={true}
+        />
+  );
+}
+
+export const CustomCreatableSelect = (props) => {
+
+  const animatedComponents = makeAnimated();
+
+  return (
+    <CreatableSelect
+      isClearable
+        closeMenuOnSelect={false}
+        components={animatedComponents}
+        defaultValue={[props.options[4], props.options[5]]}
+        
+        onChange={props.handleChange}
+        onInputChange={props.handleInputChange}
+        
+        isMulti
+        value={props.value}
+        options={props.options}
+        placeholder={props.placeholder}
+        isSearchable={true}
         />
   );
 }
