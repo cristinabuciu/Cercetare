@@ -18,24 +18,30 @@ def search(numbersOfItemsPerPage):
 
     return jsonify(numbersOfItemsPerPage=numbersOfItemsPerPage)
 
-def filterByArray(dataset, tags, itemInDataset):
+def filterByTags(dataset, tags, itemInDataset):
     for item in tags: 
         if not(any(item['label'].lower() in word.lower() for word in dataset[itemInDataset])):
             return False
     return True
 
+def filterByAuthors(dataset, tags, itemInDataset):
+    for item in tags: 
+        if not(any(item.lower() in word.lower() for word in dataset[itemInDataset])):
+            return False
+    return True
+
 def applyFilters(jsonParams):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
     
     result = es.get_es_data('datasets', jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'], jsonParams['notArrayParams']['dataset_title'], jsonParams['sortBy'], jsonParams['sortByField'])
     
     if jsonParams['arrayParams']['tags'] and len(jsonParams['arrayParams']['tags']) > 0:
-        result = list(filter(lambda x: filterByArray(x['_source'], jsonParams['arrayParams']['tags'], 'tags'), result))
+        result = list(filter(lambda x: filterByTags(x['_source'], jsonParams['arrayParams']['tags'], 'tags'), result))
     
     if len(jsonParams['arrayParams']['author']) > 0:
         authorArray = jsonParams['arrayParams']['author'].split(", ")
-        result = list(filter(lambda x: filterByArray(x['_source'], authorArray, 'authors'), result))
+        result = list(filter(lambda x: filterByAuthors(x['_source'], authorArray, 'authors'), result))
     
     # TODO: ADAUGA FILTRUL PENTRU DOWNLOAD TYPE
     
@@ -93,7 +99,7 @@ def calculateLastUpdatedAt(unixTime):
 
 
 def findItem(id):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     result = es.get_es_data_by_id('datasets', id)
@@ -125,8 +131,8 @@ def findItem(id):
     return json.dumps(returnArray)
 
 
-def getAllDomainsAndTags():
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+def getAllDefaultData():
+    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     result = es.get_es_index('domains')
@@ -142,13 +148,15 @@ def getAllDomainsAndTags():
         else:
             tags[tag['_source']['domainName']] = [{"value": tag['_source']['tagName'], "label": tag['_source']['tagName']}]
         
-    
-    return json.dumps([domains, tags])
+    result = es.get_es_index('locations')
+    countries = list(result[0]['_source'].keys())
+
+    return json.dumps([domains, tags, countries])
 
 
 def findUserID(user):
 
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     found = es.get_es_data_by_userName("logintable", user)

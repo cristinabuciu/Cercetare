@@ -56,7 +56,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 // PHYSICS: [{ value: 'PHYSICS_1', label: 'PHYSICS_1' }, { value: 'PHYSICS_2', label: 'PHYSICS_2' }, { value: 'PHYSICS_3', label: 'PHYSICS_3' }, { value: 'PHYSICS_4', label: 'PHYSICS_4' }],
                 // BUSINESS: [{ value: 'BUSINESS_1', label: 'BUSINESS_1' }, { value: 'BUSINESS_2', label: 'BUSINESS_2' }]
             },
-            country: ['All countries  ', 'Romania', 'Chile', 'Japan', 'Russia', 'China', 'Canada', 'Mexico', 'Egypt'],
+            country: ['None'],
             dataFormat: ['All Data Formats ', 'zip', 'rar', 'tar.gz'],
             sortBy: ['Dataset_title ASC', 'Dataset_title DESC', 'Avg_Rating_Value ASC', 'Avg_Rating_Value DESC'],
             downloadFrom: ['All Downloads ', 'Download Link', 'Download File', 'No Download']
@@ -82,12 +82,11 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     };
 
     componentDidMount() {
-
-        axios.get( '/getDomainsAndTags', {
+        // Domains, Tags, Countries
+        axios.get( '/getDefaultData', {
             params: {}
         })
           .then(response => {
-            // ['All domains  '].push(response.data)
             this.state.searchInputOptions.domain = ['All domains  '].concat(response.data[0])
             
             for(var domain in response.data[1]) {
@@ -97,6 +96,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     this.state.searchInputOptions.subdomainList[domain] = response.data[1][domain];
                 }
             }
+            this.state.searchInputOptions.country = ['All countries  '].concat(response.data[2]);
           })
           .catch(function (error) {
             console.log(error);

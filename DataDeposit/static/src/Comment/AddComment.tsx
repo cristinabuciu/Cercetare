@@ -30,7 +30,6 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
 
     onStarClick = (newRating) => {
       console.log("EMINEM");
-      debugger;
       if (newRating !== this.state.rating) {
           this.setState({
               rating: newRating
@@ -146,7 +145,6 @@ export interface ICommentFormState {}
       //   let author = this._author;
       //   let body = this._body;
       //   this.props.addComment(author.value, body.value);
-      debugger;
       console.log("GTA V");
       axios.post( '/updateReview', {
           params: {

@@ -102,7 +102,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                 // PHYSICS: ['PHYSICS_1', 'PHYSICS_2', 'PHYSICS_3', 'PHYSICS_4'],
                 // BUSINESS: ['BUSINESS_1', 'BUSINESS_2']
             },
-            country: ['Romania', 'Chile', 'Japan', 'Russia', 'China', 'Canada', 'Mexico', 'Egypt'],
+            country: [],
             dataFormat: ['zip', 'rar', 'tar.gz']
         },
         shouldEnterNewDomain: false,
@@ -130,7 +130,8 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
     };
 
     componentDidMount() {
-        axios.get( '/getDomainsAndTags', {
+        // Domains, Tags, Countries
+        axios.get( '/getDefaultData', {
             params: {}
         })
           .then(response => {
@@ -146,6 +147,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                     this.state.uploadInputOptions.subdomainList[domain] = response.data[1][domain];
                 }
             }
+            this.state.uploadInputOptions.country = response.data[2];
           })
           .catch(function (error) {
             console.log(error);
@@ -199,7 +201,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         this.setState({
             loaderVisibility: true
         });
-
+        
         axios.post( '/postData', {
             params: {
               	notArrayParams: {
@@ -294,7 +296,6 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             this.updateUploadOptions(false, false, true);
             break;
         default:
-            debugger;
             console.log("No match for radio button in upload !!!");
             return;
         }
@@ -444,7 +445,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                 <Col className="text-align-left">
                                     {this.state.shouldEnterNewDomain ? 
                                     <Input type="text" name="newDomain" id="newDomain" placeholder="Enter new domain" 
-                                    onChange={e => this.changeValue(e.target.value, 'otherDomain')}
+                                    onChange={e => this.changeValue(e.target.value.toUpperCase(), 'otherDomain')}
                                     /> : <></>}
                                 </Col>
                             </Row>

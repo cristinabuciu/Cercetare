@@ -1,5 +1,13 @@
 @import "../style_home.scss";
 
+.dropdown-style {
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+
+
+
 .button-style-sort {
   margin-left: 10px;
   margin-right: 10px;

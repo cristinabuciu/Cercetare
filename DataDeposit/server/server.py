@@ -1,7 +1,7 @@
 # server.py
 import os
 import sys
-from search import search, applyFilters, findItem, getAllDomainsAndTags, findUserID
+from search import search, applyFilters, findItem, getAllDefaultData, findUserID
 from upload import uploadDataset, uploadPaths, updateReviewByID
 import pgdb
 import zipfile
@@ -88,9 +88,10 @@ def getUserID():
 
     return findUserID(_user)
 
-@app.route('/getDomainsAndTags', methods = ['GET'])
-def getDomainsAndTags():
-    return getAllDomainsAndTags()
+# Domain, Tags, Country
+@app.route('/getDefaultData', methods = ['GET'])
+def getDefaultData():
+    return getAllDefaultData()
 
 @app.route("/login_post", methods=['POST'])
 def login_post():
@@ -99,7 +100,7 @@ def login_post():
     _username = receivedData.get('username')
     _password = receivedData.get('password')
 
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
     result = es.get_es_index('logintable')
     isAuthenticated = False

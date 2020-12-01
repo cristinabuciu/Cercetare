@@ -64,7 +64,6 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
             this.setState({
                 userID: response.data
             });
-            debugger;
           })
           .catch(function (error) {
             console.log(error);

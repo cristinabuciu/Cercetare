@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 
 import { Col, Button } from 'reactstrap';
 
@@ -22,16 +22,24 @@ export const Title = (props) => {
     );
 }
 
+
+
 export const ImageTitle = (props) => {
 
   const propsClassName = props.className ? " " + props.className : "";
   const profileID = props.profileID ? props.profileID : "1";
+  const listaMea= ['IT_domain.jpg', 'MEDICINE_domain.jpg', 'BIOLOGY_domain.jpg', 'CHEMISTRY_domain.jpg', 'ARCHITECTURE_domain.jpg', 'PHYSICS_domain.jpg', 'BUSINESS_domain.jpg']
+
+  let src = listaMea.includes(props.image) ? `static/dist/content/images/${props.image}` : 'static/dist/content/images/0_domain.jpg';
 
     return (
       <Col md={{ size: 12, offset: 0 }} className="text-align-center pageHeader-Title">
           <div className="pageHeader-Title-Image">
             <div>
-              <img src={'static/dist/content/images/' + props.image} className="image-title" />
+              <img
+                src={src}
+                className="image-title"
+              />
             </div>
             <div className="image-box">
               <div className="ala-de-sus text-align-left">
