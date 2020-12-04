@@ -147,7 +147,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         let nextPage = this.state.currentPage - 1;
         if(nextPage < 1) {
             nextPage = 1;
+            return;
         }
+        
         this.setState({
             currentPage: nextPage
         });
@@ -157,7 +159,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         let nextPage = this.state.currentPage + 1;
         if(nextPage > Math.ceil(this.state.numberOfCards / this.state.todosPerPage)) {
             nextPage = Math.ceil(this.state.numberOfCards / this.state.todosPerPage);
+            return;
         }
+
         this.setState({
             currentPage: nextPage
         });

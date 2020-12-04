@@ -37,7 +37,7 @@ def updateReviewByID(params):
             "createdAt": str(time()),
             "rating": params['rating']}
         
-        # es.insert('comments', '_doc', newComment)
+        es.insert('comments', '_doc', newComment)
 
         return "Succes"
     except:

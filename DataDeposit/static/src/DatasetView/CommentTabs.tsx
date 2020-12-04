@@ -49,19 +49,32 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
     }
 
     componentDidMount() {
-        const numberOfCardsLen = this.state.comments.length;
         this.updateComments();
-        
     }
 
-    switchLoader () {
-        this.setState(prevState => ({
-            loaderVisibility: !prevState.loaderVisibility
-          }));
+    setLoader (value = true) {
+        this.setState({
+            loaderVisibility: value,
+        });
+    }
+
+    setPagination (value = true) {
+        this.setState({
+            shouldDisplayPagination: value,
+        });
+    }
+
+    setNewPage (nextPage : number) {
+        this.setState({
+            currentPage: nextPage
+        }, () => {
+            this.updateComments();
+        });
     }
 
     updateComments() {
-        this.switchLoader();
+        this.setLoader();
+        this.setPagination(false);
         axios.get( '/getComments', {
             params: {
                 datasetId: this.props.id,
@@ -73,13 +86,12 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
             const numberOfCardsLen = response.data.length;
             if (numberOfCardsLen > 0) {
                 this.state.comments = response.data['results']
-                debugger;
                 this.setState({
                     numberOfCards: response.data['length'],
-                    shouldDisplayPagination: true,
                     wasInfo: false,
                     wasError: false
                 });
+                this.setPagination();
             } else {
                 this.setState({
                     wasInfo: true
@@ -94,7 +106,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
           })
           .finally(() => {
             // always executed
-            this.switchLoader();
+            this.setLoader(false);
         });
     }
 
@@ -102,33 +114,29 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         let nextPage = this.state.currentPage - 1;
         if(nextPage < 1) {
             nextPage = 1;
+            return;
+        } else {
+            this.setNewPage(nextPage);
         }
-        this.setState({
-            currentPage: nextPage
-        }, () => {
-            this.updateComments();
-        });
     }
 
     handleClickArrowRight = (event) => {
         let nextPage = this.state.currentPage + 1;
         if(nextPage > Math.ceil(this.state.numberOfCards / this.state.resultsPerPage)) {
             nextPage = Math.ceil(this.state.numberOfCards / this.state.resultsPerPage);
+            return;
+        } else {
+            this.setNewPage(nextPage);
         }
-        this.setState({
-            currentPage: nextPage
-        }, () => {
-            this.updateComments();
-        });
     }
 
     handleClick = (event) => {
-        this.setState({
-            currentPage: Number(event.target.id)
-        }, () => {
-            this.updateComments();
-        });
-      }
+        if (this.state.currentPage === Number(event.target.id)) {
+            return;
+        }
+
+        this.setNewPage(Number(event.target.id));
+    }
     
     switchTabs = (tab) => {
         if(this.state.activeTab !== tab) {
@@ -137,7 +145,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
             });
 
             if (tab === '1') {
-                this.updateComments();
+                this.setNewPage(1);
             }
         }
     }
@@ -240,8 +248,8 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                     
                     </Row>
 
-                        {this.state.shouldDisplayPagination ? searchResult : <LoaderComponent visible={this.state.loaderVisibility}/>}
-
+                        {this.state.shouldDisplayPagination ? searchResult : <></>}
+                        <LoaderComponent visible={this.state.loaderVisibility}/>
                         <Row className={this.state.wasInfo ? "" : "display-none"}>
                             <Col>
                                 <Alert color="info" className="text-align-center">
