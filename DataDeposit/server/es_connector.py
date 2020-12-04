@@ -123,6 +123,14 @@ class ESClass(object):
         s = self.es.search(index, body=searchJson, size=2000)
         return s['hits']['hits']#['total']
     
+    def get_es_data_by_datasetID(self, index, datasetID):
+        # searchJson = {"query": {"bool": {"must": {"match": {"datasetID": datasetID }}}},
+        #  "sort": {"createdAt": {"order": "desc"}}}
+        searchJson = {"query": { "match": {"datasetID": datasetID } } }
+
+        s = self.es.search(index, body=searchJson, size=2000)
+        return s['hits']['hits']#['total']
+    
     def get_es_data_by_domainName_and_tagName(self, index, domainName, tagName):
         searchJson = {"query": {"bool": {"must": [
             {"match": {"domainName": domainName}},
@@ -153,6 +161,12 @@ class ESClass(object):
         else:
             searchJson["sort"] = sortList
             return searchJson
+    
+    # update dataset rating
+    def update_dataset_rating(self, index, datasetID, newRatingValue, newRatingNumber):
+        body = { "script" : { "source": "ctx._source.avg_rating_value=" + str(newRatingValue) + ";" + "ctx._source.ratings_number=" + str(newRatingNumber) + ";", "lang": "painless" }, "query": { "term" : { "id.keyword": datasetID } } }
+
+        self.update_by_query(index, body)
 
     # insert function
     def insert(self, index, doc_type, body):
@@ -172,6 +186,10 @@ class ESClass(object):
     # update function
     def update(self, index, doc_type, event_id, body):
         self.es.update(index=index, doc_type=doc_type, id=event_id, body=body)
+    
+    # update by query
+    def update_by_query(self, index, body):
+        self.es.update_by_query(index, body)
 
     # create index
     def create_index(self, index, mapping):

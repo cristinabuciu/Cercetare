@@ -5,6 +5,7 @@ from flask import jsonify, json
 import pgdb
 import es_connector
 import time
+from operator import itemgetter
 
 def search(numbersOfItemsPerPage):
     hostname = '10.21.0.4'
@@ -164,6 +165,29 @@ def findUserID(user):
         return "0"
     else:
         return str(found[0]['_source']['id'])
+
+def getAllComments(datasetID, currentPage, resultsPerPage):
+    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es.connect()
+
+    comments = es.get_es_data_by_datasetID("comments", int(datasetID))
+
+    returnArray = []
+    allCommentsArray = []
+    for comment in comments:
+        if len(comment['_source']['commentBody']) > 0 and len(comment['_source']['commentTitle']) > 0:
+            allCommentsArray.append(comment['_source'])
+    
+    allCommentsArray = sorted(allCommentsArray, key=itemgetter('createdAt'), reverse=True)
+
+    indexOfLastTodo = int(currentPage) * int(resultsPerPage)
+    indexOfFirstTodo = indexOfLastTodo - int(resultsPerPage)
+
+    while indexOfFirstTodo < indexOfLastTodo and indexOfFirstTodo < len(allCommentsArray):
+        returnArray.append(allCommentsArray[indexOfFirstTodo])
+        indexOfFirstTodo += 1
+
+    return json.dumps({"results": returnArray, "length": len(allCommentsArray)})
 
 
 # def applyFilters1(jsonParams):

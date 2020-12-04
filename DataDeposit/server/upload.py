@@ -14,10 +14,8 @@ def updateReviewByID(params):
         result = es.get_es_data_by_id('datasets', params['id'])
 
         datasets = []
-        ids = []
         for dataset in result:
             datasets.append(dataset['_source'])
-            ids.append(dataset['_id'])
         
         if len(datasets) > 1:
             print("WARNING !! -> same id to more than 1 item")
@@ -28,7 +26,18 @@ def updateReviewByID(params):
         newRatingValue = (currentRatingValue * currentNumberOfRatings + params['rating']) / newNumberOfRatings
 
         # NU STIU SA FAC UPDATE (fara sa stric ceva)
-        # es.update('datasets', '_doc', dataset_json)
+        # es.update_dataset_rating('datasets', datasets[0]['id'], newRatingValue, newNumberOfRatings)
+
+
+        newComment = {
+            "datasetID": params['id'], 
+            "username": params['username'], 
+            "commentTitle": params['commentTitle'],
+            "commentBody": params['commentBody'],
+            "createdAt": str(time()),
+            "rating": params['rating']}
+        
+        # es.insert('comments', '_doc', newComment)
 
         return "Succes"
     except:

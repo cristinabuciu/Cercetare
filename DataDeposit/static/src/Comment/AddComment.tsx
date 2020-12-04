@@ -5,7 +5,7 @@ import "./AddComment.scss"
 import { faStarHalf, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactStars from "react-rating-stars-component";
-import { Card, CardTitle, CardText, Form, Row, Col } from 'reactstrap';
+import { Card, CardTitle, CardText, Form, Row, Col, Alert } from 'reactstrap';
 
 export interface IAddCommentProps {
   id: number;
@@ -14,6 +14,7 @@ export interface IAddCommentProps {
 export interface IAddCommentState {
     showComments: boolean;
     rating: number;
+    itWasPosted: boolean;
 }
 
 export default class AddComment extends React.Component<IAddCommentProps, IAddCommentState> {
@@ -21,6 +22,7 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
     state = {
         showComments: false,
         rating: 0,
+        itWasPosted: false,
         comments: [
             {id: 1, author: "landiggity", body: "This is my first comment on this forum so don't be rude"},
             {id: 2, author: "scarlett-jo", body: "That's a mighty fine comment you've got there my good looking fellow..."},
@@ -38,6 +40,12 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
           console.log(newRating);
       }
   }
+
+    onReceiveAnswerFromPost () {
+      this.setState({
+        itWasPosted: true
+      });
+    }
     
     
     render () {
@@ -54,8 +62,19 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
         <Card className="border-0">
             <CardTitle><h2>Join the Discussion!</h2></CardTitle>
                 <CardText>
+                {this.state.itWasPosted ?
+                <Row>
+                    <Col>
+                      <Alert color="success">
+                          Review posted successfully !
+                        </Alert>
+                    </Col>
+                </Row>
+                      
+                      : <>
                   <Row>
                     <Col className="rating-lg" md="2">
+                    
                       <ReactStars
                           count={5}
                           classNames="star-size padding-left-10"
@@ -68,11 +87,15 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
                           activeColor="#ffd700"
                           a11y={true}
                       />
-                      </Col><Col className="rating-lg">
-                      <span className="rating-text"> Acorda o nota</span>
-                    </Col>
+                    
+                      </Col>
+                      <Col className="rating-lg">
+                        <span className="rating-text"> Acorda o nota</span>
+                      </Col>
                     </Row>
-                    <CommentForm addComment={this._addComment.bind(this)} id={this.props.id} rating={this.state.rating}/>
+                    <CommentForm addComment={this._addComment.bind(this)} id={this.props.id} rating={this.state.rating} onReceiveAnswerFromPost={this.onReceiveAnswerFromPost.bind(this)}/></>
+                }
+                  
                 </CardText>
         </Card>
       );
@@ -121,22 +144,40 @@ export interface ICommentFormProps {
     addComment: Function;
     id: number;
     rating: number;
+    onReceiveAnswerFromPost: Function;
 }
 
-export interface ICommentFormState {}
+export interface ICommentFormState {
+    title: string;
+    body: string;
+}
   
   class CommentForm extends React.Component<ICommentFormProps, ICommentFormState> {
+
+    state = {
+      title: '',
+      body: ''
+    }
+
+    changeValue = (e, comboBoxTitle) => {
+      this.state[comboBoxTitle] = '' + e;
+      this.forceUpdate();
+  }
+
+
     render() {
       return (
         <Form className="comment-form" onSubmit={this._handleSubmit.bind(this)}>
           <div className="comment-form-fields">
-            <input placeholder="Title" required ></input><br />
-            <textarea placeholder="Comment" required ></textarea>
+            <input placeholder="Title" onChange={e => this.changeValue(e.target.value, 'title')}></input><br />
+            <textarea placeholder="Comment" onChange={e => this.changeValue(e.target.value, 'body')}></textarea>
           </div>
           <div className="comment-form-actions">
             <button type="submit" className="button-add-comment">Post Comment</button>
           </div>
         </Form>
+
+
       );
     } // end render
     
@@ -146,21 +187,22 @@ export interface ICommentFormState {}
       //   let body = this._body;
       //   this.props.addComment(author.value, body.value);
       console.log("GTA V");
+      const token = localStorage.getItem('login_user_token');
+      debugger;
       axios.post( '/updateReview', {
           params: {
               id: this.props.id,
-              rating: this.props.rating
+              username: token,
+              rating: this.props.rating,
+              commentBody: this.state.body,
+              commentTitle: this.state.title
           }
       })
         .then(response => {
           console.log("Phill ");
           console.log(response.data);
           console.log("Another");
-          
-          this.setState({
-              shouldDisplayLoading: false
-          });
-
+          this.props.onReceiveAnswerFromPost();
         })
         .catch(function (error) {
           console.log(error);

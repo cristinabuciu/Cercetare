@@ -1,7 +1,7 @@
 # server.py
 import os
 import sys
-from search import search, applyFilters, findItem, getAllDefaultData, findUserID
+from search import search, applyFilters, findItem, getAllDefaultData, findUserID, getAllComments
 from upload import uploadDataset, uploadPaths, updateReviewByID
 import pgdb
 import zipfile
@@ -60,6 +60,14 @@ def getData():
     _params = receivedData.get('params')
 
     return applyFilters(_params)
+
+@app.route('/getComments', methods = ['GET'])
+def getComments():
+    _datasetId = request.args['datasetId']
+    _currentPage = request.args['currentPage']
+    _resultsPerPage = request.args['resultsPerPage']
+
+    return getAllComments(_datasetId, _currentPage, _resultsPerPage)
 
 @app.route('/postData', methods = ['POST'])
 def postData():

@@ -53,7 +53,6 @@ import {
 // }
 
 export interface ICommentProps {
-    id: number;
     value: number;
     author: String;
     title: String;
@@ -92,7 +91,9 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
                             />
                         </div>
                         <div className="mrg-btm-xs js-review-body review-container">
-                            {this.props.body}
+                            <p className="comment-format">
+                                {this.props.body}
+                            </p>
                         </div>
                     </div>
                 </Col>

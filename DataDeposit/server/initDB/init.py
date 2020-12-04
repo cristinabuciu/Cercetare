@@ -98,3 +98,16 @@ with open("tags.json", 'r') as f:
 sleep(2)
 
 # #########################################################
+sleep(5)
+# ################ CREATE COMMENTS INDEX ##################
+
+es = es_connector.ESClass(server=IP, port=9200, use_ssl=False, user='', password='')
+es.connect()
+
+with open("comms.json", 'r') as f:
+    bulkData = json.load(f)
+    for item in bulkData:
+        es.insert('comments', '_doc', item)
+sleep(2)
+
+# #########################################################

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import axios from 'axios';
 
 import classnames from 'classnames';
 import AddComment from "../Comment/AddComment";
@@ -18,11 +19,13 @@ export interface ICommentTabsState {
     activeTab: string;
     currentPage: number;
     numberOfCards: number;
-    todosPerPage: number | null;
     shouldDisplayPagination: boolean;
     wasInfo: boolean;
     sortBy: String;
     sortByList: Array<String>;
+    loaderVisibility: boolean;
+    resultsPerPage: number | null;
+    wasError: boolean;
 }
 
 export default class CommentTabs extends React.Component<ICommentTabsProps, ICommentTabsState> {
@@ -31,32 +34,68 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         activeTab: '1',
         currentPage: 1,
         numberOfCards: 0,
-        todosPerPage: 5,
+        resultsPerPage: 5,
         shouldDisplayPagination: false,
         wasInfo: false,
+        wasError: false,
         sortBy: "Sort By  ",
         sortByList: ['Dataset_title ASC', 'Dataset_title DESC', 'Avg_Rating_Value ASC', 'Avg_Rating_Value DESC'],
+        loaderVisibility: false,
 
-        comments: [
-            {id: 1, value: 3.5, author: "landiggity", title: "Hatz", body: "This is my first comment on this forum so don't be rude", date: "20-10-2020"},
-            {id: 2, value: 1, author: "scarlett-jo", title: "Inoanta Chelutu", body: "That's a mighty fine comment you've got there my good looking fellow...", date: "20-10-2020"},
-            {id: 3, value: 4, author: "rosco", title: "Swalala", body: "What is the meaning of all of this 'React' mumbo-jumbo?", date: "20-10-2020"}
-        ]
+        comments: []
+            // {id: 1, value: 3.5, author: "landiggity", title: "Hatz", body: "This is my first comment on this forum so don't be rude", date: "20-10-2020"},
+            // {id: 2, value: 1, author: "scarlett-jo", title: "Inoanta Chelutu", body: "That's a mighty fine comment you've got there my good looking fellow...", date: "20-10-2020"},
+            // {id: 3, value: 4, author: "rosco", title: "Swalala", body: "What is the meaning of all of this 'React' mumbo-jumbo?", date: "20-10-2020"}
     }
 
     componentDidMount() {
         const numberOfCardsLen = this.state.comments.length;
-        if (numberOfCardsLen > 0) {
-            this.setState({
-                numberOfCards: numberOfCardsLen,
-                shouldDisplayPagination: true
-            });
-        } else {
-            this.setState({
-                wasInfo: true
-            });
-        }
+        this.updateComments();
         
+    }
+
+    switchLoader () {
+        this.setState(prevState => ({
+            loaderVisibility: !prevState.loaderVisibility
+          }));
+    }
+
+    updateComments() {
+        this.switchLoader();
+        axios.get( '/getComments', {
+            params: {
+                datasetId: this.props.id,
+                currentPage: this.state.currentPage,
+                resultsPerPage: this.state.resultsPerPage
+            }
+        })
+          .then(response => {
+            const numberOfCardsLen = response.data.length;
+            if (numberOfCardsLen > 0) {
+                this.state.comments = response.data['results']
+                debugger;
+                this.setState({
+                    numberOfCards: response.data['length'],
+                    shouldDisplayPagination: true,
+                    wasInfo: false,
+                    wasError: false
+                });
+            } else {
+                this.setState({
+                    wasInfo: true
+                });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            this.setState({
+                wasError: true
+            });
+          })
+          .finally(() => {
+            // always executed
+            this.switchLoader();
+        });
     }
 
     handleClickArrowLeft = (event) => {
@@ -66,23 +105,28 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         }
         this.setState({
             currentPage: nextPage
+        }, () => {
+            this.updateComments();
         });
     }
 
     handleClickArrowRight = (event) => {
         let nextPage = this.state.currentPage + 1;
-        if(nextPage > Math.ceil(this.state.numberOfCards / this.state.todosPerPage)) {
-            nextPage = Math.ceil(this.state.numberOfCards / this.state.todosPerPage);
+        if(nextPage > Math.ceil(this.state.numberOfCards / this.state.resultsPerPage)) {
+            nextPage = Math.ceil(this.state.numberOfCards / this.state.resultsPerPage);
         }
         this.setState({
             currentPage: nextPage
+        }, () => {
+            this.updateComments();
         });
     }
 
     handleClick = (event) => {
         this.setState({
             currentPage: Number(event.target.id)
-            
+        }, () => {
+            this.updateComments();
         });
       }
     
@@ -91,6 +135,10 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
             this.setState({
                 activeTab: tab
             });
+
+            if (tab === '1') {
+                this.updateComments();
+            }
         }
     }
 
@@ -99,13 +147,18 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         console.log(this.state.comments);
         let cards = this.state.comments.map(item => (
             // {id: 1, value: 3.5, author: "landiggity", title: "Hatz", body: "This is my first comment on this forum so don't be a dick"},
+//             commentBody: "body"
+// commentTitle: "title"
+// createdAt: "1132507830"
+// datasetID: 6
+// rating: 1.5
+// username: "admin"
             <Comment 
-                id={item.id}
-                value={item.value}
-                author={item.author}
-                title={item.title}
-                body={item.body}
-                date={item.date} />
+                value={item['rating']}
+                author={item['username']}
+                title={item['commentTitle']}
+                body={item['commentBody']}
+                date={new Date(item['createdAt'] * 1000).toLocaleDateString('en-GB')} />
           )
         )
 
@@ -118,11 +171,11 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
 
     render() {
         const searchResult = this.showSearchCards();
-        const todosPerPage = this.state.todosPerPage;
+        const resultsPerPage = this.state.resultsPerPage;
 
         // Logic for displaying page numbers
         const pageNumbers = new Array();
-        for (let i = 1; i <= Math.ceil(this.state.numberOfCards / todosPerPage); i++) {
+        for (let i = 1; i <= Math.ceil(this.state.numberOfCards / resultsPerPage); i++) {
           pageNumbers.push(i);
         }
     
@@ -172,8 +225,8 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                                     step={1} 
                                     min={3} 
                                     max={50} 
-                                    value={this.state.todosPerPage}
-                                    onChange={value => this.setState({todosPerPage: value })} />
+                                    value={this.state.resultsPerPage}
+                                    onChange={value => this.setState({resultsPerPage: value })} />
                                     <InputText 
                                         nameOfDropdown="sortBy" 
                                         titleDropdown={this.state.sortBy} 
@@ -187,12 +240,20 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                     
                     </Row>
 
-                        {this.state.shouldDisplayPagination ? searchResult : <></>}
+                        {this.state.shouldDisplayPagination ? searchResult : <LoaderComponent visible={this.state.loaderVisibility}/>}
 
                         <Row className={this.state.wasInfo ? "" : "display-none"}>
                             <Col>
                                 <Alert color="info" className="text-align-center">
                                     No comments found !
+                                </Alert>
+                            </Col>
+                        </Row>
+
+                        <Row className={this.state.wasError ? "" : "display-none"}>
+                            <Col>
+                                <Alert color="danger" className="text-align-center">
+                                    There was an error when getting the reviews !
                                 </Alert>
                             </Col>
                         </Row>
