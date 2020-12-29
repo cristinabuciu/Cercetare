@@ -167,6 +167,12 @@ class ESClass(object):
         body = { "script" : { "source": "ctx._source.avg_rating_value=" + str(newRatingValue) + ";" + "ctx._source.ratings_number=" + str(newRatingNumber) + ";", "lang": "painless" }, "query": { "term" : { "id": datasetID } } }
 
         self.update_by_query(index, body)
+    
+    # update dataset views
+    def update_dataset_views(self, index, datasetID):
+        body = { "script" : { "source": "ctx._source.views++", "lang": "painless" }, "query": { "term" : { "id": datasetID } } }
+
+        self.update_by_query(index, body)
 
     # insert function
     def insert(self, index, doc_type, body):

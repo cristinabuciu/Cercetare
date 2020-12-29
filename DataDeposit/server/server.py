@@ -2,7 +2,7 @@
 import os
 import sys
 from search import search, applyFilters, findItem, getAllDefaultData, findUserID, getAllComments
-from upload import uploadDataset, uploadPaths, updateReviewByID
+from upload import uploadDataset, uploadPaths, updateReviewByID, updateNumberOfViews
 import pgdb
 import zipfile
 from glob import glob
@@ -87,6 +87,8 @@ def updateReview():
 @app.route('/getItem', methods = ['GET'])
 def getItem():
     _id = request.args['id']
+
+    updateNumberOfViews(_id)
 
     return findItem(_id)
 

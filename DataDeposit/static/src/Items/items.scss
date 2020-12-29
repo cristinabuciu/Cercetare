@@ -273,6 +273,13 @@
   margin-bottom: 0;
 }
 
+.horizontal-list-item-last {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
 .horizontal-list-item:after {
   content: "\B7";
   margin: 0 7px;

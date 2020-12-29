@@ -131,16 +131,20 @@ export const TooltipButton = (props) => {
 export const HorizontalList = (props) => {
   const initialList = [
     {
-      id: 'a',
-      name: '30,000 views',
+      id: '1',
+      name: props.views + ' views',
     },
     {
-      id: 'b',
-      name: '4,028 downloads',
+      id: '2',
+      name: props.downloads + ' downloads',
     },
     {
-      id: 'c',
-      name: '3 updates',
+      id: '3',
+      name: props.updates + ' updates',
+    },
+    {
+      id: '4',
+      name: props.ratings + ' ratings',
     },
   ];
 
@@ -156,7 +160,8 @@ export const HorizontalList = (props) => {
     <div className={props.className ? props.className : ""}>
       <ul className="horizontal-list">
         {initialList.map(item => (
-          <li className="horizontal-list-item" key={item.id}>{item.name}</li>
+          // different for last item (no bullet after it)
+          item.id === '4' ?  <li className="horizontal-list-item-last" key={item.id}>{item.name}</li> : <li className="horizontal-list-item" key={item.id}>{item.name}</li>
         ))}
       </ul>
     </div>

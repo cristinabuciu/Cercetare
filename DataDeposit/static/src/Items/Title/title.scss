@@ -42,9 +42,7 @@
 
 .ala-de-sus {
     align-items: center;
-    margin: 15px 0 20px;
     opacity: .8;
-    padding: 0 25px;
 
     p {
         font-size: 12px;
@@ -83,6 +81,15 @@
     z-index: 0;
     border-radius: 4px 4px 0px 0px;
     
+    /* Add the blur effect */
+    filter: blur(3px);
+    -webkit-filter: blur(3px);
+    
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
 }
 
 .image-box {
@@ -93,9 +100,22 @@
     width: 100%;
 }
 
+.title-box {
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0, 0.4); /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
+    border: 3px solid #f1f1f1;
+    transform: translate(5%, 40%);
+    z-index: 2;
+    width: fit-content;
+    min-width: 50%;
+    max-width: 80%;
+    padding: 20px;
+    text-align: center;
+}
+
 .title-in-image {
-    padding: 0 25px 10px;
-    margin-top: 32px;
     z-index: 10;
     h3 {
         font-family: zeitung,sans-serif;
@@ -115,7 +135,6 @@
     font-size: 14px;
     line-height: 36px;
     align-items: center;
-    padding: 0 25px 10px;
     text-overflow: ellipsis;
     white-space: nowrap;
     z-index: 20;

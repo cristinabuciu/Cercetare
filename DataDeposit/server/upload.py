@@ -6,7 +6,22 @@ from datetime import datetime, timedelta
 import es_connector
 from time import sleep, time
 
+def updateNumberOfViews(id):
+    try:
+        es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+        es.connect()
+
+        es.update_dataset_views('datasets', int(id))
+
+        return "Succes"
+    except:
+        return "Eroare" 
+
+
 def updateReviewByID(params):
+    if params['rating'] == 0:
+        return "Skip"
+
     try:
         es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
         es.connect()
@@ -26,7 +41,7 @@ def updateReviewByID(params):
         newRatingValue = (currentRatingValue * currentNumberOfRatings + params['rating']) / newNumberOfRatings
 
         # NU STIU SA FAC UPDATE (fara sa stric ceva)
-        es.update_dataset_rating('datasets', datasets[0]['id'], newRatingValue, newNumberOfRatings)
+        es.update_dataset_rating('datasets', datasets[0]['id'], round(newRatingValue, 2), newNumberOfRatings)
 
 
         newComment = {

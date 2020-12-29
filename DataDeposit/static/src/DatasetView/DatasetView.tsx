@@ -43,7 +43,6 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
             console.log("AVA MAX");
             console.log(response.data);
             console.log("KINGS & QUEENS");
-            debugger;
             this.setState({
                 searchResult:response.data[0],
                 shoudLoad: false
@@ -95,6 +94,11 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                             dataIntegrity={this.state.searchResult[16]}
                             continuityAccess={this.state.searchResult[17]}
                             dataReuse={this.state.searchResult[18]}
+
+                            views={this.state.searchResult[19]}
+                            ratings={this.state.searchResult[20]}
+                            updates={this.state.searchResult[21]}
+                            downloads={this.state.searchResult[22]}
                         />
                         }
                         </Col>

@@ -36,6 +36,10 @@ export interface IDatasetViewLoadingProps {
     dataIntegrity: string;
     continuityAccess: string;
     dataReuse: string;
+    views: number;
+    ratings: number;
+    updates: number;
+    downloads: number;
 
     downloadPath: string;
     shouldHaveDownloadButton: boolean;
@@ -90,7 +94,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                 </Col>
                 <Col md={{ size: 12, offset: 0 }}>
                     <ImageTitle 
-                        className="margin-top-50 margin-bottom-10p" 
+                        className="margin-bottom-10p" 
                         titleSet={this.props.dataset_title}
                         image={this.props.domain + "_domain.jpg"}
                         subtitle={"Last updated " + this.props.lastUpdatedAt}
@@ -250,7 +254,11 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                 <Card className="margin-top-20">
                 {/* <CardBody> */}
                 <Row >
-                    <HorizontalList itemList={['a', 'b']} />
+                    <HorizontalList 
+                        views={this.props.views}
+                        ratings={this.props.ratings}
+                        updates={this.props.updates}
+                        downloads={this.props.downloads} />
                 </Row>
                 {/* </CardBody> */}
                     

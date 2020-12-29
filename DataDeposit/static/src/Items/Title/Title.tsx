@@ -42,17 +42,19 @@ export const ImageTitle = (props) => {
               />
             </div>
             <div className="image-box">
-              <div className="ala-de-sus text-align-left">
-                <p> <span>Public</span> </p>
-              </div>
               <div className="ala-de-sus-din-dr text-align-left">
                 <img src={'static/dist/content/images/profilePicture/' + profileID + "_avatar.jpg"} />
               </div>
-              <div className="title-in-image text-align-left">
-                <h3 className={"sellGear-title" + propsClassName}>{props.titleSet}</h3>
+              <div className="title-box">
+              <div className="ala-de-sus text-align-left">
+                <p> <span>Public</span> </p>
               </div>
-              <div className="subtitle-image">
-                    {props.subtitle ? props.subtitle : ""}
+                <div className="title-in-image text-align-left">
+                  <h3 className={"sellGear-title" + propsClassName}>{props.titleSet}</h3>
+                </div>
+                <div className="subtitle-image">
+                      {props.subtitle ? props.subtitle : ""}
+                </div>
               </div>
             </div>
           </div>
