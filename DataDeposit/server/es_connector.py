@@ -164,7 +164,7 @@ class ESClass(object):
     
     # update dataset rating
     def update_dataset_rating(self, index, datasetID, newRatingValue, newRatingNumber):
-        body = { "script" : { "source": "ctx._source.avg_rating_value=" + str(newRatingValue) + ";" + "ctx._source.ratings_number=" + str(newRatingNumber) + ";", "lang": "painless" }, "query": { "term" : { "id.keyword": datasetID } } }
+        body = { "script" : { "source": "ctx._source.avg_rating_value=" + str(newRatingValue) + ";" + "ctx._source.ratings_number=" + str(newRatingNumber) + ";", "lang": "painless" }, "query": { "term" : { "id": datasetID } } }
 
         self.update_by_query(index, body)
 

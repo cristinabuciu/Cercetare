@@ -144,6 +144,25 @@ export const Logout = props => (
   </NavItem>
 );
 
+export const Profile = props => (
+  <NavItem>
+    <span className="tooltiptext">
+      <Translate contentKey="global.menu.account.logout" />
+    </span>
+    <NavLink
+      tag={Link}
+      to="/"
+      className="d-flex align-items-center"
+      // onClick={() => props.handleLogout()}
+      style={{ color: 'white', textDecoration: 'none' }}
+    >
+      <FontAwesomeIcon icon="sign-out-alt" />
+      admin
+    </NavLink>
+  </NavItem>
+);
+
+
 export const Home = props => (
   <NavItem>
     <span className="tooltiptext">

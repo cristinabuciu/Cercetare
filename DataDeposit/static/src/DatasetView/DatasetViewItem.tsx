@@ -33,6 +33,9 @@ export interface IDatasetViewLoadingProps {
     owner: string;
     downloadType: string;
     lastUpdatedAt: string;
+    dataIntegrity: string;
+    continuityAccess: string;
+    dataReuse: string;
 
     downloadPath: string;
     shouldHaveDownloadButton: boolean;
@@ -209,7 +212,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                                 Data integrity and authenticity
                             </div>
                             <div>
-                                *add integrity and authenticity*
+                                {this.props.dataIntegrity ? this.props.dataIntegrity : "Not specified"}
                             </div>
                         </Col>
                     </Row>
@@ -219,7 +222,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                                 Continuity of access
                             </div>
                             <div>
-                                *add continuity*
+                                {this.props.continuityAccess ? this.props.continuityAccess : "Not specified"}
                             </div>
                         </Col>
                     </Row>
@@ -229,7 +232,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                                 Data reuse
                             </div>
                             <div>
-                                *add data reuse*
+                                {this.props.dataReuse ? this.props.dataReuse : "Not specified"}
                             </div>
                         </Col>
                     </Row>

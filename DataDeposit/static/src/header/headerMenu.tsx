@@ -6,7 +6,7 @@ import { Storage, translate } from 'react-jhipster';
 import { Collapse, Nav, Navbar, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import LoadingBar from 'react-redux-loading-bar';
 // import { getSession } from 'app/shared/reducers/authentication';
-import { Brand, Logo, Home, Logout } from './header-components';
+import { Brand, Logo, Home, Logout, Profile } from './header-components';
 import { connect } from 'react-redux';
 // import { IRootState } from 'app/shared/reducers';
 // import { AccountMenu, LocaleMenu } from 'app/shared/layout/header/menus';
@@ -108,7 +108,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
           <Logo />
           <Collapse isOpen={this.state.menuOpen} navbar>
             <Nav id="header-tabs" className="ml-auto" navbar>
-              {this.state.isAuthenticated ? (<Logout handleLogout={this.handleLogout} />) : (<Home toggleMenu={this.toggleMenu} />)}
+              {this.state.isAuthenticated ? (<><Profile /><Logout handleLogout={this.handleLogout} /> </>) : (<Home toggleMenu={this.toggleMenu} />)}
               
               
               {/* <LocaleMenu currentLocale={currentLocale} onClick={this.handleLocaleChange} /> */}

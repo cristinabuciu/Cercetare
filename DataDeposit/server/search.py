@@ -127,7 +127,7 @@ def findItem(id):
                 hasDownloadLink = 3
                 downloadPath = row['downloadPath'][5:]
 
-        returnArray.append([row['id'], row['domain'], row['tags'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink'], row['owner'], elapsedTime, hasDownloadLink, downloadPath])
+        returnArray.append([row['id'], row['domain'], row['tags'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink'], row['owner'], elapsedTime, hasDownloadLink, downloadPath, row['dataIntegrity'], row['continuityAccess'], row['dataReuse']])
     
     return json.dumps(returnArray)
 

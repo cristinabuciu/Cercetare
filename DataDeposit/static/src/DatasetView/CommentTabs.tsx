@@ -39,7 +39,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         wasInfo: false,
         wasError: false,
         sortBy: "Sort By  ",
-        sortByList: ['Dataset_title ASC', 'Dataset_title DESC', 'Avg_Rating_Value ASC', 'Avg_Rating_Value DESC'],
+        sortByList: ['# TODO'],
         loaderVisibility: false,
 
         comments: []
@@ -253,7 +253,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                         <Row className={this.state.wasInfo ? "" : "display-none"}>
                             <Col>
                                 <Alert color="info" className="text-align-center">
-                                    No comments found !
+                                    No reviews posted yet !
                                 </Alert>
                             </Col>
                         </Row>

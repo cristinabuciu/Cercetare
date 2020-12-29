@@ -26,7 +26,7 @@ def updateReviewByID(params):
         newRatingValue = (currentRatingValue * currentNumberOfRatings + params['rating']) / newNumberOfRatings
 
         # NU STIU SA FAC UPDATE (fara sa stric ceva)
-        # es.update_dataset_rating('datasets', datasets[0]['id'], newRatingValue, newNumberOfRatings)
+        es.update_dataset_rating('datasets', datasets[0]['id'], newRatingValue, newNumberOfRatings)
 
 
         newComment = {
