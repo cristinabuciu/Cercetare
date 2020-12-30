@@ -39,10 +39,16 @@ sleep(5)
 es = es_connector.ESClass(server=IP, port=9200, use_ssl=False, user='', password='')
 es.connect()
 
-adminAccount = {'id': 1, 'username': 'admin', 'password': 'admin'}
-johnAccount = {'id': 2, 'username': 'john', 'password': 'john'}
+adminAccount = {'id': 1, 'username': 'admin', 'password': 'admin', 'country': 'Romania', 'email': 'admin@admin.com'}
+johnAccount = {'id': 2, 'username': 'john', 'password': '1234', 'country': 'Japan', 'email': 'john@john.com'}
+dorianAccount = {'id': 3, 'username': 'Dorian', 'password': '1234', 'country': 'Germany', 'email': 'Dorian@Dorian.com'}
+spAccount = {'id': 4, 'username': 'SpiderParker', 'password': '1234', 'country': 'Canada', 'email': 'SpiderParker@SpiderParker.com'}
+putinAccount = {'id': 5, 'username': 'Putin', 'password': '1234', 'country': 'Russia', 'email': 'Putin@Putin.com'}
 es.insert('logintable', '_doc', adminAccount)
 es.insert('logintable', '_doc', johnAccount)
+es.insert('logintable', '_doc', dorianAccount)
+es.insert('logintable', '_doc', spAccount)
+es.insert('logintable', '_doc', putinAccount)
 pprint.pprint(es.get_es_index('logintable'))
 
 ##########################################################

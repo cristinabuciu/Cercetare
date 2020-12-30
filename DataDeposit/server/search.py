@@ -19,6 +19,16 @@ def search(numbersOfItemsPerPage):
 
     return jsonify(numbersOfItemsPerPage=numbersOfItemsPerPage)
 
+def getUserInfoById(userId):
+    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es.connect()
+
+    userInfo = es.get_es_data_by_id('logintable', userId)
+    userInfo = userInfo[0]['_source']
+    countByOwnerId = es.count_es_data_by_ownerId('datasets', userId)
+
+    return json.dumps({'username': userInfo['username'], 'country': userInfo['country'], 'email': userInfo['email'], 'datasets': countByOwnerId})
+
 def filterByTags(dataset, tags, itemInDataset):
     for item in tags: 
         if not(any(item['label'].lower() in word.lower() for word in dataset[itemInDataset])):
@@ -35,7 +45,13 @@ def applyFilters(jsonParams):
     es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
     
-    result = es.get_es_data('datasets', jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'], jsonParams['notArrayParams']['dataset_title'], jsonParams['sortBy'], jsonParams['sortByField'])
+    userId = None
+    shouldDisplayPrivate = False
+    if 'userId' in jsonParams['notArrayParams']:
+        userId = jsonParams['notArrayParams']['userId']
+        shouldDisplayPrivate = True
+
+    result = es.get_es_data('datasets', jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'], jsonParams['notArrayParams']['dataset_title'], jsonParams['sortBy'], jsonParams['sortByField'], userId, shouldDisplayPrivate)
     
     if jsonParams['arrayParams']['tags'] and len(jsonParams['arrayParams']['tags']) > 0:
         result = list(filter(lambda x: filterByTags(x['_source'], jsonParams['arrayParams']['tags'], 'tags'), result))

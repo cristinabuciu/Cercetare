@@ -1,8 +1,9 @@
 # server.py
 import os
 import sys
-from search import search, applyFilters, findItem, getAllDefaultData, findUserID, getAllComments
+from search import search, applyFilters, findItem, getAllDefaultData, findUserID, getAllComments, getUserInfoById
 from upload import uploadDataset, uploadPaths, updateReviewByID, updateNumberOfViews
+from delete import deleteDataset
 import pgdb
 import zipfile
 from glob import glob
@@ -42,8 +43,8 @@ def index():
 def find_file(dir, ext):
     return glob(os.path.join(dir, "*.{}".format(ext)))
 
-@app.route('/takeData', methods = ['GET'])
-def upload_file_test():
+@app.route('/getUserId', methods = ['GET'])
+def getUserId():
     return "Test"
 
 @app.route("/logout_post", methods=['POST'])
@@ -103,6 +104,20 @@ def getUserID():
 def getDefaultData():
     return getAllDefaultData()
 
+@app.route('/getUserInfo', methods = ['GET'])
+def getUserInfo():
+    _userID = request.args['userId']
+
+    return getUserInfoById(_userID)
+
+@app.route('/deleteDatasetById', methods = ['POST'])
+def deleteDatasetById():
+    receivedData = json.loads(request.data.decode('utf-8'))
+    _params = receivedData.get('params')
+    _id = _params['id']
+
+    return deleteDataset(_id)
+
 @app.route("/login_post", methods=['POST'])
 def login_post():
     global db_username, db_password, db_database, db_hostname, current_user
@@ -115,6 +130,7 @@ def login_post():
     result = es.get_es_index('logintable')
     isAuthenticated = False
     currentUser = ''
+    currentUserId = 0
     errorMessage = ""
 
     for entry in result:
@@ -124,12 +140,13 @@ def login_post():
             session['login'] = True
             session['username'] = _username
             currentUser = _username
-            resp = make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, errorMessage=errorMessage))
+            currentUserId = entry['_source']['id']
+            resp = make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, userId=currentUserId, errorMessage=errorMessage))
             resp.set_cookie("current_username", _username)
             return resp
 
     errorMessage = "User-or-password-wrong"
-    return make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, errorMessage=errorMessage))
+    return make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, userId=currentUserId, errorMessage=errorMessage))
 
 
 def allowed_file(filename):

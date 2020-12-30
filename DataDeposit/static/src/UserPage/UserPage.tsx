@@ -1,22 +1,31 @@
-
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import axios from 'axios';
 
-import './Home.scss';
+import {
+    Card, Label, CardText, CardBody,
+    CardTitle, CardSubtitle, Button, Input, Row, Col, Tooltip, Alert
+} from 'reactstrap';
 import LeftBar from "../LeftBar/LeftBar";
-import { Row, Col, Alert } from 'reactstrap';
 import { Container } from 'semantic-ui-react';
+import { RouteComponentProps } from 'react-router';
+
 import { Title } from '../Items/Title/Title';
 import Search from '../Items/Search/Search';
 import SearchCard from '../Items/SearchCard';
+
 import {LoaderComponent} from '../Items/Items-components'
 
-export interface IHomeProps {
-    greeting: string;
+import './userpage.scss';
+
+export interface IDatasetViewProps extends RouteComponentProps {
+    color: String;
+    userId: number;
 }
 
-export interface IHomeState {
-    searchResult:Array<Array<string>>;
+export interface IDatasetViewState {
+    searchResult:Array<string>;
+    shoudLoad: boolean;
+
     numberOfCards: number;
     isAuthenticated: boolean;
     shouldDisplayPagination: boolean;
@@ -25,11 +34,21 @@ export interface IHomeState {
     loaderVisibility: boolean;
     wasError: boolean;
     wasInfo: boolean;
+
+    userInfo: {
+        username: string;
+        country: string;
+        email: string;
+        datasets: number;
+    }
 }
 
-export default class Home extends React.Component<IHomeProps, IHomeState> {
+export default class DatasetView extends React.Component<IDatasetViewProps, IDatasetViewState> {
+
     state = {
         searchResult: [],
+        shoudLoad: true,
+
         numberOfCards: 0,
         isAuthenticated: false,
         shouldDisplayPagination: false,
@@ -38,18 +57,34 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         todosPerPage: 3,
         loaderVisibility: false,
         wasError: false,
-        wasInfo: false
-    };
+        wasInfo: false,
 
-    componentDidMount() {
-        this.state.isAuthenticated = false;
-        const token = localStorage.getItem('login_user_token');
-        console.log(token);
-        
-        if(token) {
-            console.log("INTRA PE AICI");
-            this.state.isAuthenticated = true;
+        userInfo: {
+            username: "",
+            country: "",
+            email: "",
+            datasets: 0
         }
+    }
+      
+    componentDidMount(): void {
+        axios.get( '/getUserInfo', {
+            params: {
+                userId: this.props.userId,
+            }
+        })
+          .then(response => {
+            this.setState({
+                userInfo: response.data
+            });
+
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+            // always executed
+        });
     }
 
 
@@ -118,7 +153,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                         shouldHaveDownloadLink={item[12] === 1}
                         owner={item[14]}
                         privateItem={item[15]}
-                        shouldHaveDelete={false}
+                        shouldHaveDelete={true}
                     />
                 </Col>
             </Row>
@@ -169,52 +204,56 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     }
 
     render() {
-        const paddingTop = '60px';
         const searchResult = this.showSearchCards();
-        const currentPage = this.state.currentPage;
         const todosPerPage = this.state.todosPerPage;
-  
-        // Logic for displaying todos
-        // const indexOfLastTodo = currentPage * todosPerPage;
-        // const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
-        // const currentTodos = searchResult.slice(indexOfFirstTodo, indexOfLastTodo);
-
-        // PAGINARE IN FRONTEND
-        // const renderTodos = currentTodos.map((card, index) => {
-        //   return <div key={index}>{card}</div>;
-        // });
     
-        // Logic for displaying page numbers
         const pageNumbers = new Array();
         for (let i = 1; i <= Math.ceil(this.state.numberOfCards / todosPerPage); i++) {
-          pageNumbers.push(i);
+            pageNumbers.push(i);
         }
     
         const renderPageNumbers = pageNumbers.map(number => {
-          return (
+            return (
             <li
-              key={number}
-              id={number}
-              className={this.state.currentPage === number ? "active" : ""}
-              onClick={this.handleClick}
+                key={number}
+                id={number}
+                className={this.state.currentPage === number ? "active" : ""}
+                onClick={this.handleClick}
             >
-              {number}
+                {number}
             </li>
-          );
+            );
         });
         return (
                 //  <button onClick={() => this.setState({count: this.state.count+1})}>
                 //     This button has been clicked {this.state.count} times.
                 // </button> 
-                <Container className="themed-container" fluid={true}>
+                <Container className="themed-container" >
                     <Row lg="12">
-                        <Title titleSet={this.props.greeting}/>
+                        
                     </Row>
                     <Row md="4">
+                        <Col className="profile-picture text-align-left" md={{ size: 2, offset: 0 }}>
+                            <img src={'static/dist/content/images/profilePicture/' + this.props.userId + "_avatar.jpg"} />
+                            
+                            <Row className="user-info text-align-center padding-top-20">
+                                <Col className="text-align-left"><h3>Username:</h3></Col>
+                                <Col className="text-align-right"><h3>{this.state.userInfo.username}</h3></Col>
+                            </Row>
+                            <Row className="user-info text-align-center">
+                                <Col className="text-align-left"><h3>Country:</h3></Col>
+                                <Col className="text-align-right"><h3>{this.state.userInfo.country}</h3></Col>
+                            </Row>
+                            <Row className="user-info text-align-center">
+                                <Col className="text-align-left"><h3>Email:</h3></Col>
+                                <Col className="text-align-right"><h3>{this.state.userInfo.email}</h3></Col>
+                            </Row>
+                            <Row className="user-info text-align-center">
+                                <Col className="text-align-left"><h3>Datasets:</h3></Col>
+                                <Col className="text-align-right"><h3>{this.state.userInfo.datasets}</h3></Col>
+                            </Row>
+                        </Col>
                         
-                        <LeftBar 
-                            className='resizable-1050' 
-                            modeSearch={true}/>
                         <Col md={{ size: 2, offset: 0 }}>
                             .
                         </Col>
@@ -223,6 +262,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                                 setItemsForShow={this.setItemsForShow}
                                 currentPage={this.state.currentPage}
                                 handleLoaderChange={this.handleLoaderChange}
+                                userId={this.props.userId}
                             />
                             <hr className="hr-style" />
                             {this.state.loaderVisibility ? <LoaderComponent visible={this.state.loaderVisibility}/>
@@ -266,4 +306,5 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             
         );
     }
+
 }

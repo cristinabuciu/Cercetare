@@ -1,0 +1,30 @@
+@import "../style_home";
+
+.profile-picture {
+    z-index: 25;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    img {
+        border-radius: 50%;
+    }
+}
+
+.test {
+    height: auto;
+}
+
+.user-info {
+    z-index: 10;
+    text-align: center;
+    h3 {
+        font-family: zeitung,sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: .25px;
+        line-height: 1.25;
+        margin-bottom: 5px;
+        text-decoration: none;
+    }
+}

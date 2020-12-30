@@ -67,6 +67,7 @@ sudo curl -X PUT "172.24.0.2:9200/datasets?pretty" -H 'Content-Type: application
             "avg_rating_value": {"type": "float"},
             "ratings_number": {"type": "integer"},
             "owner": {"type": "text", "fielddata": true},
+            "ownerId": {"type": "integer"},
             "downloadPath": {"type": "text", "fielddata": true},
             "lastUpdatedAt": {"type": "text", "fielddata": true},
             "dataReuse": {"type": "text", "fielddata": true},

@@ -77,12 +77,13 @@ class ESClass(object):
     def get_es_index(self, index):
         s = self.es.search(index, body=ESClass.MATCH_ALL_QUERY, size=2000)
         return s['hits']['hits']#['total']
-
-    def get_es_data(self, index, domain, country, data_format, year, dataset_title, order, orderField):
+    
+    def get_es_data(self, index, domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
         DATASETS_MATCH = "{\"sort\": [ { \"dataset_title\": {\"order\": \"desc\"} } ], \
                 \"query\": { \
                     \"bool\": { \
                     \"must\": [ \
+                        {}\
                         { \
                         \"match_phrase\": { \
                             \"domain\": \"" + domain + "\" \
@@ -107,8 +108,9 @@ class ESClass(object):
                     } \
                 } \
             }"
+            
         # a = json.loads(DATASETS_MATCH)
-        s = self.es.search(index, body=self.match_dataset(domain, country, data_format, year, dataset_title, order, orderField), size=2000)
+        s = self.es.search(index, body=self.match_dataset(domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate), size=2000)
         return s['hits']['hits']#['total']
     
     def get_es_data_by_id(self, index, id):
@@ -146,13 +148,21 @@ class ESClass(object):
         s = self.es.search(index, body=searchJson, size=2000)
         return s['hits']['hits']#['total']
 
-    def match_dataset(self, domain, country, data_format, year, dataset_title, order, orderField):
+    def match_dataset(self, domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
         searchJson = {"query": { "bool": {"must": [
             {"wildcard": {"domain": {"value": domain.lower()}}}, 
             {"wildcard": {"country": {"value": country.lower()}}},
             {"wildcard": {"data_format": {"value": data_format.lower()}}},
             {"wildcard": {"year": {"value": year.lower()}}},
-            {"wildcard": {"dataset_title": {"value": dataset_title.lower()}}} ]}}}
+            {"wildcard": {"dataset_title": {"value": dataset_title.lower()}}} 
+            ]}}}
+        
+        if userId:
+            searchJson['query']['bool']['must'].append({"match": {"ownerId": int(userId)}})
+        
+        if not(shouldDisplayPrivate):
+            searchJson['query']['bool']['must'].append({"match": {"private": False}})
+
         if orderField.lower() == "dataset_title":
             orderField += ".raw"
         sortList = [ { orderField.lower(): {"order": order.lower()} } ]
@@ -161,6 +171,13 @@ class ESClass(object):
         else:
             searchJson["sort"] = sortList
             return searchJson
+
+
+    def count_es_data_by_ownerId(self, index, ownerId):
+        body = {"query": { "match": {"ownerId": int(ownerId) } } }
+
+        s = self.count(index, body)
+        return s['count']
     
     # update dataset rating
     def update_dataset_rating(self, index, datasetID, newRatingValue, newRatingNumber):
@@ -173,6 +190,10 @@ class ESClass(object):
         body = { "script" : { "source": "ctx._source.views++", "lang": "painless" }, "query": { "term" : { "id": datasetID } } }
 
         self.update_by_query(index, body)
+
+    def delete_dataset_by_id(self, index, datasetId):
+        body = {"query": {"match": {"id": datasetId}}}
+        self.es.delete_by_query(index, body)
 
     # insert function
     def insert(self, index, doc_type, body):
@@ -208,6 +229,10 @@ class ESClass(object):
     # delete index
     def delete_index(self, index):
         self.es.indices.delete(index=index)
+    
+    # count documents by query
+    def count(self, index, body):
+        return self.es.count(index=index, body=body)
 
     # bulk operation
     def bulk_insert(self, index, doc_type, json_data):

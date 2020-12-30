@@ -14,6 +14,8 @@ export interface ICardProps {
     setItemsForShow: Function;
     currentPage: number;
     handleLoaderChange: Function;
+
+    userId?: number;
 }
 
 export interface ICardState {
@@ -150,7 +152,6 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         if (shouldCount == false) {
             this.props.handleLoaderChange(true);
         }
-
         axios.post( '/getData', {
             params: {
               	notArrayParams: {
@@ -160,6 +161,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     year: this.state.year === '' ? '*' : this.state.year + '*',
                     dataset_title: this.state.dataset_title === '' ? '*' : '*' + this.state.dataset_title + '*',
                     downloadFrom: this.state.downloadFrom === 'All Downloads ' ? '*' : this.state.downloadFrom,
+                    userId: this.props.userId
                 },
                 arrayParams: {
                       tags: this.state.subdomain, //=== 'All subdomains  ' ? '' : this.state.subdomain,

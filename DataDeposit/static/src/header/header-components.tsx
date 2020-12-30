@@ -151,13 +151,13 @@ export const Profile = props => (
     </span>
     <NavLink
       tag={Link}
-      to="/"
+      to={'/userpage/' + props.userId}
       className="d-flex align-items-center"
       // onClick={() => props.handleLogout()}
       style={{ color: 'white', textDecoration: 'none' }}
     >
       <FontAwesomeIcon icon="sign-out-alt" />
-      admin
+      {props.username}
     </NavLink>
   </NavItem>
 );

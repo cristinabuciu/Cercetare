@@ -1,4 +1,5 @@
 import * as React from 'react';
+import axios from 'axios';
 
 import {
     Card, Label, CardText, CardBody,
@@ -35,6 +36,8 @@ export interface ISearchCardProps {
     shouldHaveDownloadButton: boolean;
     shouldHaveDownloadLink: boolean;
     owner: string;
+
+    shouldHaveDelete: boolean;
 }
 
 
@@ -42,6 +45,9 @@ export interface ISearchCardState {
     setTooltipOpen: boolean;
     ratingAvgValue: number;
     uploadedFileLink: string;
+
+    disabledDeleteButton: boolean;
+    deleteButtonText: string;
 }
 
 export default class SearchCard extends React.Component<ISearchCardProps, ISearchCardState> {
@@ -49,9 +55,11 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
     state = {
         setTooltipOpen: false,
         ratingAvgValue: 4.58,
-        uploadedFileLink: ''
-    }
+        uploadedFileLink: '',
 
+        disabledDeleteButton: false,
+        deleteButtonText: "Delete"
+    }
 
     tooltipOpen(value) {
         this.setState ({
@@ -75,6 +83,32 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                 uploadedFileLink: 'static/dist/uploadDataset/' + user + '_dataset.zip'
             });
         }
+
+        this.deleteItem = this.deleteItem.bind(this);
+    }
+
+    deleteItem () {
+        this.setState({
+            disabledDeleteButton: true,
+            deleteButtonText: "Deleting..."
+        });
+        debugger;
+        axios.post( '/deleteDatasetById', {
+            params: {
+                id: this.props.id
+            }
+        })
+          .then(response => {
+            console.log("Carolina ");
+            console.log(response.data);
+            console.log("Jambala");
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          }); 
     }
   
     render() {  
@@ -82,10 +116,10 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
       return (
         <Card className="margin-top-20 z-depth-hoverable">
             <Row>
-                <Col xs="0" md="0" lg="2" className="resizable-1050"> 
-                     <Label for="titluDataset" className="label-format">Dataset title:</Label>
+                <Col xs="0" md="0" lg="1" className="resizable-1050"> 
+                     <Label for="titluDataset" className="label-format">Title:</Label>
                  </Col>
-                 <Col xs="6" lg="7">
+                 <Col xs="6" lg="8">
                      <NavLink tag={Link} to={'/datasetView/' + this.props.id}>{this.props.dataset_title}</NavLink>
                  </Col>
                  <Col xs="2" lg="1" className="text-align-right">
@@ -133,9 +167,13 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                  <Col className="spanSpecial resizable-1350">
                  <FontAwesomeIcon icon={faCalendar} /> {this.props.year}
                  </Col>
-                 <Col className="spanSpecial">
-                 <FontAwesomeIcon icon={faUser} /> {this.props.owner}
-                 </Col>
+                 {this.props.shouldHaveDelete ?
+                    <></>
+                    :
+                    <Col className="spanSpecial">
+                    <FontAwesomeIcon icon={faUser} /> {this.props.owner}
+                    </Col>
+                 }
                  <Col className="spanDomain">
                  <FontAwesomeIcon icon={faNewspaper} /> {this.props.domain}
                  </Col>
@@ -158,6 +196,16 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     }
                     
                 </Col>
+                {this.props.shouldHaveDelete ?
+                    <Col className="spanSpecial resizable-1350 text-align-right">
+                        <Button 
+                            color="danger" 
+                            disabled={this.state.disabledDeleteButton} 
+                            onClick={this.deleteItem}>{this.state.deleteButtonText}</Button>{' '}
+                    </Col>
+                    :
+                    <></>
+                 }
              </Row>
             </Card>
         

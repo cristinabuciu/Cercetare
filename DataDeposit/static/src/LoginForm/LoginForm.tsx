@@ -40,6 +40,7 @@ export default class LoginForm extends React.Component<ILoginFormProps, ILoginFo
             console.log(response);
             if(response.data.isAuthenticated) {
                 localStorage.setItem('login_user_token', response.data.username);
+                localStorage.setItem('login_user_token_id', response.data.userId);
                 // window.location.reload(false);
                 window.location.href = '/';
             } else {

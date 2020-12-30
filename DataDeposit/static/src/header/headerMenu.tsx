@@ -33,24 +33,33 @@ export interface IHeaderProps {
 export interface IHeaderState {
   menuOpen: boolean;
   isAuthenticated: boolean;
+  tokenId: number;
+  username: string;
 }
 
 export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
   state: IHeaderState = {
     menuOpen: false,
-    isAuthenticated: false
+    isAuthenticated: false,
+    tokenId: 0,
+    username: ""
   };
 
   componentWillMount() {
     this.state.isAuthenticated = false;
     const token = localStorage.getItem('login_user_token');
+    const tokenId = localStorage.getItem('login_user_token_id');
+    this.setState({
+      tokenId: tokenId !== null ? parseInt(tokenId) : 0,
+      username: token !== null ? token : ""
+    });
     console.log(token);
-    
+
     if(token) {
       console.log("INTRA PE AICI");
       this.state.isAuthenticated = true;
     }
-    axios.get('/takeData', {
+    axios.get('/getUserId', {
       params: {
         ID: 12345
       }
@@ -108,7 +117,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
           <Logo />
           <Collapse isOpen={this.state.menuOpen} navbar>
             <Nav id="header-tabs" className="ml-auto" navbar>
-              {this.state.isAuthenticated ? (<><Profile /><Logout handleLogout={this.handleLogout} /> </>) : (<Home toggleMenu={this.toggleMenu} />)}
+              {this.state.isAuthenticated ? (<><Profile userId={this.state.tokenId} username={this.state.username} /><Logout handleLogout={this.handleLogout} /> </>) : (<Home toggleMenu={this.toggleMenu} />)}
               
               
               {/* <LocaleMenu currentLocale={currentLocale} onClick={this.handleLocaleChange} /> */}

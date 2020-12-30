@@ -188,7 +188,7 @@ export interface ICommentFormState {
       //   this.props.addComment(author.value, body.value);
       console.log("GTA V");
       const token = localStorage.getItem('login_user_token');
-      debugger;
+
       axios.post( '/updateReview', {
           params: {
               id: this.props.id,
