@@ -182,6 +182,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 this.setState({
                     resultsSearchArray:response.data
                 }, () => {
+                    debugger;
                     this.props.handleLoaderChange(false);
                     this.props.setItemsForShow(this.state.resultsSearchArrayLen, this.state.resultsPerPage, this.state.resultsSearchArray, searchWasPressed, false, this.state.resultsSearchArrayLen == 0);
                 });

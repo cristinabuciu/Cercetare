@@ -8,7 +8,7 @@ from time import sleep, time
 
 def updateNumberOfViews(id):
     try:
-        es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
         es.connect()
 
         es.update_dataset_views('datasets', int(id))
@@ -23,7 +23,7 @@ def updateReviewByID(params):
         return "Skip"
 
     try:
-        es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
         es.connect()
 
         result = es.get_es_data_by_id('datasets', params['id'])
@@ -59,7 +59,7 @@ def updateReviewByID(params):
         return "Eroare" 
 
 def getCoordinates(country):
-    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     locations = es.get_es_index('locations')[0]['_source']
@@ -68,7 +68,7 @@ def getCoordinates(country):
 
 def uploadDataset(params, current_user):
     try:
-        es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
         es.connect()
 
         total = es.get_es_index('last_id')[0]['_source']['id']

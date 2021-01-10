@@ -39,7 +39,9 @@ export interface IDatasetViewState {
         username: string;
         country: string;
         email: string;
-        datasets: number;
+        privDatasets: number;
+        pubDatasets: number;
+        hasPhoto: boolean;
     }
 }
 
@@ -63,7 +65,9 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
             username: "",
             country: "",
             email: "",
-            datasets: 0
+            privDatasets: 0,
+            pubDatasets: 0,
+            hasPhoto: false
         }
     }
       
@@ -229,12 +233,11 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                 //     This button has been clicked {this.state.count} times.
                 // </button> 
                 <Container className="themed-container" >
-                    <Row lg="12">
-                        
-                    </Row>
                     <Row md="4">
                         <Col className="profile-picture text-align-left" md={{ size: 2, offset: 0 }}>
-                            <img src={'static/dist/content/images/profilePicture/' + this.props.userId + "_avatar.jpg"} />
+                            {this.state.userInfo.hasPhoto 
+                            ? <img src={'static/dist/content/images/profilePicture/' + this.props.userId + "_avatar.jpg"} />
+                            : <img src={'static/dist/content/images/profilePicture/default.png'} />}
                             
                             <Row className="user-info text-align-center padding-top-20">
                                 <Col className="text-align-left"><h3>Username:</h3></Col>
@@ -249,8 +252,12 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                                 <Col className="text-align-right"><h3>{this.state.userInfo.email}</h3></Col>
                             </Row>
                             <Row className="user-info text-align-center">
-                                <Col className="text-align-left"><h3>Datasets:</h3></Col>
-                                <Col className="text-align-right"><h3>{this.state.userInfo.datasets}</h3></Col>
+                                <Col className="text-align-left"><h3>Public datasets:</h3></Col>
+                                <Col className="text-align-right"><h3>{this.state.userInfo.pubDatasets}</h3></Col>
+                            </Row>
+                            <Row className="user-info text-align-center">
+                                <Col className="text-align-left"><h3>Private datasets:</h3></Col>
+                                <Col className="text-align-right"><h3>{this.state.userInfo.privDatasets}</h3></Col>
                             </Row>
                         </Col>
                         
@@ -258,6 +265,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                             .
                         </Col>
                         <Col md={{ size: 10, offset: 0 }}>
+                            <Title className="user-page-title margin-bottom-20" titleSet={"Welcome, " +this.state.userInfo.username} />
                             <Search 
                                 setItemsForShow={this.setItemsForShow}
                                 currentPage={this.state.currentPage}

@@ -20,14 +20,15 @@ def search(numbersOfItemsPerPage):
     return jsonify(numbersOfItemsPerPage=numbersOfItemsPerPage)
 
 def getUserInfoById(userId):
-    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     userInfo = es.get_es_data_by_id('logintable', userId)
     userInfo = userInfo[0]['_source']
-    countByOwnerId = es.count_es_data_by_ownerId('datasets', userId)
+    privateDatasetNumber = es.count_es_data_by_ownerId('datasets', userId, True)
+    publicDatasetNumber = es.count_es_data_by_ownerId('datasets', userId, False)
 
-    return json.dumps({'username': userInfo['username'], 'country': userInfo['country'], 'email': userInfo['email'], 'datasets': countByOwnerId})
+    return json.dumps({'username': userInfo['username'], 'country': userInfo['country'], 'email': userInfo['email'], 'privDatasets': privateDatasetNumber, 'pubDatasets': publicDatasetNumber, 'hasPhoto': userInfo['hasPhoto']})
 
 def filterByTags(dataset, tags, itemInDataset):
     for item in tags: 
@@ -42,7 +43,7 @@ def filterByAuthors(dataset, tags, itemInDataset):
     return True
 
 def applyFilters(jsonParams):
-    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
     
     userId = None
@@ -116,7 +117,7 @@ def calculateLastUpdatedAt(unixTime):
 
 
 def findItem(id):
-    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     result = es.get_es_data_by_id('datasets', id)
@@ -142,14 +143,19 @@ def findItem(id):
             elif row['downloadPath'].startswith('path'):
                 hasDownloadLink = 3
                 downloadPath = row['downloadPath'][5:]
+        
+        result = es.get_es_data_by_id('logintable', row['ownerId'])
+        hasPhoto = False
+        if result[0]['_source']:
+            hasPhoto = result[0]['_source']['hasPhoto']
 
-        returnArray.append([row['id'], row['domain'], row['tags'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink'], row['owner'], elapsedTime, hasDownloadLink, downloadPath, row['dataIntegrity'], row['continuityAccess'], row['dataReuse'], row['views'], row['ratings_number'], row['updates_number'], row['downloads_number']])
+        returnArray.append([row['id'], row['domain'], row['tags'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink'], row['owner'], elapsedTime, hasDownloadLink, downloadPath, row['dataIntegrity'], row['continuityAccess'], row['dataReuse'], row['views'], row['ratings_number'], row['updates_number'], row['downloads_number'], hasPhoto])
     
     return json.dumps(returnArray)
 
 
 def getAllDefaultData():
-    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     result = es.get_es_index('domains')
@@ -173,7 +179,7 @@ def getAllDefaultData():
 
 def findUserID(user):
 
-    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     found = es.get_es_data_by_userName("logintable", user)
@@ -183,7 +189,7 @@ def findUserID(user):
         return str(found[0]['_source']['id'])
 
 def getAllComments(datasetID, currentPage, resultsPerPage):
-    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
     es.connect()
 
     comments = es.get_es_data_by_datasetID("comments", int(datasetID))

@@ -47,6 +47,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                 searchResult:response.data[0],
                 shoudLoad: false
             });
+            debugger;
             console.log(this.state.searchResult[7]);
           })
           .catch(function (error) {
@@ -99,6 +100,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                             ratings={this.state.searchResult[20]}
                             updates={this.state.searchResult[21]}
                             downloads={this.state.searchResult[22]}
+                            hasPhoto={this.state.searchResult[23]}
                         />
                         }
                         </Col>

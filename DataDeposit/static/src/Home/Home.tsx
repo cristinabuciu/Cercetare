@@ -1,6 +1,5 @@
 
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
 import './Home.scss';
 import LeftBar from "../LeftBar/LeftBar";
@@ -47,9 +46,12 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         console.log(token);
         
         if(token) {
-            console.log("INTRA PE AICI");
             this.state.isAuthenticated = true;
         }
+
+        this.handleClickArrowLeft = this.handleClickArrowLeft.bind(this);
+        this.handleClickArrowRight = this.handleClickArrowRight.bind(this);
+        this.handleClickOnNumber = this.handleClickOnNumber.bind(this);
     }
 
 
@@ -95,8 +97,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     }
 
     showSearchCards() {
-        console.log("JOHNULE!!!");
-        console.log(this.state.searchResult);
         let cards = this.state.searchResult.map(item => (
             <Row>
                 <Col>
@@ -128,14 +128,13 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         return cards;
     }
 
-    handleClick = (event) => {
+    handleClickOnNumber(event) {
         this.setState({
             currentPage: Number(event.target.id)
-            
         });
-      }
+    }
+
     handleLoaderChange = (visible) => {
-        console.log("UNGURICA");
         this.setState({
             loaderVisibility: visible,
             wasError: false,
@@ -143,11 +142,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         });
     }
 
-
-    handleClickArrowLeft = (event) => {
+    handleClickArrowLeft(event) {
         let nextPage = this.state.currentPage - 1;
         if(nextPage < 1) {
-            nextPage = 1;
             return;
         }
         
@@ -156,10 +153,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         });
     }
 
-    handleClickArrowRight = (event) => {
+    handleClickArrowRight(event) {
         let nextPage = this.state.currentPage + 1;
         if(nextPage > Math.ceil(this.state.numberOfCards / this.state.todosPerPage)) {
-            nextPage = Math.ceil(this.state.numberOfCards / this.state.todosPerPage);
             return;
         }
 
@@ -169,7 +165,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     }
 
     render() {
-        const paddingTop = '60px';
         const searchResult = this.showSearchCards();
         const currentPage = this.state.currentPage;
         const todosPerPage = this.state.todosPerPage;
@@ -196,7 +191,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
               key={number}
               id={number}
               className={this.state.currentPage === number ? "active" : ""}
-              onClick={this.handleClick}
+              onClick={this.handleClickOnNumber}
             >
               {number}
             </li>

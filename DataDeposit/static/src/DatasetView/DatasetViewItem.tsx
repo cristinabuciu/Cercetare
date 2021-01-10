@@ -40,6 +40,7 @@ export interface IDatasetViewLoadingProps {
     ratings: number;
     updates: number;
     downloads: number;
+    hasPhoto: boolean;
 
     downloadPath: string;
     shouldHaveDownloadButton: boolean;
@@ -98,7 +99,8 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                         titleSet={this.props.dataset_title}
                         image={this.props.domain + "_domain.jpg"}
                         subtitle={"Last updated " + this.props.lastUpdatedAt}
-                        profileID={this.state.userID} />
+                        profileID={this.state.userID}
+                        hasProfilePhoto={this.props.hasPhoto} />
                 </Col>
             </Row>
             <Row>

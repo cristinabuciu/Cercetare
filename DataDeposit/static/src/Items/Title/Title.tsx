@@ -43,7 +43,9 @@ export const ImageTitle = (props) => {
             </div>
             <div className="image-box">
               <div className="ala-de-sus-din-dr text-align-left">
-                <img src={'static/dist/content/images/profilePicture/' + profileID + "_avatar.jpg"} />
+              {props.hasProfilePhoto 
+                  ? <img src={'static/dist/content/images/profilePicture/' + profileID + "_avatar.jpg"} />
+                  : <img src={'static/dist/content/images/profilePicture/default.png'} />}
               </div>
               <div className="title-box">
               <div className="ala-de-sus text-align-left">

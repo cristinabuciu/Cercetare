@@ -173,8 +173,11 @@ class ESClass(object):
             return searchJson
 
 
-    def count_es_data_by_ownerId(self, index, ownerId):
-        body = {"query": { "match": {"ownerId": int(ownerId) } } }
+    def count_es_data_by_ownerId(self, index, ownerId, isPrivate):
+        # body = {"query": { "match": {"ownerId": int(ownerId) } } }
+        body = {"query": { "bool": {"must": [
+            { "match": {"ownerId": int(ownerId) } },
+            { "match": {"private": isPrivate } }]}}}
 
         s = self.count(index, body)
         return s['count']
