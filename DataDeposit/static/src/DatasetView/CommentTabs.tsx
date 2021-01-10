@@ -162,6 +162,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
 // rating: 1.5
 // username: "admin"
             <Comment 
+                id={item['id']}
                 value={item['rating']}
                 author={item['username']}
                 title={item['commentTitle']}

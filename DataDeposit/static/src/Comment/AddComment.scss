@@ -1,3 +1,5 @@
+@import '../style_home';
+
 $dark-grey: #404040;
 $nc-blue: #00BDFC;
 $nc-bl-dark: #0093C4;
@@ -11,7 +13,7 @@ $red: #FC3F00;
   display: inline-block;
   text-decoration: none;
 
-  box-shadow: 0px 5px 0px #00823F;
+  box-shadow: 0px 5px 0px red;
   top: 0px;
   transition: all ease 0.3s;
   
@@ -24,7 +26,7 @@ $red: #FC3F00;
   }
 
   &:active {
-    box-shadow: 0 3px 0 #00823F;
+    box-shadow: 0 3px 0 red;
     top: 3px;
   }
 }
@@ -183,4 +185,22 @@ $red: #FC3F00;
 
 .comment-format {
   white-space: pre-line;
+}
+
+
+
+
+
+
+
+
+
+
+.delete-comment-btn {
+  padding: 1px 6px;
+  padding-top: 1px;
+  padding-right: 6px;
+  padding-bottom: 1px;
+  padding-left: 6px;
+  font-size: 0.75rem;
 }

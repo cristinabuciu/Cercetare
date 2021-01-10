@@ -150,13 +150,19 @@ export interface ICommentFormProps {
 export interface ICommentFormState {
     title: string;
     body: string;
+
+    // COMMENTS WARNINGS
+    noRatingWarning: boolean; 
+    noTitleAndBodyWarning: boolean;
 }
   
   class CommentForm extends React.Component<ICommentFormProps, ICommentFormState> {
 
     state = {
       title: '',
-      body: ''
+      body: '',
+      noRatingWarning: false,
+      noTitleAndBodyWarning: false
     }
 
     changeValue = (e, comboBoxTitle) => {
@@ -174,6 +180,20 @@ export interface ICommentFormState {
           </div>
           <div className="comment-form-actions">
             <button type="submit" className="button-add-comment">Post Comment</button>
+            <Row className={this.state.noRatingWarning ? "" : "display-none"}>
+              <Col className="margin-top-10">
+                  <Alert color="danger" className="text-align-center">
+                      Comment can not be submitted. Missing rating value.
+                  </Alert>
+              </Col>
+          </Row>
+          <Row className={this.state.noTitleAndBodyWarning ? "" : "display-none"}>
+              <Col className="margin-top-10">
+                  <Alert color="danger" className="text-align-center">
+                      Comment can not be submitted. Both title and comment should be filled in.
+                  </Alert>
+              </Col>
+          </Row>
           </div>
         </Form>
 
@@ -186,31 +206,50 @@ export interface ICommentFormState {
       //   let author = this._author;
       //   let body = this._body;
       //   this.props.addComment(author.value, body.value);
-      console.log("GTA V");
       const token = localStorage.getItem('login_user_token');
 
-      axios.post( '/updateReview', {
-          params: {
-              id: this.props.id,
-              username: token,
-              rating: this.props.rating,
-              commentBody: this.state.body,
-              commentTitle: this.state.title
-          }
-      })
-        .then(response => {
-          console.log("Phill ");
-          console.log(response.data);
-          console.log("Another");
-          this.props.onReceiveAnswerFromPost();
+      const rating = this.props.rating;
+      const title = this.state.title;
+      const comment = this.state.body;
+      debugger;
+      if (rating > 0) {
+        if ((title === '' && comment === '') || (title !== '' && comment !== '')) {
+          // SCHIMB CULOAREA BUTONULUI IN VERDE
+          axios.post( '/updateReview', {
+            params: {
+                id: this.props.id,
+                username: token,
+                rating: this.props.rating,
+                commentBody: this.state.body,
+                commentTitle: this.state.title
+            }
         })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function () {
-          // always executed
-        }); 
-
+          .then(response => {
+            console.log(response.data);
+            this.props.onReceiveAnswerFromPost();
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(() => {
+            // always executed
+            this.setState({
+              noTitleAndBodyWarning: false,
+              noRatingWarning: false
+            });
+          });
+        }
+        else {
+          this.setState({
+            noTitleAndBodyWarning: true
+          });
+        }
+      }
+      else {
+        this.setState({
+          noRatingWarning: true
+        });
+      }
     }
   } // end CommentForm component
 

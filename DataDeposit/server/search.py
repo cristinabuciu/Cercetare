@@ -1,4 +1,6 @@
 # search.py
+from application_properties import *
+
 import os
 import sys
 from flask import jsonify, json
@@ -7,26 +9,14 @@ import es_connector
 import time
 from operator import itemgetter
 
-def search(numbersOfItemsPerPage):
-    hostname = '10.21.0.4'
-    username = 'root'
-    password = 'secret'
-    database = 'database'
-    myConnection = pgdb.Connection( host=hostname, user=username, password=password, database=database )
-    cursor = myConnection.cursor()
-    
-    cursor.execute("SELECT * from datasets")
-
-    return jsonify(numbersOfItemsPerPage=numbersOfItemsPerPage)
-
 def getUserInfoById(userId):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
     es.connect()
 
-    userInfo = es.get_es_data_by_id('logintable', userId)
+    userInfo = es.get_es_data_by_id(INDEX_USERS, userId)
     userInfo = userInfo[0]['_source']
-    privateDatasetNumber = es.count_es_data_by_ownerId('datasets', userId, True)
-    publicDatasetNumber = es.count_es_data_by_ownerId('datasets', userId, False)
+    privateDatasetNumber = es.count_es_data_by_ownerId(INDEX_DATASETS, userId, True)
+    publicDatasetNumber = es.count_es_data_by_ownerId(INDEX_DATASETS, userId, False)
 
     return json.dumps({'username': userInfo['username'], 'country': userInfo['country'], 'email': userInfo['email'], 'privDatasets': privateDatasetNumber, 'pubDatasets': publicDatasetNumber, 'hasPhoto': userInfo['hasPhoto']})
 
@@ -43,7 +33,7 @@ def filterByAuthors(dataset, tags, itemInDataset):
     return True
 
 def applyFilters(jsonParams):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
     es.connect()
     
     userId = None
@@ -52,7 +42,7 @@ def applyFilters(jsonParams):
         userId = jsonParams['notArrayParams']['userId']
         shouldDisplayPrivate = True
 
-    result = es.get_es_data('datasets', jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'], jsonParams['notArrayParams']['dataset_title'], jsonParams['sortBy'], jsonParams['sortByField'], userId, shouldDisplayPrivate)
+    result = es.get_es_data(INDEX_DATASETS, jsonParams['notArrayParams']['domain'], jsonParams['notArrayParams']['country'], jsonParams['notArrayParams']['data_format'], jsonParams['notArrayParams']['year'], jsonParams['notArrayParams']['dataset_title'], jsonParams['sortBy'], jsonParams['sortByField'], userId, shouldDisplayPrivate)
     
     if jsonParams['arrayParams']['tags'] and len(jsonParams['arrayParams']['tags']) > 0:
         result = list(filter(lambda x: filterByTags(x['_source'], jsonParams['arrayParams']['tags'], 'tags'), result))
@@ -117,10 +107,10 @@ def calculateLastUpdatedAt(unixTime):
 
 
 def findItem(id):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
     es.connect()
 
-    result = es.get_es_data_by_id('datasets', id)
+    result = es.get_es_data_by_id(INDEX_DATASETS, id)
     returnArray = []
     datasets = []
     for dataset in result:
@@ -144,7 +134,7 @@ def findItem(id):
                 hasDownloadLink = 3
                 downloadPath = row['downloadPath'][5:]
         
-        result = es.get_es_data_by_id('logintable', row['ownerId'])
+        result = es.get_es_data_by_id(INDEX_USERS, row['ownerId'])
         hasPhoto = False
         if result[0]['_source']:
             hasPhoto = result[0]['_source']['hasPhoto']
@@ -155,15 +145,15 @@ def findItem(id):
 
 
 def getAllDefaultData():
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
     es.connect()
 
-    result = es.get_es_index('domains')
+    result = es.get_es_index(INDEX_DOMAINS)
     domains = []
     for domain in result:
         domains.append(domain['_source']['domainName'])
     
-    result = es.get_es_index('tags')
+    result = es.get_es_index(INDEX_TAGS)
     tags = {}
     for tag in result:
         if tag['_source']['domainName'] in tags:
@@ -171,7 +161,7 @@ def getAllDefaultData():
         else:
             tags[tag['_source']['domainName']] = [{"value": tag['_source']['tagName'], "label": tag['_source']['tagName']}]
         
-    result = es.get_es_index('locations')
+    result = es.get_es_index(INDEX_LOCATIONS)
     countries = list(result[0]['_source'].keys())
 
     return json.dumps([domains, tags, countries])
@@ -179,20 +169,20 @@ def getAllDefaultData():
 
 def findUserID(user):
 
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
     es.connect()
 
-    found = es.get_es_data_by_userName("logintable", user)
+    found = es.get_es_data_by_userName(INDEX_USERS, user)
     if not(found):
         return "0"
     else:
         return str(found[0]['_source']['id'])
 
 def getAllComments(datasetID, currentPage, resultsPerPage):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
     es.connect()
 
-    comments = es.get_es_data_by_datasetID("comments", int(datasetID))
+    comments = es.get_es_data_by_datasetID(INDEX_COMMENTS, int(datasetID))
 
     returnArray = []
     allCommentsArray = []

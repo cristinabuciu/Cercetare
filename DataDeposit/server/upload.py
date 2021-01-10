@@ -1,4 +1,6 @@
 # upload.py
+from application_properties import *
+
 import os
 import sys
 import pgdb
@@ -6,12 +8,24 @@ from datetime import datetime, timedelta
 import es_connector
 from time import sleep, time
 
+# TREBUIE FACUT FISIER CU FUNTII COMUNE
+def findUserID(user):
+
+    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
+    es.connect()
+
+    found = es.get_es_data_by_userName(INDEX_USERS, user)
+    if not(found):
+        return "0"
+    else:
+        return str(found[0]['_source']['id'])
+
 def updateNumberOfViews(id):
     try:
-        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
 
-        es.update_dataset_views('datasets', int(id))
+        es.update_dataset_views(INDEX_DATASETS, int(id))
 
         return "Succes"
     except:
@@ -23,10 +37,10 @@ def updateReviewByID(params):
         return "Skip"
 
     try:
-        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
 
-        result = es.get_es_data_by_id('datasets', params['id'])
+        result = es.get_es_data_by_id(INDEX_DATASETS, params['id'])
 
         datasets = []
         for dataset in result:
@@ -41,7 +55,7 @@ def updateReviewByID(params):
         newRatingValue = (currentRatingValue * currentNumberOfRatings + params['rating']) / newNumberOfRatings
 
         # NU STIU SA FAC UPDATE (fara sa stric ceva)
-        es.update_dataset_rating('datasets', datasets[0]['id'], round(newRatingValue, 2), newNumberOfRatings)
+        es.update_dataset_rating(INDEX_DATASETS, datasets[0]['id'], round(newRatingValue, 2), newNumberOfRatings)
 
 
         newComment = {
@@ -52,64 +66,64 @@ def updateReviewByID(params):
             "createdAt": str(time()),
             "rating": params['rating']}
         
-        es.insert('comments', '_doc', newComment)
+        es.insert(INDEX_COMMENTS, '_doc', newComment)
 
         return "Succes"
     except:
         return "Eroare" 
 
 def getCoordinates(country):
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
     es.connect()
 
-    locations = es.get_es_index('locations')[0]['_source']
+    locations = es.get_es_index(INDEX_LOCATIONS)[0]['_source']
 
     return ", ".join(str(x) for x in locations[country])
 
 def uploadDataset(params, current_user):
     try:
-        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
 
-        total = es.get_es_index('last_id')[0]['_source']['id']
-        currentID = total + 1
+        # total = es.get_es_index('last_id')[0]['_source']['id']
+        # currentID = total + 1
+
+        ownerID = findUserID(current_user)
+
+        lastDatasetID = es.count_es_data(INDEX_DATASETS)
+        currentDatasetID = lastDatasetID + 1
 
         dataset_json = {}
-        dataset_json_input = {}
-        dataset_json_input['private'] = params['private']
-        dataset_json_input['owner'] = current_user
+        dataset_json['private'] = params['private']
+        dataset_json['owner'] = current_user
+        dataset_json['ownerId'] = ownerID
         
         for k, v in params['notArrayParams'].items():
-            dataset_json_input[k] = v
-        dataset_json_input['views'] = '0'
+            dataset_json[k] = v
 
         for k, v in params['arrayParams'].items():
-            dataset_json_input[k] = v
+            dataset_json[k] = v
         
-        dataset_json_input['tags'] = list(map(lambda x: x['value'], dataset_json_input['tags']))
-        
-        dataset_json = dataset_json_input
-        dataset_json['date'] = (datetime.now() - timedelta(hours = 3)).strftime('%Y-%m-%dT%H:%M:%S+0000')
+        dataset_json['tags'] = list(map(lambda x: x['value'], dataset_json['tags']))
 
+        dataset_json['id'] = currentDatasetID
+        dataset_json['updates_number'] = 0
+        dataset_json['downloads_number'] = 0
+        dataset_json['avg_rating_value'] = 0
+        dataset_json['ratings_number'] = 0
+        dataset_json['views'] = 0
         dataset_json['geo_coord'] = getCoordinates(params['notArrayParams']['country'])
-
-        dataset_json['id'] = currentID
-
+        dataset_json['date'] = (datetime.now() - timedelta(hours = 3)).strftime('%Y-%m-%dT%H:%M:%S+0000')
         dataset_json['lastUpdatedAt'] = str(int(time()))
 
-        es.insert('datasets', '_doc', dataset_json)
-        
-        ### UPDATE LAST DATASET ID
-        es.delete_index('last_id')
-        sleep(2)
-        es.insert('last_id', '_doc', {'id': currentID})
+        es.insert(INDEX_DATASETS, '_doc', dataset_json)
 
         ### UPDATE DOMAINS
         domain = params['notArrayParams']['domain'].upper()
 
-        isDomainNew = not(es.get_es_data_by_domainName("domains", domain))
+        isDomainNew = not(es.get_es_data_by_domainName(INDEX_DOMAINS, domain))
         if isDomainNew:
-            es.insert('domains', '_doc', {"domainName": domain})
+            es.insert(INDEX_DOMAINS, '_doc', {"domainName": domain})
         
         ### UPDATE TAGS
         tags = params['arrayParams']['tags']
@@ -118,15 +132,15 @@ def uploadDataset(params, current_user):
             for tag in tags:
                 tagName = tag['value'].lower()
                 tagName = tagName.capitalize()
-                isTagNew = not(es.get_es_data_by_domainName_and_tagName("tags", domain, tagName))
+                isTagNew = not(es.get_es_data_by_domainName_and_tagName(INDEX_TAGS, domain, tagName))
 
                 if isTagNew:
-                    es.insert('tags', '_doc', {"domainName": domain, "tagName": tagName})
+                    es.insert(INDEX_TAGS, '_doc', {"domainName": domain, "tagName": tagName})
         else:
             for tag in tags:
                 tagName = tag['value'].lower()
                 tagName = tagName.capitalize()
-                es.insert('tags', '_doc', {"domainName": domain, "tagName": tagName})
+                es.insert(INDEX_TAGS, '_doc', {"domainName": domain, "tagName": tagName})
     
         return "Succes"
     except:

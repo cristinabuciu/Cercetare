@@ -1,4 +1,6 @@
 # delete.py
+from application_properties import *
+
 import os
 import sys
 from flask import jsonify, json
@@ -9,10 +11,10 @@ from operator import itemgetter
 
 def deleteDataset(datasetId):
     try:
-        es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
 
-        es.delete_dataset_by_id('datasets', int(datasetId))
+        es.delete_dataset_by_id(INDEX_DATASETS, int(datasetId))
     
         return "Succes"
     except:

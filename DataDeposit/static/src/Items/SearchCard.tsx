@@ -159,6 +159,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                         starRatedColor="gold"
                         name='rating'
                     />
+                    
                     </div>
                 </Col>
                 

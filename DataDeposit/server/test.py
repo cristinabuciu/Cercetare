@@ -1,12 +1,12 @@
+from application_properties import *
+
 import es_connector
 import pprint
 
 
-# es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
-# es.connect()
 
 # es.insert('sergiu', '_doc', {'hatz':'hatz'})
-# pprint.pprint(es.get_es_index('datasets'))
+# pprint.pprint(es.get_es_index(INDEX_DATASETS))
 
 import json
 import os
@@ -23,12 +23,12 @@ locations = {}
 with open("locations_mapping/locations.json", 'r') as f:
     data = json.load(f)
 
-    es = es_connector.ESClass(server='172.24.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
     es.connect()
-    es.insert('locations', '_doc', data)
+    es.insert(INDEX_LOCATIONS, '_doc', data)
 
     sleep(5)
-    pprint.pprint(es.get_es_index('locations'))
+    pprint.pprint(es.get_es_index(INDEX_LOCATIONS))
 
 
 print("yeye")

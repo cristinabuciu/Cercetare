@@ -214,8 +214,6 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                     short_desc: this.state.short_desc,
                     gitlink: this.state.gitlink,
                     full_desc: '...',
-                    avg_rating_value: 0,
-                    ratings_number: 0,
                     dataReuse: this.state.dataReuse,
                     dataIntegrity: this.state.dataIntegrity,
                     continuityAccess: this.state.contAccess,

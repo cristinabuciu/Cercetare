@@ -3,12 +3,14 @@ import React, { PureComponent } from 'react'
 import axios from 'axios';
 import "./AddComment.scss"
 
-import { Link } from 'react-router-dom'
 import StarRatings from 'react-star-ratings';
 import {
     Card, CardBody,
     CardTitle, Button, Row, Col
   } from 'reactstrap';
+
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 // VARIANTA CU REPLY
 // export const MyComment = ({ comment, allComments, createComment, user_id, post_id, parent_id }) => {
@@ -53,6 +55,7 @@ import {
 // }
 
 export interface ICommentProps {
+    id: number;
     value: number;
     author: String;
     title: String;
@@ -60,9 +63,47 @@ export interface ICommentProps {
     date: String;
 }
 
-export interface ICommentState {}
+export interface ICommentState {
+    disabledDeleteButton: boolean;
+}
 
 export default class Comment extends React.Component<ICommentProps, ICommentState> {
+
+    state = {
+        disabledDeleteButton: false
+    }
+
+    componentDidMount() {
+        this.handleClickDelete = this.handleClickDelete.bind(this);
+    }
+
+    handleClickDelete() {
+        const token = localStorage.getItem('login_user_token');
+
+        this.setState({
+            disabledDeleteButton: true
+        });
+        debugger;
+        axios.post( '/deleteComment', {
+            params: {
+                id: this.props.id,
+                currentUser: token
+                // AICI AM RAMAS 10.01.2020
+                // TODO BACKEND
+            }
+        })
+          .then(response => {
+            console.log("Carolina ");
+            console.log(response.data);
+            console.log("Jambala");
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          }); 
+    }
 
     render () {
 
@@ -79,7 +120,18 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
                 <Col md="10">
                     <div className="review-body">
                         <hr className="hr-style-review" />
+                        <Row>
+                        <Col>
                         <h3 className="review-title">{this.props.title}</h3>
+                        </Col>
+                        <Col className="text-align-center">
+                            <Button 
+                                color="danger" 
+                                className="delete-comment-btn" 
+                                onClick={this.handleClickDelete}
+                                disabled={this.state.disabledDeleteButton} ><FontAwesomeIcon icon={faTimesCircle}/></Button>
+                        </Col>
+                        </Row>
                         <div className="star-rating-container">
                         <StarRatings
                                 rating={this.props.value}

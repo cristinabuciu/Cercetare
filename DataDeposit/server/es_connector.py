@@ -6,7 +6,7 @@ import json
 class ESClass(object):
     MATCH_ALL_QUERY = {'query': {'match_all': {}}}
 
-    def __init__(self, server, port, use_ssl, user='', password=''):
+    def __init__(self, server, port, use_ssl=False, user='', password=''):
         self.server = server
         self.port = port
         self.use_ssl = use_ssl
@@ -180,6 +180,12 @@ class ESClass(object):
             { "match": {"private": isPrivate } }]}}}
 
         s = self.count(index, body)
+        return s['count']
+    
+    def count_es_data(self, index):
+        # body = {"query": { "match": {"ownerId": int(ownerId) } } }
+
+        s = self.count(index, self.MATCH_ALL_QUERY)
         return s['count']
     
     # update dataset rating

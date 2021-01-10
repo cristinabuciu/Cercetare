@@ -1,7 +1,9 @@
 # server.py
+from application_properties import *
+
 import os
 import sys
-from search import search, applyFilters, findItem, getAllDefaultData, findUserID, getAllComments, getUserInfoById
+from search import applyFilters, findItem, getAllDefaultData, findUserID, getAllComments, getUserInfoById
 from upload import uploadDataset, uploadPaths, updateReviewByID, updateNumberOfViews
 from delete import deleteDataset
 import pgdb
@@ -11,19 +13,21 @@ import es_connector
 ############################### FLASK CONFIG ################################
 from flask import Flask, render_template, request, json, redirect, url_for, flash, session, make_response, jsonify
 from werkzeug.utils import secure_filename
-app = Flask(__name__, static_folder="../static", template_folder="../static/dist")
+app = Flask(__name__, static_folder=FLASK_STATIC_FOLDER, template_folder=FLASK_TEMPLATE_FOLDER)
 
-UPLOAD_FOLDER = './uploadFiles'
+UPLOAD_FOLDER = UPLOAD_FOLDER_PATH
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 160 * 1024 * 1024
-app.secret_key = 'development'
+app.secret_key = FLASK_SECRET_KEY
 ALLOWED_EXTENSIONS = {'rar', 'zip', 'tar.gz', 'jpg'}
 
-db_hostname = '10.21.0.4'
-db_username = 'root'
-db_password = 'secret'
-db_database = 'database'
 current_user = 'admin'
+
+
+
+
+
+
 # jinja typescript
 
 # Butonul Upload -> poate mai mic?
@@ -120,14 +124,13 @@ def deleteDatasetById():
 
 @app.route("/login_post", methods=['POST'])
 def login_post():
-    global db_username, db_password, db_database, db_hostname, current_user
     receivedData = json.loads(request.data.decode('utf-8'))
     _username = receivedData.get('username')
     _password = receivedData.get('password')
 
-    es = es_connector.ESClass(server='172.23.0.2', port=9200, use_ssl=False, user='', password='')
+    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
     es.connect()
-    result = es.get_es_index('logintable')
+    result = es.get_es_index(INDEX_USERS)
     isAuthenticated = False
     currentUser = ''
     currentUserId = 0
