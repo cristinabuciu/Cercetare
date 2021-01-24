@@ -58,7 +58,7 @@ export default class UploadPageResult extends React.Component<IUploadPageResultP
                             Error: Dataset has not been uploaded  !
                         </Alert>
                         <Alert color="warning">
-                            If this didn't happend before please try again
+                            If this didn't happened before please try again
                         </Alert></>
                         }
                         

@@ -56,25 +56,36 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export interface ICommentProps {
     id: number;
+    datasetID: number;
     value: number;
     author: String;
     title: String;
     body: String;
     date: String;
+    updateComments: Function;
 }
 
 export interface ICommentState {
     disabledDeleteButton: boolean;
+    shouldDisplayDeleteButton: boolean;
 }
 
 export default class Comment extends React.Component<ICommentProps, ICommentState> {
 
     state = {
-        disabledDeleteButton: false
+        disabledDeleteButton: false,
+        shouldDisplayDeleteButton: false
     }
 
     componentDidMount() {
         this.handleClickDelete = this.handleClickDelete.bind(this);
+
+        const token = localStorage.getItem('login_user_token');
+        if (this.props.author === token) {
+            this.setState({
+                shouldDisplayDeleteButton: true
+            });
+        }
     }
 
     handleClickDelete() {
@@ -83,12 +94,13 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
         this.setState({
             disabledDeleteButton: true
         });
-        debugger;
         axios.post( '/deleteComment', {
             params: {
                 id: this.props.id,
-                currentUser: token
-                // AICI AM RAMAS 10.01.2020
+                currentUser: token,
+                commentRating: this.props.value,
+                datasetID: this.props.datasetID
+                // AICI AM RAMAS 10.01.2021
                 // TODO BACKEND
             }
         })
@@ -96,6 +108,8 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
             console.log("Carolina ");
             console.log(response.data);
             console.log("Jambala");
+
+            this.props.updateComments();
           })
           .catch(function (error) {
             console.log(error);
@@ -124,13 +138,13 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
                         <Col>
                         <h3 className="review-title">{this.props.title}</h3>
                         </Col>
-                        <Col className="text-align-center">
+                        {this.state.shouldDisplayDeleteButton ? <Col className="text-align-center">
                             <Button 
                                 color="danger" 
                                 className="delete-comment-btn" 
                                 onClick={this.handleClickDelete}
                                 disabled={this.state.disabledDeleteButton} ><FontAwesomeIcon icon={faTimesCircle}/></Button>
-                        </Col>
+                        </Col> : <></>}
                         </Row>
                         <div className="star-rating-container">
                         <StarRatings

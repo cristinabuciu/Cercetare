@@ -54,11 +54,12 @@ def updateReviewByID(params):
         newNumberOfRatings = currentNumberOfRatings + 1
         newRatingValue = (currentRatingValue * currentNumberOfRatings + params['rating']) / newNumberOfRatings
 
-        # NU STIU SA FAC UPDATE (fara sa stric ceva)
         es.update_dataset_rating(INDEX_DATASETS, datasets[0]['id'], round(newRatingValue, 2), newNumberOfRatings)
 
+        currentCommentID = es.get_es_index(INDEX_ID_GENERATOR)[0]['_source'][INDEX_COMMENTS] + 1
 
         newComment = {
+            "id": currentCommentID,
             "datasetID": params['id'], 
             "username": params['username'], 
             "commentTitle": params['commentTitle'],
@@ -67,6 +68,7 @@ def updateReviewByID(params):
             "rating": params['rating']}
         
         es.insert(INDEX_COMMENTS, '_doc', newComment)
+        es.update_id_generator(INDEX_ID_GENERATOR, INDEX_COMMENTS)
 
         return "Succes"
     except:
@@ -85,13 +87,10 @@ def uploadDataset(params, current_user):
         es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
 
-        # total = es.get_es_index('last_id')[0]['_source']['id']
-        # currentID = total + 1
-
         ownerID = findUserID(current_user)
 
-        lastDatasetID = es.count_es_data(INDEX_DATASETS)
-        currentDatasetID = lastDatasetID + 1
+        # lastDatasetID = es.count_es_data(INDEX_DATASETS)
+        currentDatasetID = es.get_es_index(INDEX_ID_GENERATOR)[0]['_source'][INDEX_DATASETS] + 1
 
         dataset_json = {}
         dataset_json['private'] = params['private']
@@ -116,7 +115,11 @@ def uploadDataset(params, current_user):
         dataset_json['date'] = (datetime.now() - timedelta(hours = 3)).strftime('%Y-%m-%dT%H:%M:%S+0000')
         dataset_json['lastUpdatedAt'] = str(int(time()))
 
+        dataset_json['deleted'] = False
+        dataset_json['deletedAt'] = -1
+
         es.insert(INDEX_DATASETS, '_doc', dataset_json)
+        es.update_id_generator(INDEX_ID_GENERATOR, INDEX_DATASETS)
 
         ### UPDATE DOMAINS
         domain = params['notArrayParams']['domain'].upper()

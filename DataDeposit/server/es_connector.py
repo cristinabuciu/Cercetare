@@ -154,9 +154,10 @@ class ESClass(object):
             {"wildcard": {"country": {"value": country.lower()}}},
             {"wildcard": {"data_format": {"value": data_format.lower()}}},
             {"wildcard": {"year": {"value": year.lower()}}},
-            {"wildcard": {"dataset_title": {"value": dataset_title.lower()}}} 
+            {"wildcard": {"dataset_title": {"value": dataset_title.lower()}}},
+            {"match": {"deleted": False}}
             ]}}}
-        
+
         if userId:
             searchJson['query']['bool']['must'].append({"match": {"ownerId": int(userId)}})
         
@@ -199,10 +200,42 @@ class ESClass(object):
         body = { "script" : { "source": "ctx._source.views++", "lang": "painless" }, "query": { "term" : { "id": datasetID } } }
 
         self.update_by_query(index, body)
+    
+    def soft_delete_comments_by_dataset_id(self, index, datasetId, currentTimestamp):
+        body = { "script" : { "source": "ctx._source.deleted=true;" + "ctx._source.deletedAt=" + str(currentTimestamp) + ";", "lang": "painless" }, "query": { "term" : { "datasetID": datasetId } } }
+
+        self.update_by_query(index, body)
+
+    def soft_delete_dataset_by_id(self, index, datasetId, currentTimestamp):
+        body = { "script" : { "source": "ctx._source.deleted=true;" + "ctx._source.deletedAt=" + str(currentTimestamp) + ";" + "ctx._source.lastUpdatedAt=" + str(currentTimestamp) + ";", "lang": "painless" }, "query": { "term" : { "id": datasetId } } }
+
+        self.update_by_query(index, body)
+    
+    def delete_comments_by_dataset_id(self, index, datasetId):
+        body = {"query": {"match": {"datasetID": datasetId}}}
+        self.es.delete_by_query(index, body)
 
     def delete_dataset_by_id(self, index, datasetId):
         body = {"query": {"match": {"id": datasetId}}}
         self.es.delete_by_query(index, body)
+    
+    def delete_comment_by_id(self, index, commentId):
+        body = {"query": {"match": {"id": commentId}}}
+        self.es.delete_by_query(index, body)
+
+    def update_id_generator(self, index, field):
+        body = { "script" : { "source": "ctx._source." + field + "++", "lang": "painless" } }
+
+        self.update_by_query(index, body)
+    
+    # Cleanup datasets
+    def get_datasets_cleanup(self, index, deletedAtBefore):
+        body = {"query": {"bool": {"must": [{"range": {"deletedAt": {"lte": deletedAtBefore} } }, 
+        { "match": {"deleted": True } }
+        ] }}}
+
+        s = self.es.search(index, body=body)
+        return s['hits']['hits']
 
     # insert function
     def insert(self, index, doc_type, body):

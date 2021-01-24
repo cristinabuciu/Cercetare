@@ -1,6 +1,6 @@
 FLASK_SECRET_KEY = 'development'
 
-DATABASE_IP = '172.23.0.2'
+DATABASE_IP = '172.29.0.2'
 DATABASE_PORT = 9200
 INDEX_USERS = 'logintable'
 INDEX_LOCATIONS = 'locations'
@@ -8,7 +8,12 @@ INDEX_DATASETS = 'datasets'
 INDEX_DOMAINS = 'domains'
 INDEX_TAGS = 'tags'
 INDEX_COMMENTS = 'comments'
+INDEX_ID_GENERATOR = 'id_generator'
 
 UPLOAD_FOLDER_PATH = './uploadFiles'
 FLASK_STATIC_FOLDER = "../static"
 FLASK_TEMPLATE_FOLDER = "../static/dist" # imagini
+
+SOFT_DELETE = True
+CLEANUP_DATASETS_ENABLED = False
+CLEANUP_DATASETS_DAYS = 30

@@ -2,10 +2,11 @@
 from application_properties import *
 
 import os
+import subprocess
 import sys
 from search import applyFilters, findItem, getAllDefaultData, findUserID, getAllComments, getUserInfoById
 from upload import uploadDataset, uploadPaths, updateReviewByID, updateNumberOfViews
-from delete import deleteDataset
+from delete import deleteDataset, softDeleteDataset, deleteCommentById
 import pgdb
 import zipfile
 from glob import glob
@@ -120,7 +121,20 @@ def deleteDatasetById():
     _params = receivedData.get('params')
     _id = _params['id']
 
-    return deleteDataset(_id)
+    if SOFT_DELETE:
+        return softDeleteDataset(_id)
+    else:
+        return deleteDataset(_id)
+
+@app.route('/deleteComment', methods = ['POST'])
+def deleteComment():
+    receivedData = json.loads(request.data.decode('utf-8'))
+    _params = receivedData.get('params')
+    _id = _params['id']
+    _commentRating = _params['commentRating']
+    _datasetID = _params['datasetID']
+
+    return deleteCommentById(_id, _commentRating, _datasetID)
 
 @app.route("/login_post", methods=['POST'])
 def login_post():
@@ -209,5 +223,8 @@ def upload_file():
             return 'Bad file'
 
 if __name__ == "__main__":
+    if CLEANUP_DATASETS_ENABLED:
+        subprocess.Popen(['python3', 'DataDeposit/server/datasetsCleanupJob.py'])
+    
     app.run(debug=True, use_reloader=False)
 

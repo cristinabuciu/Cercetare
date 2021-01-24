@@ -6,7 +6,9 @@
         "commentTitle": "title",
         "commentBody": "body",
         "createdAt": "1300513563", 
-        "rating": 1.5
+        "rating": 1.5,
+        "deleted": false,
+        "deletedAt": ""
     },
     {
         "id": 2,
@@ -15,7 +17,9 @@
         "commentTitle": "title",
         "commentBody": "body",
         "createdAt": "1549735244", 
-        "rating": 1.5
+        "rating": 1.5,
+        "deleted": false,
+        "deletedAt": ""
     },
     {
         "id": 3,
@@ -24,7 +28,9 @@
         "commentTitle": "title",
         "commentBody": "body",
         "createdAt": "1056719115", 
-        "rating": 1.5
+        "rating": 1.5,
+        "deleted": false,
+        "deletedAt": ""
     },
     {
         "id": 4,
@@ -33,7 +39,9 @@
         "commentTitle": "title",
         "commentBody": "body",
         "createdAt": "1065672107", 
-        "rating": 2.5
+        "rating": 2.5,
+        "deleted": false,
+        "deletedAt": ""
     },
     {
         "id": 5,
@@ -42,7 +50,9 @@
         "commentTitle": "title",
         "commentBody": "body",
         "createdAt": "1132507830", 
-        "rating": 1.5
+        "rating": 1.5,
+        "deleted": false,
+        "deletedAt": ""
     },
     {
         "id": 6,
@@ -51,6 +61,8 @@
         "commentTitle": "title",
         "commentBody": "body",
         "createdAt": "1053199364", 
-        "rating": 3.5
+        "rating": 3.5,
+        "deleted": false,
+        "deletedAt": ""
     }
 ]

@@ -49,6 +49,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
     }
 
     componentDidMount() {
+        this.updateComments = this.updateComments.bind(this);
         this.updateComments();
     }
 
@@ -163,11 +164,13 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
 // username: "admin"
             <Comment 
                 id={item['id']}
+                datasetID={item['datasetID']}
                 value={item['rating']}
                 author={item['username']}
                 title={item['commentTitle']}
                 body={item['commentBody']}
-                date={new Date(item['createdAt'] * 1000).toLocaleDateString('en-GB')} />
+                date={new Date(item['createdAt'] * 1000).toLocaleDateString('en-GB')}
+                updateComments={this.updateComments} />
           )
         )
 

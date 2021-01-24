@@ -26,7 +26,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
         },
 
 {"date": "2020-06-12T11:49:45+0000",
@@ -55,7 +57,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
         },
 
 {"date": "2020-06-12T11:49:45+0000",
@@ -84,7 +88,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -114,7 +120,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -144,7 +152,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -174,7 +184,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 {"date": "2020-06-12T11:49:45+0000",
@@ -203,7 +215,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -233,7 +247,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -264,7 +280,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -294,7 +312,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -324,7 +344,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -354,7 +376,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -384,7 +408,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -414,7 +440,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -444,7 +472,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -474,7 +504,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -504,7 +536,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -534,7 +568,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -564,7 +600,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -594,7 +632,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
 
@@ -624,7 +664,9 @@
             "dataReuse": "dataReuse should be here",
             "dataIntegrity": "dataIntegrity should be here",
             "continuityAccess": "continuityAccess should be here",
-            "views": 75
+            "views": 75,
+            "deleted": false,
+            "deletedAt": -1
             
         },
     {"date": "2020-06-12T11:49:45+0000",
@@ -653,7 +695,9 @@
                 "dataReuse": "dataReuse should be here",
                 "dataIntegrity": "dataIntegrity should be here",
                 "continuityAccess": "continuityAccess should be here",
-                "views": 75
+                "views": 75,
+                "deleted": false,
+                "deletedAt": -1
                 
             },
         {"date": "2020-06-12T11:49:45+0000",
@@ -682,7 +726,9 @@
                     "dataReuse": "dataReuse should be here",
                     "dataIntegrity": "dataIntegrity should be here",
                     "continuityAccess": "continuityAccess should be here",
-                    "views": 75
+                    "views": 75,
+                    "deleted": false,
+                    "deletedAt": -1
                     
                 }
     ]

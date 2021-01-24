@@ -6,7 +6,7 @@ import pprint
 
 
 locations = {}
-IP = '172.23.0.2'
+IP = '172.29.0.2'
 
 #################### ADAUGARE LOCATII ##################
 with open("locations_mapping/locations.json", 'r') as f:
@@ -72,9 +72,10 @@ sleep(5)
 es = es_connector.ESClass(server=IP, port=9200, use_ssl=False, user='', password='')
 es.connect()
 
-es.insert('last_id', '_doc', {'id': 35})
+es.insert('id_generator', '_doc', {'datasets': 35, 'comments': 6})
+
 sleep(2)
-pprint.pprint(es.get_es_index('last_id')[0]['_source'])
+pprint.pprint(es.get_es_index('id_generator')[0]['_source'])
 
 # #########################################################
 sleep(5)
