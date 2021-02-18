@@ -144,7 +144,7 @@ export const HorizontalList = (props) => {
     },
     {
       id: '4',
-      name: props.ratings + ' ratings',
+      name: props.ratings + ' reviews',
     },
   ];
 

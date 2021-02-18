@@ -459,7 +459,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         value={this.state.subdomain}
                                         handleChange={this.handleCreateSelectChange}
                                         onInputChange={this.handleCreateSelectInputChange}
-                                        placeholder="Select subdomain"
+                                        placeholder="Select tags"
                                     />
                                 </Col>
                             </Row>

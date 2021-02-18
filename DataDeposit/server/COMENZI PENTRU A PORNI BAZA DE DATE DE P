@@ -9,6 +9,13 @@ pip3 install psycopg2
 pip3 install pygresql
 
 -------------------------------
+KIBANA
+Pentru index pattern -> Mangement -> Index pattern -> datasets -> Fara DATE
+Pentru harta -> coord_map -> geo_coord
+Pentru gogoasa -> Pie -> Selectez pe Terms -> Domains
+Pentru Area -> Panel Settings -> Line -> Pe OX folosesc Date -> Custom -> 2d
+
+-------------------------------
 ELASTIC SEARCH
 sudo pip3 install elasticsearch==7.0.2
 

@@ -240,7 +240,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                         options={this.state.searchInputOptions.subdomain}
                         value={this.state.subdomain}
                         handleChange={this.handleSelectChange}
-                        placeholder="All subdomains"
+                        placeholder="All tags"
                     />
 
                 </Col>

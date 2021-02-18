@@ -149,6 +149,7 @@ class ESClass(object):
         return s['hits']['hits']#['total']
 
     def match_dataset(self, domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
+        # Search pattern
         searchJson = {"query": { "bool": {"must": [
             {"wildcard": {"domain": {"value": domain.lower()}}}, 
             {"wildcard": {"country": {"value": country.lower()}}},
@@ -158,12 +159,16 @@ class ESClass(object):
             {"match": {"deleted": False}}
             ]}}}
 
+        # Used for the user page
         if userId:
             searchJson['query']['bool']['must'].append({"match": {"ownerId": int(userId)}})
         
+        # If this is set on true, datasets are displayed on the user page
+        # Otherwise, datasets are displayed on the main page
         if not(shouldDisplayPrivate):
             searchJson['query']['bool']['must'].append({"match": {"private": False}})
 
+        # Sort the result
         if orderField.lower() == "dataset_title":
             orderField += ".raw"
         sortList = [ { orderField.lower(): {"order": order.lower()} } ]
