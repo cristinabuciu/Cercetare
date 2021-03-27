@@ -29,7 +29,7 @@ class ESClass(object):
     def query(self, index, query, size):
         if size > 10000:
             hits = []
-            s = self.es.search(index, body=query, size=10000, scroll='1m')
+            s = self.es.search(index=index, body=query, size=10000, scroll='1m')
             scroll_id = s['_scroll_id']
             hits += s['hits']['hits']
             total_size = min(s['hits']['total'], size)
@@ -38,7 +38,7 @@ class ESClass(object):
                 s = self.es.scroll(scroll_id=scroll_id, scroll='1m')
                 hits += s['hits']['hits']
         else:
-            s = self.es.search(index, body=query, size=size)
+            s = self.es.search(index=index, body=query, size=size)
             if s['hits']['hits']:
                 if size == 1:
                     return s['hits']['hits'][0]
@@ -49,7 +49,7 @@ class ESClass(object):
 
     # get ElasticSearch ID
     def get_es_id(self, index, query):
-        s = self.es.search(index, body=query, size=1)
+        s = self.es.search(index=index, body=query, size=1)
         return s['hits']['hits'][0]['_id']
 
     # old query for matching branch name
@@ -69,12 +69,13 @@ class ESClass(object):
 
     # get element by branch
     def get_es_branch(self, index, branch):
-        s = self.es.search(index, body=self.match_vip_branch_query(branch), size=1)
+        s = self.es.search(index=index, body=self.match_vip_branch_query(branch), size=1)
         return s['hits']['hits'][0]
 
     # get elements by index
     def get_es_index(self, index):
-        s = self.es.search(index, body=ESClass.MATCH_ALL_QUERY, size=2000)
+        print(ESClass.MATCH_ALL_QUERY)
+        s = self.es.search(index=index, body=ESClass.MATCH_ALL_QUERY, size=2000)
         return s['hits']['hits']#['total']
 
     # insert function

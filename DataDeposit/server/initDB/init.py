@@ -6,10 +6,10 @@ import pprint
 
 
 locations = {}
-IP = '172.29.0.2'
+IP = '172.19.0.2'
 
 #################### ADAUGARE LOCATII ##################
-with open("locations_mapping/locations.json", 'r') as f:
+with open("./locations_mapping/locations.json", 'r') as f:
     data = json.load(f)
 
     es = es_connector.ESClass(server=IP, port=9200, use_ssl=False, user='', password='')

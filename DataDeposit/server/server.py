@@ -7,7 +7,6 @@ import sys
 from search import applyFilters, findItem, getAllDefaultData, findUserID, getAllComments, getUserInfoById
 from upload import uploadDataset, uploadPaths, updateReviewByID, updateNumberOfViews
 from delete import deleteDataset, softDeleteDataset, deleteCommentById
-import pgdb
 import zipfile
 from glob import glob
 import es_connector
@@ -23,11 +22,6 @@ app.secret_key = FLASK_SECRET_KEY
 ALLOWED_EXTENSIONS = {'rar', 'zip', 'tar.gz', 'jpg'}
 
 current_user = 'admin'
-
-
-
-
-
 
 # jinja typescript
 
@@ -226,5 +220,5 @@ if __name__ == "__main__":
     if CLEANUP_DATASETS_ENABLED:
         subprocess.Popen(['python3', 'DataDeposit/server/datasetsCleanupJob.py'])
     
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=41338)
 

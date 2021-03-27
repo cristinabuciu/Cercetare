@@ -5,7 +5,6 @@ from time import time, sleep
 import os
 import sys
 from flask import jsonify, json
-import pgdb
 import es_connector
 from operator import itemgetter
 

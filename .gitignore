@@ -3,3 +3,9 @@ DataDeposit/static/dist/app.bundle.js
 .vscode/launch.json
 DataDeposit/static/src1/
 DataDeposit/server/__pycache__/
+DataDeposit/server/bin/
+DataDeposit/server/lib/
+DataDeposit/server/lib64/
+DataDeposit/server/share/
+Deposit/server/share/
+*.pyc

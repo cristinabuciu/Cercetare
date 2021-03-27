@@ -4,7 +4,6 @@ from application_properties import *
 import os
 import sys
 from flask import jsonify, json
-import pgdb
 import es_connector
 import time
 from operator import itemgetter

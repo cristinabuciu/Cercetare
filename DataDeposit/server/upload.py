@@ -3,7 +3,6 @@ from application_properties import *
 
 import os
 import sys
-import pgdb
 from datetime import datetime, timedelta
 import es_connector
 from time import sleep, time

@@ -30,7 +30,7 @@ class ESClass(object):
     def query(self, index, query, size):
         if size > 10000:
             hits = []
-            s = self.es.search(index, body=query, size=10000, scroll='1m')
+            s = self.es.search(index=index, body=query, size=10000, scroll='1m')
             scroll_id = s['_scroll_id']
             hits += s['hits']['hits']
             total_size = min(s['hits']['total'], size)
@@ -39,7 +39,7 @@ class ESClass(object):
                 s = self.es.scroll(scroll_id=scroll_id, scroll='1m')
                 hits += s['hits']['hits']
         else:
-            s = self.es.search(index, body=query, size=size)
+            s = self.es.search(index=index, body=query, size=size)
             if s['hits']['hits']:
                 if size == 1:
                     return s['hits']['hits'][0]
@@ -50,7 +50,7 @@ class ESClass(object):
 
     # get ElasticSearch ID
     def get_es_id(self, index, query):
-        s = self.es.search(index, body=query, size=1)
+        s = self.es.search(index=index, body=query, size=1)
         return s['hits']['hits'][0]['_id']
 
     # old query for matching branch name
@@ -70,12 +70,12 @@ class ESClass(object):
 
     # get element by branch
     def get_es_branch(self, index, branch):
-        s = self.es.search(index, body=self.match_vip_branch_query(branch), size=1)
+        s = self.es.search(index=index, body=self.match_vip_branch_query(branch), size=1)
         return s['hits']['hits'][0]
 
     # get elements by index
     def get_es_index(self, index):
-        s = self.es.search(index, body=ESClass.MATCH_ALL_QUERY, size=2000)
+        s = self.es.search(index=index, body=ESClass.MATCH_ALL_QUERY, size=2000)
         return s['hits']['hits']#['total']
     
     def get_es_data(self, index, domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
@@ -110,19 +110,19 @@ class ESClass(object):
             }"
             
         # a = json.loads(DATASETS_MATCH)
-        s = self.es.search(index, body=self.match_dataset(domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate), size=2000)
+        s = self.es.search(index=index, body=self.match_dataset(domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate), size=2000)
         return s['hits']['hits']#['total']
     
     def get_es_data_by_id(self, index, id):
         searchJson = {"query": { "match": {"id": id } } }
 
-        s = self.es.search(index, body=searchJson, size=2000)
+        s = self.es.search(index=index, body=searchJson, size=2000)
         return s['hits']['hits']#['total']
     
     def get_es_data_by_domainName(self, index, domainName):
         searchJson = {"query": { "match": {"domainName": domainName } } }
 
-        s = self.es.search(index, body=searchJson, size=2000)
+        s = self.es.search(index=index, body=searchJson, size=2000)
         return s['hits']['hits']#['total']
     
     def get_es_data_by_datasetID(self, index, datasetID):
@@ -130,7 +130,7 @@ class ESClass(object):
         #  "sort": {"createdAt": {"order": "desc"}}}
         searchJson = {"query": { "match": {"datasetID": datasetID } } }
 
-        s = self.es.search(index, body=searchJson, size=2000)
+        s = self.es.search(index=index, body=searchJson, size=2000)
         return s['hits']['hits']#['total']
     
     def get_es_data_by_domainName_and_tagName(self, index, domainName, tagName):
@@ -139,13 +139,13 @@ class ESClass(object):
             {"match": {"tagName": tagName}}
             ]}}}
 
-        s = self.es.search(index, body=searchJson, size=2000)
+        s = self.es.search(index=index, body=searchJson, size=2000)
         return s['hits']['hits']#['total']
     
     def get_es_data_by_userName(self, index, username):
         searchJson = {"query": { "match": {"username": username } } }
 
-        s = self.es.search(index, body=searchJson, size=2000)
+        s = self.es.search(index=index, body=searchJson, size=2000)
         return s['hits']['hits']#['total']
 
     def match_dataset(self, domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
@@ -239,7 +239,7 @@ class ESClass(object):
         { "match": {"deleted": True } }
         ] }}}
 
-        s = self.es.search(index, body=body)
+        s = self.es.search(index=index, body=body)
         return s['hits']['hits']
 
     # insert function
