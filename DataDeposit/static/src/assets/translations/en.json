@@ -4,7 +4,8 @@
   "common": {
     "yes": "Yes",
     "no": "No",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "None": "None"
   },
 
   "Home": {
