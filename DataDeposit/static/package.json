@@ -44,7 +44,7 @@
     "@types/react-numeric-input": "^2.2.3",
     "antd": "^3.26.4",
     "availity-reactstrap-validation": "^2.0.6",
-    "axios": "^0.19.2",
+    "axios": ">=0.21.1",
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
     "express": "^4.17.1",
