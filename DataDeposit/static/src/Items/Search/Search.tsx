@@ -1,4 +1,5 @@
 import * as React from 'react';
+import MyTranslator from '../../assets/MyTranslator'
 
 import axios from 'axios';
 import {
@@ -213,7 +214,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     
 
     render() { 
-
+        const translate = new MyTranslator("eng", "Search");
       return (
         <Card className="z-depth-1-half">
         <CardBody>
@@ -247,15 +248,15 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             </Row>
             <Row className="padding-top-20">
                 <Col md={{ size: 5, offset: 0 }}>
-                    <Input type="text" name="author" id="Author" placeholder="Author" 
+                    <Input type="text" name="author" id="Author" placeholder={translate.useTranslation("author")} 
                         onChange={e => this.changeValue(e.target.value, 'authors', true)} />
                 </Col>
                 <Col md={{ size: 2, offset: 0 }}>
-                    <Input type="number" name="year" id="Year" placeholder="Year" className="text-align-center" 
+                    <Input type="number" name="year" id="Year" placeholder={translate.useTranslation("year")}  className="text-align-center" 
                         onChange={e => this.changeValue(e.target.value, 'year', true)}/>
                 </Col>
                 <Col md={{ size: 5, offset: 0 }}>
-                    <Input type="text" name="Dataset-title" id="Dataset-title" placeholder="Dataset title" 
+                    <Input type="text" name="Dataset-title" id="Dataset-title" placeholder={translate.useTranslation("dataset-title")} 
                         onChange={e => this.changeValue(e.target.value, 'dataset_title', true)}/>
                 </Col>
             </Row>
@@ -279,7 +280,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 {/* <Col md={{ size: 6, offset: 0 }}></Col>*/}
                 <Col md={{ size: 4, offset: 0 }} className="text-align-right"> 
                     <Button color="primary" outline className="search-button-size" onClick={() => this.searchData(false, true)}>
-                        Search    <Badge color="secondary">{this.state.resultsSearchArrayLen}</Badge>
+                    {translate.useTranslation("search")}    <Badge color="secondary">{this.state.resultsSearchArrayLen}</Badge>
                     </Button>
                 </Col>
                     

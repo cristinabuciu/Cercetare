@@ -1,5 +1,5 @@
-
 import * as React from 'react';
+import MyTranslator from '../assets/MyTranslator'
 
 import './Home.scss';
 import LeftBar from "../LeftBar/LeftBar";
@@ -197,6 +197,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             </li>
           );
         });
+
+        const translate = new MyTranslator("eng", "Home");
+        
         return (
                 //  <button onClick={() => this.setState({count: this.state.count+1})}>
                 //     This button has been clicked {this.state.count} times.
@@ -227,15 +230,14 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                                 <Row className={this.state.wasError ? "" : "display-none"}>
                                     <Col>
                                         <Alert color="danger" className="text-align-center">
-                                            There was an error at search !
+                                            {translate.useTranslation("items-error")}
                                         </Alert>
                                     </Col>
                                 </Row>
-
                                 <Row className={this.state.wasInfo ? "" : "display-none"}>
                                     <Col>
                                         <Alert color="info" className="text-align-center">
-                                            No items found !
+                                            {translate.useTranslation("items-not-found")}
                                         </Alert>
                                     </Col>
                                 </Row>

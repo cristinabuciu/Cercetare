@@ -1,0 +1,36 @@
+{
+  "None": {},
+  
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel"
+  },
+
+  "Home": {
+      "items-not-found": "No items found !",
+      "items-error": "There was an error at search !" 
+  },
+
+  "Search": {
+    "search": "Search",
+    "author": "Author",
+    "year": "Year",
+    "dataset-title": "Dataset title"
+  },
+
+  "LeftBar": {
+    "upload": "Upload dataset",
+    "search": "Search datasets",
+    "about": "About project",
+    "contact": "Contact us",
+    "privacy": "Privacy Policy",
+    "sponsors": "Sponsors",
+    "developers": "Developers"
+  },
+    "intro": "Hello",  
+    "thankyou.label": "Thank you",
+    "details.label": "is an internationalization-framework which offers a complete solution to localize your product from web to mobile and desktop:is an internationalization-framework which offers a complete solution to localize your product from web to mobile and desktop",
+    "Advantages.label": "Advantages",
+    "Advantagesdetails.label": "Flexibility to use other packages: Flexibility to use other packages"
+}
