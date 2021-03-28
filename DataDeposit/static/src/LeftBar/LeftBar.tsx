@@ -50,7 +50,7 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
                     <>
                     {this.props.modeSearch ? 
                         <NavLink tag={Link} to="/uploadPage"><Button outline size='lg' className="button-color">{translate.useTranslation("upload")}</Button>{' '}</NavLink>
-                        : <NavLink tag={Link} to="/"><Button outline size='lg' className="button-color">{translate.useTranslation("search")}</Button>{' '}</NavLink>}</>
+                        : <NavLink tag={Link} to="/search"><Button outline size='lg' className="button-color">{translate.useTranslation("search")}</Button>{' '}</NavLink>}</>
                         : <></>
                     }
                     

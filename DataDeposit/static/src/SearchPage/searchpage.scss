@@ -1,0 +1,79 @@
+@import '../style_home';
+
+$grid-line-color: rgb(187, 228, 240);
+
+.ant-notification .ant-notification-topRight {
+  z-index: 2050;
+}
+
+.themed-container {
+  max-width: 90%;
+}
+
+.app-container {
+  box-sizing: border-box;
+
+  .view-container {
+    width: 100%;
+    min-height: 100%;
+
+    display: grid;
+    grid-template-rows: 1fr auto;
+
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: .5rem 1rem 1rem 1rem;
+
+    .card {
+      // padding: 1rem;
+      padding: 0 1rem 1rem 1rem;
+    }
+
+    .view-routes {
+      height: 100%;
+
+      > div {
+        height: 100%;
+      }
+    }
+  }
+}
+
+////////////////PAGINATION//////////////////
+.pagination {
+  display: inline-block;
+}
+
+.pagination > li {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  cursor: pointer;
+
+  -webkit-user-select: none; /* Chrome/Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+
+  /* Rules below not implemented in browsers yet */
+  -o-user-select: none;
+  user-select: none;
+}
+
+.pagination > li.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.pagination li:hover:not(.active) {background-color: #ddd;}
+
+.paginationButton:focus {
+  background-color: #ddd;
+}
+
+.display-none {
+  display: none;
+}
+/////////////////////////////////////////////

@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 // import { withRouter } from 'react-router';
 import { triggerAsyncId } from 'async_hooks';
 // import { AppNotificationActions } from 'app/shared/ui/AppNotificationsContext/NotificationsActions';
+import ReactFlagsSelect from 'react-flags-select';
 
 export interface IHeaderProps {
 //   location: any;
@@ -35,6 +36,7 @@ export interface IHeaderState {
   isAuthenticated: boolean;
   tokenId: number;
   username: string;
+  selected: string;
 }
 
 export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
@@ -42,7 +44,8 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
     menuOpen: false,
     isAuthenticated: false,
     tokenId: 0,
-    username: ""
+    username: "",
+    selected: "GB"
   };
 
   componentWillMount() {
@@ -74,6 +77,8 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
       // always executed
     });  
     console.log(this.state.isAuthenticated);
+
+    this.setSelected = this.setSelected.bind(this);
   }
 
   toggleMenu = () => {
@@ -96,6 +101,12 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
       }); 
   };
 
+  setSelected(code) {
+    this.setState({
+      selected: code
+    });
+  }
+
   render() {
     // const { currentLocale, isAuthenticated } = this.props;
     // const account = this.props.account.user;
@@ -116,6 +127,14 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
           <Brand />
           <Logo />
           <Collapse isOpen={this.state.menuOpen} navbar>
+            <ReactFlagsSelect
+              selected={this.state.selected}
+              onSelect={code => this.setSelected(code)}
+              countries={["GB", "RO"]}
+              showSelectedLabel={false}
+              showOptionLabel={false}
+              fullWidth={false}
+            />
             <Nav id="header-tabs" className="ml-auto" navbar>
               {this.state.isAuthenticated ? (<><Profile userId={this.state.tokenId} username={this.state.username} /><Logout handleLogout={this.handleLogout} /> </>) : (<Home toggleMenu={this.toggleMenu} />)}
               

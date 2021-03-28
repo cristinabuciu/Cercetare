@@ -11,6 +11,9 @@ import DatePicker from "react-datepicker";
 import NumericInput from 'react-numeric-input';
 import "../../style_home.scss";
 
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 export interface ICardProps {
     setItemsForShow: Function;
     currentPage: number;
@@ -280,7 +283,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 {/* <Col md={{ size: 6, offset: 0 }}></Col>*/}
                 <Col md={{ size: 4, offset: 0 }} className="text-align-right"> 
                     <Button color="primary" outline className="search-button-size" onClick={() => this.searchData(false, true)}>
-                    {translate.useTranslation("search")}    <Badge color="secondary">{this.state.resultsSearchArrayLen}</Badge>
+                    <FontAwesomeIcon icon={faSearch}/>{translate.useTranslation("search")}    <Badge color="secondary">{this.state.resultsSearchArrayLen}</Badge>
                     </Button>
                 </Col>
                     

@@ -52,6 +52,7 @@
     "react-bootstrap": "^1.0.1",
     "react-datepicker": "^2.15.0",
     "react-dom": "^16.13.1",
+    "react-flags-select": "^2.1.2",
     "react-hot-loader": "3.1.1",
     "react-icons": "^3.11.0",
     "react-jhipster": "0.7.0",

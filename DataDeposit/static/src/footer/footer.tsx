@@ -12,8 +12,8 @@ const Footer = props => (
     <hr />
     <div style={{ display: 'flex', justifyContent: 'space-between' }} >
        <span className="column-list">
-        <ul><li className="column-list"><Nav.Link href="/uploadPage">Upload dataset</Nav.Link></li>
-        <li className="column-list"><Nav.Link href="/">Search dataset</Nav.Link></li></ul>
+        <ul><li className="column-list"><NavLink tag={Link} to="/uploadPage">Upload dataset</NavLink></li>
+        <li className="column-list"><NavLink tag={Link} to="/search">Search dataset</NavLink></li></ul>
       </span>
       
       <span style={{ fontWeight: 'normal', marginLeft: '20px', marginRight: ' 20px' }}>Made with ❤️ at UPB</span>
