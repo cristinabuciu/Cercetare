@@ -5,7 +5,6 @@ import {HeaderMenu} from './header/headerMenu';
 import Footer from './footer/footer';
 import { AppContainer } from 'react-hot-loader';
 import { Card } from 'reactstrap';
-import { BackTop } from 'antd';
 import ErrorBoundary from './error/error-boundary';
 import { HashRouter as Router } from 'react-router-dom';
 import ScrollUpButton from "react-scroll-up-button";
@@ -49,7 +48,6 @@ export class App extends React.Component<{greeting: string}, {count:number}> {
                 </Card>
                 <Footer />
               </div>
-              <BackTop />
               
             </div>
           </Router>

@@ -73,7 +73,7 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
                       
                       : <>
                   <Row>
-                    <Col className="rating-lg" md="2">
+                    <Col className="rating-lg">
                     
                       <ReactStars
                           count={5}
@@ -88,9 +88,6 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
                           a11y={true}
                       />
                     
-                      </Col>
-                      <Col className="rating-lg">
-                        <span className="rating-text"> Acorda o nota</span>
                       </Col>
                     </Row>
                     <CommentForm addComment={this._addComment.bind(this)} id={this.props.id} rating={this.state.rating} onReceiveAnswerFromPost={this.onReceiveAnswerFromPost.bind(this)}/></>
