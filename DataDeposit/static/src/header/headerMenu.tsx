@@ -136,7 +136,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
     //   loginName = account.firstName;
     //   photoLink = account.researchers.photoLink;
     // }  
-
+    const translate = new MyTranslator("Header");
     return (
       <div id="app-header">
         {/* <LoadingBar className="loading-bar" /> */}

@@ -198,7 +198,7 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
           );
         });
 
-        const translate = new MyTranslator("eng", "SearchPage");
+        const translate = new MyTranslator("SearchPage");
         
         return (
                 //  <button onClick={() => this.setState({count: this.state.count+1})}>

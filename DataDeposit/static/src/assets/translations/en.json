@@ -28,5 +28,11 @@
     "privacy": "Privacy Policy",
     "sponsors": "Sponsors",
     "developers": "Developers"
+  },
+
+  "Header": {
+    "brand": "University Politehnica of Bucharest",
+    "login": "Login",
+    "logout": "Logout"
   }
 }

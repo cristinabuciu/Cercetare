@@ -3,14 +3,10 @@ import ro from "./translations/ro.json"
 
 class MyTranslator {
 
-  readonly language: string;
   readonly languages = ["GB", "RO"];
   readonly component: string;
 
-  
-
-  constructor(language: string = "GB", component: string = "None") {
-    this.language = language;
+  constructor(component: string = "None") {
     this.component = component;
   }
 
@@ -19,8 +15,6 @@ class MyTranslator {
   useTranslation (value: string): string {
     debugger;
     switch(MyTranslator.staticProperty) {
-      
-    // switch(currentLanguage) {
       case "GB":
         if (this.component) {
           if (value in eng[this.component]) {

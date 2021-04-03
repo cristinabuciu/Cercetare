@@ -2,19 +2,38 @@
   "None": {},
   
   "common": {
-    "yes": "Yes",
-    "no": "No",
-    "cancel": "Cancel",
-    "None": "None"
+    "yes": "Da",
+    "no": "Nu",
+    "cancel": "Anuleaza",
+    "None": "Null"
   },
-    "intro": "Mata",
-  
-    "thankyou.label": "Thank you",
-  
-    "details.label": "is an internationalization-framework which offers a complete solution to localize your product from web to mobile and desktop:is an internationalization-framework which offers a complete solution to localize your product from web to mobile and desktop",
-  
-    "Advantages.label": "Advantages",
-  
-    "Advantagesdetails.label": "Flexibility to use other packages: Flexibility to use other packages"
+
+  "SearchPage": {
+      "items-not-found": "Niciun set de date gasit !",
+      "items-error": "Eroare la cautare !" 
+  },
+
+  "Search": {
+    "search": "Cauta",
+    "author": "Autor",
+    "year": "Ani",
+    "dataset-title": "Titlu set de date"
+  },
+
+  "LeftBar": {
+    "upload": "Incarcare set de date",
+    "search": "Cautare set de date",
+    "about": "Despre proiect",
+    "contact": "Contacteaza-ne",
+    "privacy": "Privacy Policy",
+    "sponsors": "Sponsori",
+    "developers": "Developers"
+  },
+
+  "Header": {
+    "brand": "Universitatea Politehnica din București",
+    "login": "Autentificare",
+    "logout": "Iesire"
+  }
   
   }

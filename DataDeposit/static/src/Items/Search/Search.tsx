@@ -217,7 +217,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     
 
     render() { 
-        const translate = new MyTranslator("eng", "Search");
+        const translate = new MyTranslator("Search");
       return (
         <Card className="z-depth-1-half">
         <CardBody>
