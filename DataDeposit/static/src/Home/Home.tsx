@@ -15,64 +15,51 @@ export interface IHomeProps {
 }
 
 export interface IHomeState {
-    searchResult:Array<Array<string>>;
-    numberOfCards: number;
-    isAuthenticated: boolean;
-    shouldDisplayPagination: boolean;
-    currentPage: number;
-    todosPerPage: number;
-    loaderVisibility: boolean;
     wasError: boolean;
     wasInfo: boolean;
 }
 
 export default class Home extends React.Component<IHomeProps, IHomeState> {
-    state = {
-        searchResult: [],
-        numberOfCards: 0,
-        isAuthenticated: false,
-        shouldDisplayPagination: false,
-        
-        currentPage: 1,
-        todosPerPage: 3,
-        loaderVisibility: false,
+    state: IHomeState = {
         wasError: false,
         wasInfo: false
     };
 
     componentDidMount() {
-        this.state.isAuthenticated = false;
-        const token = localStorage.getItem('login_user_token');
-        console.log(token);
-        
-        if(token) {
-            this.state.isAuthenticated = true;
-        }
+
     }
 
     render() {
-        
+        const translate = new MyTranslator("Home");
         return (
 
-                <Container className="themed-container" fluid={true}>
-                    <Row lg="12">
-                        <Title titleSet={this.props.greeting}/>
-                    </Row>
-                    <Row md="4">
+            <Container className="themed-container" fluid={true}>
+                <Row lg="12">
+                    <Title titleSet={this.props.greeting}/>
+                </Row>
+                <Row md="4">
+                    
+                    <LeftBar 
+                        className='resizable-1050' 
+                        modeSearch={false}/>
+                    <Col md={{ size: 2, offset: 0 }}>
+                        .
+                    </Col>
+                    <Col md={{ size: 10, offset: 0 }}>
+                        <Row>
+                            <Col>
+                            HATZ
+                            </Col>
+
+                            <Col>
+                            dsfs
+                            </Col>
+                        </Row>
                         
-                        <LeftBar 
-                            className='resizable-1050' 
-                            modeSearch={false}/>
-                        <Col md={{ size: 2, offset: 0 }}>
-                            .
-                        </Col>
-                        <Col md={{ size: 10, offset: 0 }}>
-                            MULT HATZ
-                            
-                        </Col>
-                        
-                    </Row>
-                </Container>
+                    </Col>
+                    
+                </Row>
+            </Container>
             
         );
     }

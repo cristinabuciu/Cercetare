@@ -36,7 +36,7 @@ export const Brand = props => (
   <NavbarBrand tag={Link} to="/" className="BrandLogo">
     <BrandIcon />
     <span className="BrandTitle" style={{ fontSize: 'large' }}>
-      Universitatea Politehnica din București
+      {props.translate.useTranslation("brand")}
     </span>
   </NavbarBrand>
 );
@@ -139,7 +139,7 @@ export const Logout = props => (
       style={{ color: 'white', textDecoration: 'none' }}
     >
       <FontAwesomeIcon icon="sign-out-alt" />
-      Logout
+      {props.translate.useTranslation("logout")}
     </NavLink>
   </NavItem>
 );
@@ -166,7 +166,7 @@ export const Profile = props => (
 export const Home = props => (
   <NavItem>
     <span className="tooltiptext">
-      <Translate contentKey="global.menu.account.login" />
+      <Translate contentKey="global.menu.account.login" />Mata
     </span>
     <NavLink
       tag={Link}
@@ -177,7 +177,7 @@ export const Home = props => (
     >
       <FontAwesomeIcon icon="user" />
       <span>
-        Autentificare
+        {props.translate.useTranslation("login")}
       </span>
     </NavLink>
   </NavItem>

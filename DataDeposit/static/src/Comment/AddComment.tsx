@@ -41,7 +41,7 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
       }
   }
 
-    onReceiveAnswerFromPost () {
+    onReceiveAnswerFromPost (): void {
       this.setState({
         itWasPosted: true
       });

@@ -34,5 +34,11 @@
     "brand": "University Politehnica of Bucharest",
     "login": "Login",
     "logout": "Logout"
+  },
+
+  "Footer": {
+    "upload": "Upload dataset",
+    "search": "Search datasets",
+    "support": "Support"
   }
 }

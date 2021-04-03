@@ -19,24 +19,28 @@ class MyTranslator {
         if (this.component) {
           if (value in eng[this.component]) {
             return eng[this.component][value];
-          }
-          else if (value in eng["common"]) {
-            return eng["common"][value]
-          }
+          } 
         }
+
+        if (value in eng["common"]) {
+          return eng["common"][value];
+        }
+
         return "Error-String-Not-Found";
       case "RO":
         if (ro[this.component]) {
           if (value in ro[this.component]) {
             return ro[this.component][value];
-          } else if (value in ro["common"]) {
-            return eng["common"][value]
           }
-          
         }
-        return "Error-String-Not-Found";
 
+        if (value in ro["common"]) {
+          return ro["common"][value];
+        }
+
+        return "Error-String-Not-Found";
       default:
+        console.log(MyTranslator.staticProperty);
         return "Error-Language-Not-Found";
     } 
     

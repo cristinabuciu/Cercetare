@@ -142,7 +142,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
         {/* <LoadingBar className="loading-bar" /> */}
         <Navbar dark expand="md" fixed="top" className="CustomNavbar">
           <NavbarToggler aria-label="Menu" onClick={this.toggleMenu} />
-          <Brand />
+          <Brand translate={translate} />
           <Logo />
           <Collapse isOpen={this.state.menuOpen} navbar>
             <ReactFlagsSelect
@@ -154,7 +154,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
               fullWidth={false}
             />
             <Nav id="header-tabs" className="ml-auto" navbar>
-              {this.state.isAuthenticated ? (<><Profile userId={this.state.tokenId} username={this.state.username} /><Logout handleLogout={this.handleLogout} /> </>) : (<Home toggleMenu={this.toggleMenu} />)}
+              {this.state.isAuthenticated ? (<><Profile userId={this.state.tokenId} username={this.state.username} /><Logout handleLogout={this.handleLogout} translate={translate}/> </>) : (<Home toggleMenu={this.toggleMenu} translate={translate} />)}
               
               
               {/* <LocaleMenu currentLocale={currentLocale} onClick={this.handleLocaleChange} /> */}

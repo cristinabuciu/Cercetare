@@ -46,7 +46,9 @@ export class App extends React.Component<{greeting: string}, {count:number}> {
                         />
                   </ErrorBoundary>
                 </Card>
-                <Footer />
+                <ErrorBoundary>
+                  <Footer />
+                </ErrorBoundary>
               </div>
               
             </div>

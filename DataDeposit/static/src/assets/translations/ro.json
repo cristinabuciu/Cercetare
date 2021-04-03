@@ -34,6 +34,11 @@
     "brand": "Universitatea Politehnica din București",
     "login": "Autentificare",
     "logout": "Iesire"
-  }
-  
-  }
+  },
+
+  "Footer": {
+    "upload": "Incarcare set de date",
+    "search": "Cautare set de date",
+    "support": "Suport"
+  }  
+}

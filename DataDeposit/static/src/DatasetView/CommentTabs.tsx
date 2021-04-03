@@ -26,6 +26,7 @@ export interface ICommentTabsState {
     loaderVisibility: boolean;
     resultsPerPage: number | null;
     wasError: boolean;
+    comments: any;
 }
 
 export default class CommentTabs extends React.Component<ICommentTabsProps, ICommentTabsState> {

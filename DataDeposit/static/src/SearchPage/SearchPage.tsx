@@ -49,13 +49,15 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
             this.state.isAuthenticated = true;
         }
 
+        //////////////////// FUNCTIONS /////////////////////
         this.handleClickArrowLeft = this.handleClickArrowLeft.bind(this);
         this.handleClickArrowRight = this.handleClickArrowRight.bind(this);
         this.handleClickOnNumber = this.handleClickOnNumber.bind(this);
+        this.setItemsForShow = this.setItemsForShow.bind(this);
     }
 
 
-    setItemsForShow = (numberOfCards, numberOfCardsPerPage, searchResultItems, searchWasPressed = false, itWasAnError = false, itWasAnInfo = false) => {
+    setItemsForShow(numberOfCards: number, numberOfCardsPerPage: number, searchResultItems: Array<any>, searchWasPressed: boolean = false, itWasAnError: boolean = false, itWasAnInfo: boolean = false): void {
         console.log("CEL MAI MARE HATZ");
 
         if (searchWasPressed) {
@@ -82,8 +84,6 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
                 shouldDisplayPagination: false,
                 wasInfo: true
             });
-
-            // return;
         }
 
         if (itWasAnError) {
@@ -92,11 +92,9 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
                 wasError: true
             });
         }
-        
-        console.log(this.state)
     }
 
-    showSearchCards() {
+    showSearchCards(): any {
         let cards = this.state.searchResult.map(item => (
             <Row>
                 <Col>
@@ -128,7 +126,7 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
         return cards;
     }
 
-    handleClickOnNumber(event) {
+    handleClickOnNumber(event): void {
         this.setState({
             currentPage: Number(event.target.id)
         });
@@ -142,7 +140,7 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
         });
     }
 
-    handleClickArrowLeft(event) {
+    handleClickArrowLeft(event): void {
         let nextPage = this.state.currentPage - 1;
         if(nextPage < 1) {
             return;
@@ -153,7 +151,7 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
         });
     }
 
-    handleClickArrowRight(event) {
+    handleClickArrowRight(event): void {
         let nextPage = this.state.currentPage + 1;
         if(nextPage > Math.ceil(this.state.numberOfCards / this.state.todosPerPage)) {
             return;
