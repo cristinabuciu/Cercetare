@@ -2,6 +2,7 @@ import './header.scss';
 
 import axios from 'axios';
 import React from 'react';
+import MyTranslator from '../assets/MyTranslator'
 import { Storage, translate } from 'react-jhipster';
 import { Collapse, Nav, Navbar, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import LoadingBar from 'react-redux-loading-bar';
@@ -49,6 +50,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
   };
 
   componentWillMount() {
+    ///////////////////// LOGIN ///////////////////////
     this.state.isAuthenticated = false;
     const token = localStorage.getItem('login_user_token');
     const tokenId = localStorage.getItem('login_user_token_id');
@@ -78,6 +80,20 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
     });  
     console.log(this.state.isAuthenticated);
 
+    /////////////////// LANGUAGE //////////////////////
+    let currentLanguage: string | null = localStorage.getItem("language");
+    if (currentLanguage) {
+      this.setState({
+        selected: currentLanguage
+      });
+
+      MyTranslator.staticProperty = currentLanguage;
+    }
+    else {
+      localStorage.setItem("language", "GB");
+    }
+
+    ////////////////// FUNCTIONS /////////////////////
     this.setSelected = this.setSelected.bind(this);
   }
 
@@ -101,10 +117,12 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
       }); 
   };
 
-  setSelected(code) {
+  setSelected(code: string): void {
     this.setState({
       selected: code
     });
+
+    localStorage.setItem("language", code);
   }
 
   render() {

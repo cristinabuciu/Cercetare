@@ -1,5 +1,12 @@
 {
-
+  "None": {},
+  
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel",
+    "None": "None"
+  },
     "intro": "Mata",
   
     "thankyou.label": "Thank you",

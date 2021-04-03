@@ -7,7 +7,7 @@
     "test": "echo \"Error: no tests installed\" && exit 1",
     "build": "webpack --progress --config webpack.config.js --mode=production",
     "build:dev": "webpack --progress --config webpack.config.js --mode=development",
-    "watch": "webpack --config webpack.config.js --mode=development --watch",
+    "watch": "webpack --config webpack.config.js --mode=development --watch --watch-poll",
     "start-build": "npm run build && python3 ../server/server.py",
     "start": "webpack-dev-server --open",
     "webpack:dev": "npm run webpack-dev-server -- --config webpack.config.js --inline --port=9060 --env.stats=minimal",
