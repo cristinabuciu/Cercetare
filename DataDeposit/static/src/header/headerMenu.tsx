@@ -117,7 +117,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
     // if (account && account.researchers) {
     //   loginName = account.firstName;
     //   photoLink = account.researchers.photoLink;
-    // }
+    // }  
 
     return (
       <div id="app-header">
