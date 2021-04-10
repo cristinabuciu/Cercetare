@@ -31,15 +31,15 @@ def updateNumberOfViews(id):
         return "Eroare" 
 
 
-def updateReviewByID(params):
-    if params['rating'] == 0:
+def addComment(datasetId, comment):
+    if comment['rating'] == 0:
         return "Skip"
 
     try:
         es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
 
-        result = es.get_es_data_by_id(INDEX_DATASETS, params['id'])
+        result = es.get_es_data_by_id(INDEX_DATASETS, datasetId)
 
         datasets = []
         for dataset in result:
@@ -51,7 +51,7 @@ def updateReviewByID(params):
         currentNumberOfRatings = datasets[0]['ratings_number']
 
         newNumberOfRatings = currentNumberOfRatings + 1
-        newRatingValue = (currentRatingValue * currentNumberOfRatings + params['rating']) / newNumberOfRatings
+        newRatingValue = (currentRatingValue * currentNumberOfRatings + comment['rating']) / newNumberOfRatings
 
         es.update_dataset_rating(INDEX_DATASETS, datasets[0]['id'], round(newRatingValue, 2), newNumberOfRatings)
 
@@ -59,12 +59,12 @@ def updateReviewByID(params):
 
         newComment = {
             "id": currentCommentID,
-            "datasetID": params['id'], 
-            "username": params['username'], 
-            "commentTitle": params['commentTitle'],
-            "commentBody": params['commentBody'],
+            "datasetID": datasetId,
+            "username": comment['username'],
+            "commentTitle": comment['commentTitle'],
+            "commentBody": comment['commentBody'],
             "createdAt": str(time()),
-            "rating": params['rating']}
+            "rating": comment['rating']}
         
         es.insert(INDEX_COMMENTS, '_doc', newComment)
         es.update_id_generator(INDEX_ID_GENERATOR, INDEX_COMMENTS)
