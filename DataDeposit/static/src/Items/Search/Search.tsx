@@ -82,9 +82,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
 
     componentDidMount() {
         // Domains, Tags, Countries
-        axios.get( '/getDefaultData', {
-            params: {}
-        })
+        axios.get( '/getDefaultData')
           .then(response => {
             this.state.searchInputOptions.domain = ['All domains  '].concat(response.data[0])
             
@@ -149,26 +147,28 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         if (shouldCount == false) {
             this.props.handleLoaderChange(true);
         }
-        axios.post( '/getData', {
+        axios.get( '/datasets', {
             params: {
-              	notArrayParams: {
-                    domain: this.state.domain === 'All domains  ' ? '*' : this.state.domain,
-                    country: this.state.country === 'All countries  ' ? '*' : this.state.country,
-                    data_format: this.state.dataFormat === 'All Data Formats ' ? '*' : this.state.dataFormat,
-                    year: this.state.year === '' ? '*' : this.state.year + '*',
-                    dataset_title: this.state.dataset_title === '' ? '*' : '*' + this.state.dataset_title + '*',
-                    downloadFrom: this.state.downloadFrom === 'All Downloads ' ? '*' : this.state.downloadFrom,
-                    userId: this.props.userId
-                },
-                arrayParams: {
-                      tags: this.state.subdomain, //=== 'All subdomains  ' ? '' : this.state.subdomain,
-                      author: this.state.authors
-                },
-                sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSort(this.state.sortBy),
-                sortByField: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSortName(this.state.sortBy),
-                count: shouldCount,
-                resultsPerPage: this.state.resultsPerPage,
-                currentPage: this.props.currentPage
+                allFilters: {
+                    notArrayParams: {
+                        domain: this.state.domain === 'All domains  ' ? '*' : this.state.domain,
+                        country: this.state.country === 'All countries  ' ? '*' : this.state.country,
+                        data_format: this.state.dataFormat === 'All Data Formats ' ? '*' : this.state.dataFormat,
+                        year: this.state.year === '' ? '*' : this.state.year + '*',
+                        dataset_title: this.state.dataset_title === '' ? '*' : '*' + this.state.dataset_title + '*',
+                        downloadFrom: this.state.downloadFrom === 'All Downloads ' ? '*' : this.state.downloadFrom,
+                        userId: this.props.userId
+                    },
+                    arrayParams: {
+                        tags: this.state.subdomain, //=== 'All subdomains  ' ? '' : this.state.subdomain,
+                        author: this.state.authors
+                    },
+                    sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSort(this.state.sortBy),
+                    sortByField: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSortName(this.state.sortBy),
+                    count: shouldCount,
+                    resultsPerPage: this.state.resultsPerPage,
+                    currentPage: this.props.currentPage
+                }
             }
         })
           .then(response => {

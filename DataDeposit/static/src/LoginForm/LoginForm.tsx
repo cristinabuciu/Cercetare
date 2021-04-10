@@ -28,10 +28,7 @@ export default class LoginForm extends React.Component<ILoginFormProps, ILoginFo
 
       
     handleSubmit = (event, errors, { username, password, rememberMe = false }) => {
-        // this.props.login(username.split('@')[0], password, rememberMe);
-        console.log("HATZ");
-
-        axios.post( '/login_post', {
+        axios.post( '/login', {
             username: username,
             password: password,
             rememberMe: rememberMe

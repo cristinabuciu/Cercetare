@@ -72,12 +72,12 @@ export interface ICommentState {
 
 export default class Comment extends React.Component<ICommentProps, ICommentState> {
 
-    state = {
+    state: ICommentState = {
         disabledDeleteButton: false,
         shouldDisplayDeleteButton: false
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         this.handleClickDelete = this.handleClickDelete.bind(this);
 
         const token = localStorage.getItem('login_user_token');
@@ -88,22 +88,15 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
         }
     }
 
-    handleClickDelete() {
+    handleClickDelete(): void {
         const token = localStorage.getItem('login_user_token');
 
         this.setState({
             disabledDeleteButton: true
         });
-        axios.post( '/deleteComment', {
-            params: {
-                id: this.props.id,
-                currentUser: token,
-                commentRating: this.props.value,
-                datasetID: this.props.datasetID
-                // AICI AM RAMAS 10.01.2021
-                // TODO BACKEND
-            }
-        })
+        // AICI AM RAMAS 10.01.2021
+        // TODO BACKEND
+        axios.delete( '/dataset/' + this.props.datasetID + '/comment/' + this.props.id)
           .then(response => {
             console.log("Carolina ");
             console.log(response.data);

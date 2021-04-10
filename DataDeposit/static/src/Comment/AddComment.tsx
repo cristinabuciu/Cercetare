@@ -212,9 +212,8 @@ export interface ICommentFormState {
       if (rating > 0) {
         if ((title === '' && comment === '') || (title !== '' && comment !== '')) {
           // SCHIMB CULOAREA BUTONULUI IN VERDE
-          axios.post( '/updateReview', {
-            params: {
-                id: this.props.id,
+          axios.post( '/dataset/' + this.props.id + '/comments', {
+            comment: {
                 username: token,
                 rating: this.props.rating,
                 commentBody: this.state.body,

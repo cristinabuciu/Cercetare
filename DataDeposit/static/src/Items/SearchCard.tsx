@@ -93,13 +93,9 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
             deleteButtonText: "Deleting..."
         });
         debugger;
-        axios.post( '/deleteDatasetById', {
-            params: {
-                id: this.props.id
-            }
-        })
+        axios.delete( '/dataset/' + this.props.id)
           .then(response => {
-            console.log("Carolina ");
+            console.log("Carolina");
             console.log(response.data);
             console.log("Jambala");
           })

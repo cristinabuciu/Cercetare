@@ -131,9 +131,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
 
     componentDidMount() {
         // Domains, Tags, Countries
-        axios.get( '/getDefaultData', {
-            params: {}
-        })
+        axios.get( '/getDefaultData')
           .then(response => {
             // ['All domains  '].push(response.data)
 
@@ -202,7 +200,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             loaderVisibility: true
         });
         
-        axios.post( '/postData', {
+        axios.post( '/datasets', {
             params: {
               	notArrayParams: {
                     domain: this.state.otherDomain ? this.state.otherDomain : this.state.domain,
