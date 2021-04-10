@@ -105,11 +105,11 @@ def calculateLastUpdatedAt(unixTime):
         return str(int(elapsedTime / (12 * 30 * 24 * 60 * 60))) + " years ago"
 
 
-def findItem(id):
+def findDataset(datasetId):
     es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
     es.connect()
 
-    result = es.get_es_data_by_id(INDEX_DATASETS, id)
+    result = es.get_es_data_by_id(INDEX_DATASETS, datasetId)
     returnArray = []
     datasets = []
     for dataset in result:
