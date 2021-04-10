@@ -81,8 +81,7 @@ def logout():
 
 @app.route('/datasets', methods=['GET'])
 def searchDatasets():
-    _allFilters = request.args['allFilters']
-
+    _allFilters = json.loads(request.args['allFilters'])
     return applyFilters(_allFilters)
 
 
@@ -132,12 +131,19 @@ def deleteComment(dataset_id, comment_id):
 
 @app.route('/user/<user_info>', methods=['GET'])
 def getUserDetails(user_info):
-    if type(user_info) == int:
-        _user_id = user_info
+    try:
+        _user_id = int(user_info)
         return getUserInfoById(_user_id)
-    elif type(user_info) == str:
+    except ValueError:
         _username = user_info
         return findUserID(_username)
+
+    # if type(user_info) == int:
+    #     _user_id = user_info
+    #     return getUserInfoById(_user_id)
+    # elif type(user_info) == str:
+    #     _username = user_info
+    #     return findUserID(_username)
 
 
 # Domain, Tags, Country

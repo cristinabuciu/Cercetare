@@ -31,9 +31,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
         const profileID = this.props.match.params['id'];
         console.log(profileID);
 
-        axios.get( '/dataset/' + profileID, {
-            params: {}
-        })
+        axios.get( '/dataset/' + profileID)
           .then(response => {
             console.log("AVA MAX");
             console.log(response.data);

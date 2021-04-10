@@ -146,7 +146,7 @@ def uploadDataset(params, current_user):
     
         return "Succes"
     except:
-        return "Eroare" 
+        return "UPLOAD_DATASET_ERROR" 
 
 # def uploadDataset1(params, current_user):
 #     hostname = '10.21.0.4'
