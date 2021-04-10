@@ -64,11 +64,8 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
       console.log("INTRA PE AICI");
       this.state.isAuthenticated = true;
     }
-    axios.get('/getUserId', {
-      params: {
-        ID: 12345
-      }
-    })
+    
+    axios.get('/user/' + '12345')
     .then(function (response) {
       console.log(response);
     })
@@ -78,6 +75,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
     .finally(function () {
       // always executed
     });  
+
     console.log(this.state.isAuthenticated);
 
     /////////////////// LANGUAGE //////////////////////
@@ -95,14 +93,15 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
 
     ////////////////// FUNCTIONS /////////////////////
     this.setSelected = this.setSelected.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   toggleMenu = () => {
     this.setState({ menuOpen: !this.state.menuOpen });
   };
 
-  handleLogout = () => {
-    axios.post( '/logout_post', {})
+  handleLogout(): void {
+    axios.post( '/logout', {})
       .then(response => {
         console.log(response);
           localStorage.removeItem('login_user_token');
@@ -115,7 +114,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
       .finally(function () {
         // always executed
       }); 
-  };
+  }
 
   setSelected(code: string): void {
     this.setState({

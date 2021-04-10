@@ -82,9 +82,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
 
     componentDidMount() {
         // Domains, Tags, Countries
-        axios.get( '/getDefaultData', {
-            params: {}
-        })
+        axios.get( '/getDefaultData')
           .then(response => {
             this.state.searchInputOptions.domain = ['All domains  '].concat(response.data[0])
             
@@ -149,7 +147,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         if (shouldCount == false) {
             this.props.handleLoaderChange(true);
         }
-        axios.post( '/getData', {
+        axios.post( '/datasets', {
             params: {
               	notArrayParams: {
                     domain: this.state.domain === 'All domains  ' ? '*' : this.state.domain,

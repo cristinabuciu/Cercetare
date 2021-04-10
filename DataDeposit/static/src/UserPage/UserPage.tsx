@@ -72,11 +72,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
     }
       
     componentDidMount(): void {
-        axios.get( '/getUserInfo', {
-            params: {
-                userId: this.props.userId,
-            }
-        })
+        axios.get( '/user/' + this.props.userId)
           .then(response => {
             this.setState({
                 userInfo: response.data

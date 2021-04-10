@@ -1,10 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 
-import {
-    Card, Label, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Input, Row, Col, Tooltip
-} from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import LeftBar from "../LeftBar/LeftBar";
 import DatasetViewLoading from "./DatasetViewLoading"
 import DatasetViewItem from "./DatasetViewItem"
@@ -34,10 +31,8 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
         const profileID = this.props.match.params['id'];
         console.log(profileID);
 
-        axios.get( '/getItem', {
-            params: {
-                id: profileID
-            }
+        axios.get( '/dataset/' + profileID, {
+            params: {}
         })
           .then(response => {
             console.log("AVA MAX");
