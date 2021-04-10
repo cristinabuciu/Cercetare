@@ -63,7 +63,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
     }
 
     componentDidMount () {
-        axios.get( '/user' + this.props.owner)
+        axios.get( '/user/' + this.props.owner)
           .then(response => {
             this.setState({
                 userID: response.data
