@@ -8,15 +8,20 @@ from flask import jsonify, json
 import es_connector
 from operator import itemgetter
 
-def deleteCommentById(commentId, commentRating, datasetID):
+
+def hardDeleteComment(datasetId, commentId):
     try:
         es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
 
+        # todo: add get comment by id method in connector and get commentRating from response
+        # todo: update value
+        commentRating = 0
+
         es.delete_comment_by_id(INDEX_COMMENTS, int(commentId))
 
         # recalculate dataset rating
-        result = es.get_es_data_by_id(INDEX_DATASETS, datasetID)
+        result = es.get_es_data_by_id(INDEX_DATASETS, datasetId)
 
         datasets = []
         for dataset in result:
@@ -50,7 +55,7 @@ def softDeleteDataset(datasetId):
     except:
         return "Eroare"
 
-def deleteDataset(datasetId):
+def hardDeleteDataset(datasetId):
     try:
         es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
