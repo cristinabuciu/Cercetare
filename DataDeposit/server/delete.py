@@ -14,14 +14,13 @@ def hardDeleteComment(datasetId, commentId):
         es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
 
-        # todo: add get comment by id method in connector and get commentRating from response
-        # todo: update value
-        commentRating = 0
+        result = es.get_es_data_by_id(INDEX_COMMENTS, int(commentId))
+        commentRating = result[0]['_source']['rating']
 
         es.delete_comment_by_id(INDEX_COMMENTS, int(commentId))
 
         # recalculate dataset rating
-        result = es.get_es_data_by_id(INDEX_DATASETS, datasetId)
+        result = es.get_es_data_by_id(INDEX_DATASETS, int(datasetId))
 
         datasets = []
         for dataset in result:
@@ -34,7 +33,10 @@ def hardDeleteComment(datasetId, commentId):
         currentNumberOfRatings = datasets[0]['ratings_number']
 
         newNumberOfRatings = currentNumberOfRatings - 1
-        newRatingValue = (currentRatingValue * currentNumberOfRatings - commentRating) / newNumberOfRatings
+        newRatingValue = 0
+        
+        if newNumberOfRatings != 0:
+            newRatingValue = (currentRatingValue * currentNumberOfRatings - commentRating) / newNumberOfRatings
 
         es.update_dataset_rating(INDEX_DATASETS, datasets[0]['id'], round(newRatingValue, 2), newNumberOfRatings)
         sleep(1)
