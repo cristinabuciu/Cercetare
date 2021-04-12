@@ -5,7 +5,7 @@ import os
 import subprocess
 import sys
 from search import applyFilters, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById
-from upload import uploadDataset, uploadPaths, addComment, updateNumberOfViews
+from upload import uploadDataset, uploadPaths, addComment, updateNumberOfViews, updateDataset
 from delete import hardDeleteDataset, softDeleteDataset, hardDeleteComment
 import zipfile
 from glob import glob
@@ -98,6 +98,14 @@ def addDataset():
     _params = receivedData.get('params')
 
     return uploadDataset(_params, current_user)
+
+
+@app.route('/dataset/<dataset_id>', methods=['PUT'])
+def editDataset(dataset_id):
+    global current_user
+    receivedData = json.loads(request.data.decode('utf-8'))
+    _params = receivedData.get('params')
+    return updateDataset(dataset_id, _params, current_user)
 
 
 @app.route('/dataset/<dataset_id>', methods=['DELETE'])
