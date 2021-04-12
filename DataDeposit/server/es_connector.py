@@ -246,6 +246,10 @@ class ESClass(object):
     def insert(self, index, doc_type, body):
         return self.es.index(index=index, doc_type=doc_type, body=body)
 
+    # update function
+    def update(self, index, doc_type, doc_id, body):
+        return self.es.index(index=index, doc_type=doc_type, id=doc_id, body=body)
+
     # delete function
     def delete(self, index, doc_type, event_id):
         return self.es.delete(index=index, doc_type=doc_type, id=event_id)
@@ -258,8 +262,8 @@ class ESClass(object):
         return self.es.delete_by_query(index=index, body=ESClass.MATCH_ALL_QUERY)
 
     # update function
-    def update(self, index, doc_type, event_id, body):
-        self.es.update(index=index, doc_type=doc_type, id=event_id, body=body)
+    def update2(self, index, doc_type, doc_id, body):
+        self.es.update(index=index, doc_type=doc_type, id=doc_id, body=body)
     
     # update by query
     def update_by_query(self, index, body):
