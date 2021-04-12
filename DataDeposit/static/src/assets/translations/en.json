@@ -40,5 +40,20 @@
     "upload": "Upload dataset",
     "search": "Search datasets",
     "support": "Support"
+  },
+
+  "Upload": {
+    "dataset_title": "Dataset title",
+    "dataset_authors": "Dataset authors",
+    "article_title": "Article title",
+    "year": "Year of the publication",
+    "optional": "This field is optional",
+    "tags": "Select tags",
+    "description": "Short Description",
+    "data_integrity": "Data integrity and authenticity",
+    "access": "Continuity of access",
+    "reuse": "Data Reuse",
+    "edit": "Apply changes"
+
   }
 }

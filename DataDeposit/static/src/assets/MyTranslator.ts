@@ -13,7 +13,7 @@ class MyTranslator {
   static staticProperty: string = 'GB';
 
   useTranslation (value: string): string {
-    debugger;
+
     switch(MyTranslator.staticProperty) {
       case "GB":
         if (this.component) {
