@@ -1,0 +1,10 @@
+. /usr/lib/ckan/default/bin/activate
+ckan -c /etc/ckan/default/ckan.ini run
+deactivate
+
+user:admin
+pass:adminadmin
+
+Organization: Crescdi
+Groups: IT
+
