@@ -8,6 +8,9 @@ import DatasetViewItem from "./DatasetViewItem"
 import { Container } from 'semantic-ui-react';
 import { RouteComponentProps } from 'react-router';
 
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 import './DatasetView.scss';
 
 export interface IDatasetViewProps extends RouteComponentProps {
@@ -50,16 +53,22 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
             // always executed
           });
 
+          this.goBack = this.goBack.bind(this);
+
+    }
+
+    goBack(): void {
+        window.history.back();
     }
 
     render() {  
         return (
             <Container className="themed-container" fluid={true}>
-                    <Row md="4">
+                    <Row className="container-inside">
                         
                         <LeftBar className='resizable-1050' modeSearch={false}/>
-                        <Col md={{ size: 2, offset: 0 }}>
-                            .
+                        <Col sm="2" className="text-align-right">
+                            <FontAwesomeIcon className="about-edit-button" icon={faArrowLeft} onClick={this.goBack} size="3x" />
                         </Col>
                         <Col md="10">
                         {this.state.shoudLoad ? <DatasetViewLoading />

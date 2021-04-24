@@ -1,19 +1,15 @@
 import * as React from 'react';
 import axios from 'axios';
+import MyTranslator from '../assets/MyTranslator'
 
-import {
-    Card, Label, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Input, Row, Col, Tooltip
-  } from 'reactstrap';
-import ReactStars from "react-rating-stars-component";
-import Rating from 'react-rating';
+import { Card, CardTitle, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { LoaderComponent, HorizontalList } from '../Items/Items-components'
 import { AboutBody } from './Dataset-components'
 import DatasetUpdate from './DatasetUpdate'
 import CommentTabs from "./CommentTabs"
 
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTimesCircle, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 import { ImageTitle, Title } from '../Items/Title/Title';
 
@@ -54,14 +50,16 @@ export interface IDatasetViewLoadingState {
     shouldGiveRating: boolean;
     shouldDisplayLoading: boolean;
     userID: string;
+    shouldDisplayAboutAt: boolean;
 }
 
 export default class DatasetViewLoading extends React.Component<IDatasetViewLoadingProps, IDatasetViewLoadingState> {
-    state = {
+    state: IDatasetViewLoadingState = {
         rating: 0,
         shouldGiveRating: true,
         shouldDisplayLoading: true,
-        userID: "0"
+        userID: "0",
+        shouldDisplayAboutAt: true
     }
 
     componentDidMount () {
@@ -73,24 +71,29 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
           })
           .catch(function (error) {
             console.log(error);
-          })
+        })
           .finally( () => {
             // always executed
-          });
+        });
+
+        this.switchPage = this.switchPage.bind(this);
     }
 
     goBack = () =>{
         window.history.back();
-      }
+    }
+
+    switchPage(): void {
+        this.setState({
+            shouldDisplayAboutAt: !this.state.shouldDisplayAboutAt
+        });
+    }
 
     render() {  
-        
+        const translate = new MyTranslator("View");
         return (
             <>
             <Row>
-                <Col>
-                <a onClick={this.goBack} href="">Back</a>
-                </Col>
                 <Col md={{ size: 12, offset: 0 }}>
                     <ImageTitle 
                         className="margin-bottom-10p" 
@@ -106,12 +109,16 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                 <Card className="margin-top-20">
                     <CardTitle>
                         <Row>
-                            <Col md="3"> </Col>
-                            <Title titleSet="About" md={6} /> 
-                            <Col md="3" className="text-align-right edit-button"> <FontAwesomeIcon icon={faEdit}/> </Col>
+                            <Col md="3"></Col>
+                            {this.state.shouldDisplayAboutAt ? <Title titleSet={translate.useTranslation("about")} md={6} /> : <Title titleSet={translate.useTranslation("edit")} md={6} /> }
+                            <Col md="3" className="text-align-right edit-button"> 
+                                {this.state.shouldDisplayAboutAt ? <FontAwesomeIcon className="about-edit-button" icon={faEdit} onClick={this.switchPage}/> :
+                                <FontAwesomeIcon className="about-edit-button" icon={faTimesCircle} onClick={this.switchPage}/>  }
+                            </Col>
                         </Row>
                     </CardTitle>
-                    {/* <AboutBody 
+                    {this.state.shouldDisplayAboutAt ?
+                    <AboutBody 
                             domain={this.props.domain}
                             subdomain={this.props.subdomain} 
                             country={this.props.country}
@@ -131,8 +138,8 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                             downloadPath={this.props.downloadPath}
                             shouldHaveDownloadButton={this.props.shouldHaveDownloadButton}
                             shouldHaveDownloadLink={this.props.shouldHaveDownloadLink}
-                    /> */}
-
+                    />
+                        :
                         <DatasetUpdate 
                             id={this.props.id}
                             domain={this.props.domain}
@@ -148,7 +155,9 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                             gitlink={this.props.gitlink}
                             dataIntegrity={this.props.dataIntegrity}
                             continuityAccess={this.props.continuityAccess}
-                            dataReuse={this.props.dataReuse} />
+                            dataReuse={this.props.dataReuse}
+                            switchPage={this.switchPage} />
+                    }
                     
                 </Card>
                 </Col>

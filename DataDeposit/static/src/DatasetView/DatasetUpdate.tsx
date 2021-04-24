@@ -2,11 +2,10 @@ import './DatasetView.scss';
 import MyTranslator from '../assets/MyTranslator'
 import React from 'react';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink, faPortrait, faDownload } from "@fortawesome/free-solid-svg-icons";
+import ReactFlagsSelect from 'react-flags-select';
 
 import { CardBody, Row, Col, CardTitle, CardSubtitle, CardText, Card,
-    Button, Input, Form, FormGroup, FormText, Label } from 'reactstrap';
+    Button, Input, Form, FormGroup, FormText } from 'reactstrap';
 import {InputText, Switch, LoaderComponent, TooltipButton, CustomCreatableSelect} from '../Items/Items-components'
 
 export interface IDatasetUpdateProps {
@@ -24,7 +23,8 @@ export interface IDatasetUpdateProps {
     gitlink: string;
     dataIntegrity: string;
     continuityAccess: string;
-    dataReuse: string;
+	dataReuse: string;
+	switchPage: Function;
 }
 
 export interface IDatasetUpdateState {
@@ -111,8 +111,8 @@ export default class DatasetUpdate extends React.Component<IDatasetUpdateProps, 
             year: false,
             short_desc: false
         },
-        buttonUpload: true,
-        loaderVisibility: false
+        buttonUpload: false,
+        loaderVisibility: true
     }
 
     componentDidMount (): void {
@@ -156,7 +156,8 @@ export default class DatasetUpdate extends React.Component<IDatasetUpdateProps, 
 				valueSwitch: false,
 				subdomain: currentTags,
 				shouldEnterNewDomain: false,
-				otherDomain: null
+				otherDomain: null,
+				loaderVisibility: false
 			});
 
 			this.state.uploadInputOptions.subdomain = this.state.uploadInputOptions.subdomainList[this.props.domain];
@@ -168,9 +169,10 @@ export default class DatasetUpdate extends React.Component<IDatasetUpdateProps, 
 		this.checkForIntegrityOfFields = this.checkForIntegrityOfFields.bind(this);
 		this.handleCreateSelectChange = this.handleCreateSelectChange.bind(this);
 		this.handleCreateSelectInputChange = this.handleCreateSelectInputChange.bind(this);
+		this.switchPageBack = this.switchPageBack.bind(this);
 	}
 	
-	changeValue (e: any, comboBoxTitle: string, shouldUpdate: boolean = false) {
+	changeValue (e: any, comboBoxTitle: string, shouldUpdate: boolean = false): void {
         if(comboBoxTitle === 'domain') {
             this.state.uploadInputOptions.subdomain = [];
             if (e === 'Other') {
@@ -224,6 +226,10 @@ export default class DatasetUpdate extends React.Component<IDatasetUpdateProps, 
         console.log(`action: ${actionMeta.action}`);
         console.groupEnd();
 	};
+
+	switchPageBack(): void {
+		this.props.switchPage();
+	}
 	
 	handleSubmit(): void {
         this.setState({
@@ -248,266 +254,274 @@ export default class DatasetUpdate extends React.Component<IDatasetUpdateProps, 
                     downloadPath: this.state.downloadPath,
                 },
                 arrayParams: {
-                        tags: this.state.subdomain,
-                        authors: this.state.dataset_authors.split(", ")
+					tags: this.state.subdomain,
+					authors: this.state.dataset_authors.split(", ")
                 },
                 private: this.state.valueSwitch
             }
         })
-          .then(response => {
+		.then(response => {
             // if (response.data === 'Succes') {
             //     this.props.changeToSuccess();
             // } else {
             //     this.props.changeToSuccess(false);
 			// }
 			
-          })
-          .catch(function (error) {
+		})
+		.catch(function (error) {
             console.log(error);
-          });
+		});
     }
 
     render() {  
         const translate = new MyTranslator("Upload");
         return (
+			<>
+			{this.state.loaderVisibility ? <LoaderComponent visible={this.state.loaderVisibility}/> :
 			<CardBody>
-			<CardTitle></CardTitle>
-			<CardSubtitle></CardSubtitle>
-			<CardText>
-			<Form>
-				<FormGroup>
-					<Row>
-						<Col className="display-flex"><span className="padding-right-16">Private</span>
-						<Switch
-							isOn={this.state.valueSwitch}
-							onColor="#00FF00"
-							handleToggle={() => this.changeValue(!this.state.valueSwitch, 'valueSwitch')}
-						/>
-						</Col>
-					</Row>
-				</FormGroup>
-				<FormGroup>
-					<Row className="padding-top-20">
-						<Col >
-							<Input 
-								type="text"
-								invalid={this.state.validInputs.dataset_title}
-								name="dataset-title" 
-								id="Dataset-title" 
-								placeholder={translate.useTranslation("dataset_title")}
-								value={this.state.dataset_title}
-								onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
-								onChange={e => this.changeValue(e.target.value, 'dataset_title')}/>
-						</Col>
-						
-					</Row>
-				</FormGroup>
-				<FormGroup>
-					<Row className="padding-top-20">
-						<Col >
-							<Input 
-								type="text" 
-								name="dataset-authors"
-								id="Dataset-authors" 
-								placeholder={translate.useTranslation("dataset_authors")}
-								value={this.state.dataset_authors}
-								invalid={this.state.validInputs.dataset_authors}
-								onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_authors')}
-								onChange={e => this.changeValue(e.target.value, 'dataset_authors')}/>
-							<TooltipButton 
-								className="padding-top-10"
-								ButtonName="Show more info" 
-								body={''}/>
-						</Col>
-						
-					</Row>
-				</FormGroup>
-				<FormGroup>
-					<Row>
-						<Col >
-							<Input 
-								type="text" 
-								name="article-title" 
-								id="Article-title" 
-								placeholder={translate.useTranslation("article_title")}
-								value={this.state.article_title}
-								// invalid={this.state.validInputs.article_title}
-								// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'article_title')}
-								onChange={e => this.changeValue(e.target.value, 'article_title')}/>
-								<FormText>{translate.useTranslation("optional")}</FormText>
-						</Col>
-						
-					</Row>
-				</FormGroup>
-				<FormGroup>
-					<Row className="padding-top-20">
-						<Col md={{ size: 3, offset: 0 }}>
-							<Input 
-								type="number" 
-								name="year" 
-								id="year" 
-								placeholder={translate.useTranslation("year")}
-								invalid={this.state.validInputs.year}
-								value={this.state.year}
-								onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'year')}
-								onChange={e => this.changeValue(e.target.value, 'year')}/>
-						</Col>
-						<Col></Col>
-						
-					</Row>
-				</FormGroup>
-				<FormGroup>
-					<Row className="padding-top-20">
-						<Col className="text-align-left">
-							<InputText 
-								nameOfDropdown="country" 
-								titleDropdown={this.state.country} 
-								listOfItems={this.state.uploadInputOptions.country} 
-								changeValue={this.changeValue} 
-								className="button-style-upload" />
-						</Col>
-					</Row>
-				</FormGroup>
-				<FormGroup>
-					<Row className="padding-top-20">
-						<Col className="text-align-left" md="3">
-							<InputText nameOfDropdown="domain" titleDropdown={this.state.domain} listOfItems={this.state.uploadInputOptions.domain} changeValue={this.changeValue} className="button-style-upload" />
-						</Col>
-						<Col className="text-align-left">
-							{this.state.shouldEnterNewDomain ? 
-							<Input type="text" name="newDomain" id="newDomain" placeholder="Enter new domain" 
-							onChange={e => this.changeValue(e.target.value.toUpperCase(), 'otherDomain')}
-							/> : <></>}
-						</Col>
-					</Row>
-				</FormGroup>
-				<FormGroup>
-					<Row className="padding-top-20">
-						<Col>
-							<CustomCreatableSelect 
-								options={this.state.uploadInputOptions.subdomain}
-								value={this.state.subdomain}
-								handleChange={this.handleCreateSelectChange}
-								onInputChange={this.handleCreateSelectInputChange}
-								placeholder={translate.useTranslation("tags")}
+				<CardTitle></CardTitle>
+				<CardSubtitle></CardSubtitle>
+				<CardText>
+				<Form>
+					<FormGroup>
+						<Row>
+							<Col className="display-flex"><span className="padding-right-16">Private</span>
+							<Switch
+								isOn={this.state.valueSwitch}
+								onColor="#00FF00"
+								handleToggle={() => this.changeValue(!this.state.valueSwitch, 'valueSwitch')}
 							/>
-						</Col>
-					</Row>
-				</FormGroup>
-				<FormGroup>
-					<Row className="padding-top-20">
-						<Col className="text-align-left">
-							<InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.uploadInputOptions.dataFormat} changeValue={this.changeValue} className="button-style-upload" />
-						</Col>
-					</Row>
-				</FormGroup>
-				<FormGroup>
-					<Row className="padding-top-20">
-						<Col>
-							<Input 
-								type="textarea" 
-								name="text" 
-								maxLength="1000"  
-								id="description" 
-								placeholder={translate.useTranslation("description")}
-								className="margin-top-10" 
-								value={this.state.short_desc}
-								invalid={this.state.validInputs.short_desc}
-								onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'short_desc')}
-								onChange={e => this.changeValue(e.target.value, 'short_desc')}/>
-						</Col>
-					</Row>
-				</FormGroup>
-				<FormGroup>
-					<Row className="padding-top-20">
-						<Col >
-							<Input type="text" name="gitlink" id="gitlink" placeholder="GitHub link" value={this.state.gitlink}
-								onChange={e => this.changeValue(e.target.value, 'gitlink')}/>
-							<FormText>{translate.useTranslation("optional")}</FormText>
-						</Col>
-					</Row>
-				</FormGroup>
-				<FormGroup>
-					<Row className="padding-top-20">
-						<Col >
-							<Input 
-								type="text"
-								// invalid={this.state.validInputs.dataset_title}
-								name="Data-integ" 
-								id="Data-integ" 
-								placeholder={translate.useTranslation("data_integrity")}
-								value={this.state.dataIntegrity}
-								// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
-								onChange={e => this.changeValue(e.target.value, 'dataIntegrity')}
-								/>
+							</Col>
+						</Row>
+					</FormGroup>
+					<FormGroup>
+						<Row className="padding-top-20">
+							<Col >
+								<Input 
+									type="text"
+									invalid={this.state.validInputs.dataset_title}
+									name="dataset-title" 
+									id="Dataset-title" 
+									placeholder={translate.useTranslation("dataset_title")}
+									value={this.state.dataset_title}
+									onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
+									onChange={e => this.changeValue(e.target.value, 'dataset_title')}/>
+							</Col>
+							
+						</Row>
+					</FormGroup>
+					<FormGroup>
+						<Row className="padding-top-20">
+							<Col >
+								<Input 
+									type="text" 
+									name="dataset-authors"
+									id="Dataset-authors" 
+									placeholder={translate.useTranslation("dataset_authors")}
+									value={this.state.dataset_authors}
+									invalid={this.state.validInputs.dataset_authors}
+									onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_authors')}
+									onChange={e => this.changeValue(e.target.value, 'dataset_authors')}/>
 								<TooltipButton 
-									body={'a'}
+									className="padding-top-10"
+									ButtonName="Show more info" 
+									body={''}/>
+							</Col>
+							
+						</Row>
+					</FormGroup>
+					<FormGroup>
+						<Row>
+							<Col >
+								<Input 
+									type="text" 
+									name="article-title" 
+									id="Article-title" 
+									placeholder={translate.useTranslation("article_title")}
+									value={this.state.article_title}
+									// invalid={this.state.validInputs.article_title}
+									// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'article_title')}
+									onChange={e => this.changeValue(e.target.value, 'article_title')}/>
+									<FormText>{translate.useTranslation("optional")}</FormText>
+							</Col>
+							
+						</Row>
+					</FormGroup>
+					<FormGroup>
+						<Row className="padding-top-20">
+							<Col md={{ size: 3, offset: 0 }}>
+								<Input 
+									type="number" 
+									name="year" 
+									id="year" 
+									placeholder={translate.useTranslation("year")}
+									invalid={this.state.validInputs.year}
+									value={this.state.year}
+									onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'year')}
+									onChange={e => this.changeValue(e.target.value, 'year')}/>
+							</Col>
+							<Col></Col>
+							
+						</Row>
+					</FormGroup>
+					<FormGroup>
+						<Row className="padding-top-20">
+							<Col className="text-align-left">
+								<InputText 
+									nameOfDropdown="country" 
+									titleDropdown={this.state.country} 
+									listOfItems={this.state.uploadInputOptions.country} 
+									changeValue={this.changeValue} 
+									className="button-style-upload" />
+							</Col>
+						</Row>
+					</FormGroup>
+					<FormGroup>
+						<Row className="padding-top-20">
+							<Col className="text-align-left" md="3">
+								<InputText nameOfDropdown="domain" titleDropdown={this.state.domain} listOfItems={this.state.uploadInputOptions.domain} changeValue={this.changeValue} className="button-style-upload" />
+							</Col>
+							<Col className="text-align-left">
+								{this.state.shouldEnterNewDomain ? 
+								<Input type="text" name="newDomain" id="newDomain" placeholder="Enter new domain" 
+								onChange={e => this.changeValue(e.target.value.toUpperCase(), 'otherDomain')}
+								/> : <></>}
+							</Col>
+						</Row>
+					</FormGroup>
+					<FormGroup>
+						<Row className="padding-top-20">
+							<Col>
+								<CustomCreatableSelect 
+									options={this.state.uploadInputOptions.subdomain}
+									value={this.state.subdomain}
+									handleChange={this.handleCreateSelectChange}
+									onInputChange={this.handleCreateSelectInputChange}
+									placeholder={translate.useTranslation("tags")}
+								/>
+							</Col>
+						</Row>
+					</FormGroup>
+					<FormGroup>
+						<Row className="padding-top-20">
+							<Col className="text-align-left">
+								<InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.uploadInputOptions.dataFormat} changeValue={this.changeValue} className="button-style-upload" />
+							</Col>
+						</Row>
+					</FormGroup>
+					<FormGroup>
+						<Row className="padding-top-20">
+							<Col>
+								<Input 
+									type="textarea" 
+									name="text" 
+									maxLength="1000"  
+									id="description" 
+									placeholder={translate.useTranslation("description")}
+									className="margin-top-10" 
+									value={this.state.short_desc}
+									invalid={this.state.validInputs.short_desc}
+									onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'short_desc')}
+									onChange={e => this.changeValue(e.target.value, 'short_desc')}/>
+							</Col>
+						</Row>
+					</FormGroup>
+					<FormGroup>
+						<Row className="padding-top-20">
+							<Col >
+								<Input type="text" name="gitlink" id="gitlink" placeholder="GitHub link" value={this.state.gitlink}
+									onChange={e => this.changeValue(e.target.value, 'gitlink')}/>
+								<FormText>{translate.useTranslation("optional")}</FormText>
+							</Col>
+						</Row>
+					</FormGroup>
+					<FormGroup>
+						<Row className="padding-top-20">
+							<Col >
+								<Input 
+									type="text"
+									// invalid={this.state.validInputs.dataset_title}
+									name="Data-integ" 
+									id="Data-integ" 
+									placeholder={translate.useTranslation("data_integrity")}
+									value={this.state.dataIntegrity}
+									// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
+									onChange={e => this.changeValue(e.target.value, 'dataIntegrity')}
+									/>
+									<TooltipButton 
+										body={'a'}
+										className="padding-top-10"
+										ButtonName="Show more info" />
+							</Col>
+						</Row>
+						<Row className="padding-top-10">
+							<Col >
+							<Input 
+									type="text"
+									// invalid={this.state.validInputs.dataset_title}
+									name="Cont-access"
+									id="Cont-access" 
+									placeholder={translate.useTranslation("access")}
+									value={this.state.contAccess}
+									// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
+									onChange={e => this.changeValue(e.target.value, 'contAccess') }
+									/>
+								<TooltipButton 
+									body={translate.useTranslation("access-info")}
 									className="padding-top-10"
 									ButtonName="Show more info" />
-						</Col>
-					</Row>
-					<Row className="padding-top-10">
-						<Col >
-						<Input 
-								type="text"
-								// invalid={this.state.validInputs.dataset_title}
-								name="Cont-access"
-								id="Cont-access" 
-								placeholder={translate.useTranslation("access")}
-								value={this.state.contAccess}
-								// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
-								onChange={e => this.changeValue(e.target.value, 'contAccess') }
-								/>
-							<TooltipButton 
-								body={'a'}
-								className="padding-top-10"
-								ButtonName="Show more info" />
+								
+							</Col>                                
+						</Row>
+						<Row className="padding-top-10">
+							<Col >
+							<Input 
+									type="text"
+									// invalid={this.state.validInputs.dataset_title}
+									name="data-reuse"
+									id="data-reuse" 
+									placeholder={translate.useTranslation("reuse")}
+									value={this.state.dataReuse}
+									// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
+									onChange={e => this.changeValue(e.target.value, 'dataReuse')}
+									/>
+								<TooltipButton 
+									body={this.props.dataReuse}
+									className="padding-top-10"
+									ButtonName="Show more info" />
+								
+							</Col>                                
+						</Row>
+					</FormGroup>
+		
+					<FormGroup>
+						<Row className="padding-top-20">
+							<Col md="3"></Col>
+							<Col md="6" className="text-align-center">
+								{this.state.loaderVisibility ?
+								<LoaderComponent visible={this.state.loaderVisibility}/> 
+								:                                    
+								<Button 
+								color="primary" 
+								outline className="upload-button-size" 
+								disabled={this.state.buttonUpload}
+								onClick={() => this.handleSubmit()}>
+									{translate.useTranslation("edit")}
+								</Button>
+								}
 							
-						</Col>                                
-					</Row>
-					<Row className="padding-top-10">
-						<Col >
-						<Input 
-								type="text"
-								// invalid={this.state.validInputs.dataset_title}
-								name="data-reuse"
-								id="data-reuse" 
-								placeholder={translate.useTranslation("reuse")}
-								value={this.state.dataReuse}
-								// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
-								onChange={e => this.changeValue(e.target.value, 'dataReuse')}
-								/>
-							<TooltipButton 
-								body={this.props.dataReuse}
-								className="padding-top-10"
-								ButtonName="Show more info" />
-							
-						</Col>                                
-					</Row>
-				</FormGroup>
-	
-				<FormGroup>
-					<Row className="padding-top-20">
-						<Col className="text-align-center">
-							{this.state.loaderVisibility ?
-							<LoaderComponent visible={this.state.loaderVisibility}/> 
-							:                                    
-							<Button 
-							color="primary" 
-							outline className="upload-button-size" 
-							disabled={this.state.buttonUpload}
-							onClick={() => this.handleSubmit()}>
-								{translate.useTranslation("edit")}
-							</Button>
-							}
-						
-						</Col>
-					</Row>
-				</FormGroup>
-				</Form>
-			</CardText>
+							</Col>
+							<Col md="3" className="text-align-right">
+								<a onClick={this.switchPageBack}>{translate.useTranslation("cancel")}</a>
+							</Col>
+						</Row>
+					</FormGroup>
+					</Form>
+				</CardText>
 			
 			</CardBody>
-        )
+			}
+			</>
+		)
     }
 }

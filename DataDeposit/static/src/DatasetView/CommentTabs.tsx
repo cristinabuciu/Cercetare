@@ -1,5 +1,6 @@
 import * as React from 'react';
 import axios from 'axios';
+import MyTranslator from '../assets/MyTranslator'
 
 import classnames from 'classnames';
 import AddComment from "../Comment/AddComment";
@@ -155,13 +156,6 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         console.log("JOHNULE!!!");
         console.log(this.state.comments);
         let cards = this.state.comments.map(item => (
-            // {id: 1, value: 3.5, author: "landiggity", title: "Hatz", body: "This is my first comment on this forum so don't be a dick"},
-//             commentBody: "body"
-// commentTitle: "title"
-// createdAt: "1132507830"
-// datasetID: 6
-// rating: 1.5
-// username: "admin"
             <Comment 
                 id={item['id']}
                 datasetID={item['datasetID']}
@@ -204,23 +198,23 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
           );
         });
 
+        const translate = new MyTranslator("Comment");
+
         return (
         <Card>
             <Nav tabs className="margin-top-5 margin-bottom-5">
                 <NavItem>
                     <NavLink
                         className={classnames({ active: this.state.activeTab === '1' })}
-                        onClick={ () => this.switchTabs('1') }
-                    >
-                    All comments
+                        onClick={ () => this.switchTabs('1') }>
+                        {translate.useTranslation("all-comments")}
                     </NavLink>
                 </NavItem>
                 <NavItem>
                     <NavLink
                         className={classnames({ active: this.state.activeTab === '2' })}
-                        onClick={ () => this.switchTabs('2') }
-                    >
-                    Add comment
+                        onClick={ () => this.switchTabs('2') }>
+                        {translate.useTranslation("add-comment")}
                     </NavLink>
                 </NavItem>
             </Nav>
@@ -257,7 +251,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                         <Row className={this.state.wasInfo ? "" : "display-none"}>
                             <Col>
                                 <Alert color="info" className="text-align-center">
-                                    No reviews posted yet !
+                                    {translate.useTranslation("no-reviews")}
                                 </Alert>
                             </Col>
                         </Row>
@@ -265,7 +259,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                         <Row className={this.state.wasError ? "" : "display-none"}>
                             <Col>
                                 <Alert color="danger" className="text-align-center">
-                                    There was an error when getting the reviews !
+                                    {translate.useTranslation("error-reviews")}
                                 </Alert>
                             </Col>
                         </Row>
