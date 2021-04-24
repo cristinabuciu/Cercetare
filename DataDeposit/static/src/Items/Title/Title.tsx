@@ -16,7 +16,7 @@ export const Title = (props) => {
 
     const propsClassName = props.className ? " " + props.className : "";
     return (
-      <Col md={{ size: 12, offset: 0 }} className="text-align-center quick-title">
+      <Col md={props.md ? props.md : 12} className="text-align-center quick-title">
           <h3 className={"sellGear-title" + propsClassName}>{props.titleSet}</h3>
       </Col>
     );

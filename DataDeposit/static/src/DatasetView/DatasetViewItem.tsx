@@ -1,17 +1,15 @@
 import * as React from 'react';
 import axios from 'axios';
+import MyTranslator from '../assets/MyTranslator'
 
-import {
-    Card, Label, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Input, Row, Col, Tooltip
-  } from 'reactstrap';
-import ReactStars from "react-rating-stars-component";
-import Rating from 'react-rating';
+import { Card, CardTitle, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { LoaderComponent, HorizontalList } from '../Items/Items-components'
+import { AboutBody } from './Dataset-components'
+import DatasetUpdate from './DatasetUpdate'
 import CommentTabs from "./CommentTabs"
 
-import { faLink, faStar, faPortrait, faCalendar, faUser, faFile, faFileDownload, faGlobe, faDatabase, faEye, faTags, faFemale, faFlag } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTimesCircle, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 import { ImageTitle, Title } from '../Items/Title/Title';
 
@@ -52,14 +50,16 @@ export interface IDatasetViewLoadingState {
     shouldGiveRating: boolean;
     shouldDisplayLoading: boolean;
     userID: string;
+    shouldDisplayAboutAt: boolean;
 }
 
 export default class DatasetViewLoading extends React.Component<IDatasetViewLoadingProps, IDatasetViewLoadingState> {
-    state = {
+    state: IDatasetViewLoadingState = {
         rating: 0,
         shouldGiveRating: true,
         shouldDisplayLoading: true,
-        userID: "0"
+        userID: "0",
+        shouldDisplayAboutAt: true
     }
 
     componentDidMount () {
@@ -71,24 +71,29 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
           })
           .catch(function (error) {
             console.log(error);
-          })
+        })
           .finally( () => {
             // always executed
-          });
+        });
+
+        this.switchPage = this.switchPage.bind(this);
     }
 
     goBack = () =>{
         window.history.back();
-      }
+    }
+
+    switchPage(): void {
+        this.setState({
+            shouldDisplayAboutAt: !this.state.shouldDisplayAboutAt
+        });
+    }
 
     render() {  
-        
+        const translate = new MyTranslator("View");
         return (
             <>
             <Row>
-                <Col>
-                <a onClick={this.goBack} href="">Back</a>
-                </Col>
                 <Col md={{ size: 12, offset: 0 }}>
                     <ImageTitle 
                         className="margin-bottom-10p" 
@@ -102,143 +107,57 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
             <Row>
                 <Col>
                 <Card className="margin-top-20">
-                    <CardTitle><Title titleSet="About" /></CardTitle>
-                    <CardBody>
-                    <Row >
-                        <Col>
-                            
-                                <div className="column-section">
-                                    <div className="overflow-hidden">
-                                    <span className="column-item">
-                                        <span className="column-data">
-                                        <FontAwesomeIcon icon={faCalendar}/> Domain:
-                                        </span>
-                                        {this.props.domain ? this.props.domain : "-"}
-                                    </span>
-
-                                    <span className="column-item">
-                                        <span className="column-data">
-                                        <FontAwesomeIcon icon={faTags}/> Tags:
-                                        </span>
-                                        <div className="overflow-hidden">
-                                        {this.props.subdomain ? this.props.subdomain.map(txt => <div className="column-list">{txt}</div>) : "-"}
-                                        </div>
-                                    </span>
-
-                                    <span className="column-item">
-                                        <span className="column-data">
-                                        <FontAwesomeIcon icon={faPortrait}/> Authors:
-                                        </span>
-                                        <div className="overflow-hidden">
-                                        {this.props.authors ? this.props.authors.map(txt => <div className="column-list">{txt}</div>) : "-"}
-                                        </div>
-                                    </span>
-
-                                    <span className="column-item">
-                                        <span className="column-data">
-                                        <FontAwesomeIcon icon={faPortrait}/> Article title:
-                                        </span>
-                                        {this.props.article_title ? this.props.article_title : "-"}
-                                    </span>
-
-                                    <span className="column-item">
-                                        <span className="column-data">
-                                        <FontAwesomeIcon icon={faGlobe}/> Country:
-                                        </span>
-                                        {this.props.country ? this.props.country : "-"}
-                                    </span>
-                                    
-                                    <span className="column-item">
-                                        <span className="column-data">
-                                        <FontAwesomeIcon icon={faCalendar}/> Created:
-                                        </span>
-                                        {this.props.year ? this.props.year : "-"}
-                                    </span>
-
-                                    </div>
-
-                                    <div className="overflow-hidden">
-                                        <span className="column-item">
-                                            <span className="column-data">
-                                            <FontAwesomeIcon icon={faStar}/> Rating:
-                                            </span>
-                                            {this.props.avg_rating ? this.props.avg_rating : "0"}
-                                        </span>
-                                        <span className="column-item">
-                                            <span className="column-data">
-                                            <FontAwesomeIcon icon={faFile}/> Data format:
-                                            </span>
-                                            {this.props.data_format ? this.props.data_format : "-"}
-                                        </span>
-                                        <span className="column-item">
-                                            <span className="column-data">
-                                            <FontAwesomeIcon icon={faFileDownload}/> Download Type:
-                                            </span>
-                                            {this.props.shouldHaveDownloadButton ? 
-                                                <>{
-                                                    this.props.shouldHaveDownloadLink ? 
-                                                    <><a target="_blank" href={this.props.downloadPath}><FontAwesomeIcon icon={faLink} />Download Link</a></>
-                                                    :
-                                                    <span><FontAwesomeIcon icon={faDatabase} />  Download File</span>
-                                                }</>
-                                                :
-                                                <>No download!</>
-                                                }
-                                        </span>
-                                        <span className="column-item">
-                                            <span className="column-data">
-                                            <FontAwesomeIcon icon={faGlobe}/> Gitlink:
-                                            </span>
-                                            {this.props.gitlink ? this.props.gitlink : "-"}
-                                        </span>
-
-                                        <span className="column-item">
-                                            <span className="column-data">
-                                            <FontAwesomeIcon icon={faUser}/> Uploaded by:
-                                            </span>
-                                            {this.props.owner ? this.props.owner : "-"}
-                                        </span>
-                                    </div>
-
-                                </div>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            {this.props.short_desc}
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <div className="column-title margin-top-10">
-                                Data integrity and authenticity
-                            </div>
-                            <div>
-                                {this.props.dataIntegrity ? this.props.dataIntegrity : "Not specified"}
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <div className="column-title margin-top-10">
-                                Continuity of access
-                            </div>
-                            <div>
-                                {this.props.continuityAccess ? this.props.continuityAccess : "Not specified"}
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <div className="column-title margin-top-10">
-                                Data reuse
-                            </div>
-                            <div>
-                                {this.props.dataReuse ? this.props.dataReuse : "Not specified"}
-                            </div>
-                        </Col>
-                    </Row>
-                    </CardBody>
+                    <CardTitle>
+                        <Row>
+                            <Col md="3"></Col>
+                            {this.state.shouldDisplayAboutAt ? <Title titleSet={translate.useTranslation("about")} md={6} /> : <Title titleSet={translate.useTranslation("edit")} md={6} /> }
+                            <Col md="3" className="text-align-right edit-button"> 
+                                {this.state.shouldDisplayAboutAt ? <FontAwesomeIcon className="about-edit-button" icon={faEdit} onClick={this.switchPage}/> :
+                                <FontAwesomeIcon className="about-edit-button" icon={faTimesCircle} onClick={this.switchPage}/>  }
+                            </Col>
+                        </Row>
+                    </CardTitle>
+                    {this.state.shouldDisplayAboutAt ?
+                    <AboutBody 
+                            domain={this.props.domain}
+                            subdomain={this.props.subdomain} 
+                            country={this.props.country}
+                            data_format={this.props.data_format}
+                            authors={this.props.authors}
+                            year={this.props.year}
+                            dataset_title={this.props.dataset_title}
+                            article_title={this.props.article_title}
+                            short_desc={this.props.short_desc}
+                            avg_rating={this.props.avg_rating}
+                            gitlink={this.props.gitlink}
+                            owner={this.props.owner}
+                            dataIntegrity={this.props.dataIntegrity}
+                            continuityAccess={this.props.continuityAccess}
+                            dataReuse={this.props.dataReuse}
+                        
+                            downloadPath={this.props.downloadPath}
+                            shouldHaveDownloadButton={this.props.shouldHaveDownloadButton}
+                            shouldHaveDownloadLink={this.props.shouldHaveDownloadLink}
+                    />
+                        :
+                        <DatasetUpdate 
+                            id={this.props.id}
+                            domain={this.props.domain}
+                            subdomain={this.props.subdomain} 
+                            country={this.props.country}
+                            data_format={this.props.data_format}
+                            authors={this.props.authors}
+                            year={this.props.year}
+                            dataset_title={this.props.dataset_title}
+                            article_title={this.props.article_title}
+                            short_desc={this.props.short_desc}
+                            avg_rating={this.props.avg_rating}
+                            gitlink={this.props.gitlink}
+                            dataIntegrity={this.props.dataIntegrity}
+                            continuityAccess={this.props.continuityAccess}
+                            dataReuse={this.props.dataReuse}
+                            switchPage={this.switchPage} />
+                    }
                     
                 </Card>
                 </Col>

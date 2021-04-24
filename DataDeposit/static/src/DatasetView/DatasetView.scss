@@ -40,6 +40,10 @@ $grid-line-color: rgb(187, 228, 240);
   }
 }
 
+.about-edit-button {
+  cursor: pointer;
+}
+
 ////////////////PAGINATION//////////////////
 .pagination {
   display: inline-block;
@@ -81,4 +85,9 @@ $grid-line-color: rgb(187, 228, 240);
 .rating-button-size {
   font-size: 16px;
   padding: 3px 50px;
+}
+
+.edit-button {
+  font-size: 30px;
+  color: #3c87be;
 }
