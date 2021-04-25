@@ -64,17 +64,6 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
       console.log("INTRA PE AICI");
       this.state.isAuthenticated = true;
     }
-    
-    axios.get('/user/' + '12345')
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    })
-    .finally(function () {
-      // always executed
-    });  
 
     console.log(this.state.isAuthenticated);
 

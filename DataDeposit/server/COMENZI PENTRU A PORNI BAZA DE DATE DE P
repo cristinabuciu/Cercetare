@@ -84,7 +84,8 @@ sudo curl -X PUT "172.19.0.2:9200/datasets?pretty" -H 'Content-Type: application
             "updates_number": {"type": "long"},
             "downloads_number": {"type": "long"},
             "deleted": {"type": "boolean"},
-            "deletedAt": {"type": "long"}
+            "deletedAt": {"type": "long"},
+            "ckan_package_id": {"type": "integer"}
         }}
     }
 }

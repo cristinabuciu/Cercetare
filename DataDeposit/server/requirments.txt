@@ -3,3 +3,4 @@ mysql-connector-python
 Flask-Session
 Flask-Cors
 apscheduler
+elasticsearch==7.0.2
