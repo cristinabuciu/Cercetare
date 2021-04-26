@@ -1,9 +1,5 @@
 import requests
-import os
 import json
-import pprint
-import urllib
-import urllib3
 
 # GET GROUPS
 a = requests.get('http://0.0.0.0:5000/api/action/group_list')
@@ -13,7 +9,7 @@ print(json.loads(a.content.decode('utf8').replace("'", '"'))['result'])
 b = requests.get('http://0.0.0.0:5000/api/action/organization_list')
 print(json.loads(b.content.decode('utf8').replace("'", '"'))['result'])
 
-# GET PACKAGES
+# GET PACKAGES (dataset metadata)
 b = requests.get('http://0.0.0.0:5000/api/action/package_list')
 print(json.loads(b.content.decode('utf8').replace("'", '"'))['result'])
 

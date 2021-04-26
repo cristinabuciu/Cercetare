@@ -5,7 +5,7 @@ import os
 import subprocess
 import sys
 from search import applyFilters, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById
-from upload import uploadDataset, uploadPaths, addComment, updateNumberOfViews, updateDataset
+from upload import uploadDataset, uploadDatasetFiles, uploadPaths, addComment, updateNumberOfViews, updateDataset
 from delete import hardDeleteDataset, softDeleteDataset, hardDeleteComment
 import zipfile
 from glob import glob
@@ -19,7 +19,6 @@ UPLOAD_FOLDER = UPLOAD_FOLDER_PATH
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 160 * 1024 * 1024
 app.secret_key = FLASK_SECRET_KEY
-ALLOWED_EXTENSIONS = {'rar', 'zip', 'tar.gz', 'jpg'}
 
 current_user = 'admin'
 
@@ -98,6 +97,13 @@ def addDataset():
     _params = receivedData.get('params')
 
     return uploadDataset(_params, current_user)
+
+
+@app.route('/dataset/<dataset_id>/files', methods=['POST'])
+def addDatasetFiles(dataset_id):
+    packageId = request.form['packageId']
+    file = request.files['file']
+    return uploadDatasetFiles(dataset_id, packageId, file)
 
 
 @app.route('/dataset/<dataset_id>', methods=['PUT'])
