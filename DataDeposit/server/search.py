@@ -1,8 +1,7 @@
 # search.py
 from application_properties import *
 
-import os
-import sys
+import re
 from flask import jsonify, json
 import es_connector
 import time
@@ -121,24 +120,27 @@ def findDataset(datasetId):
     for row in datasets:
         elapsedTime = calculateLastUpdatedAt(int(row['lastUpdatedAt']))
 
-        hasDownloadLink = 2
+        resourceType = ''
         downloadPath = ''
+
         if 'downloadPath' in row:
-            if row['downloadPath'].startswith('link'):
-                hasDownloadLink = 1
-                downloadPath = row['downloadPath'][5:]
-            elif row['downloadPath'].startswith('private'):
-                hasDownloadLink = 2
-            elif row['downloadPath'].startswith('path'):
-                hasDownloadLink = 3
-                downloadPath = row['downloadPath'][5:]
+            downloadPath = row['downloadPath']
+
+        if downloadPath == '':
+            resourceType = 'NONE'
+        elif re.match(r'http://.+\:.+/dataset/.+/resource/.+/download/file', downloadPath) == downloadPath:
+            resourceType = 'INTERNAL'
+        else:
+            resourceType = 'EXERNAL'
         
         result = es.get_es_data_by_id(INDEX_USERS, row['ownerId'])
         hasPhoto = False
         if result[0]['_source']:
             hasPhoto = result[0]['_source']['hasPhoto']
 
-        returnArray.append([row['id'], row['domain'], row['tags'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink'], row['owner'], elapsedTime, hasDownloadLink, downloadPath, row['dataIntegrity'], row['continuityAccess'], row['dataReuse'], row['views'], row['ratings_number'], row['updates_number'], row['downloads_number'], hasPhoto])
+        returnArray.append([row['id'], row['domain'], row['tags'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'],
+                            row['avg_rating_value'], row['gitlink'], row['owner'], elapsedTime, resourceType, downloadPath, row['dataIntegrity'], row['continuityAccess'], row['dataReuse'],
+                            row['views'], row['ratings_number'], row['updates_number'], row['downloads_number'], hasPhoto])
     
     return json.dumps(returnArray)
 

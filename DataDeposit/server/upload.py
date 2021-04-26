@@ -5,6 +5,7 @@ import os
 import sys
 from datetime import datetime, timedelta
 import es_connector
+import ckan_connector as ck
 from time import sleep, time
 
 # TREBUIE FACUT FISIER CU FUNTII COMUNE
@@ -146,10 +147,86 @@ def uploadDataset(params, current_user):
                 tagName = tag['value'].lower()
                 tagName = tagName.capitalize()
                 es.insert(INDEX_TAGS, '_doc', {"domainName": domain, "tagName": tagName})
-    
-        return "UPLOAD_DATASET_SUCCESS"
+
+        # ckan package upload
+        packageId = uploadDatasetToCkanInstance(dataset_json)
+
+        # update dataset - add ckan packageId correlation
+        existing = es.get_es_data_by_id(INDEX_DATASETS, dataset_json['id'])[0]
+        esId = existing['_id']
+        existing = existing['_source']
+        existing['ckan_package_id'] = packageId
+        es.update(INDEX_DATASETS, '_doc', esId, existing)
+
+        return {'datasetId': dataset_json['id'], 'packageId': packageId}
     except:
         return "UPLOAD_DATASET_ERROR"
+
+
+def uploadDatasetToCkanInstance(dataset):
+    group = dataset['domain'].replace(" ", "-").lower()
+    ck.createGroupIfNeeded(group)
+
+    ckanMetadata = {}
+
+    ckanMetadata['title'] = dataset['dataset_title']
+    ckanMetadata['name'] = str(dataset['id'])
+    ckanMetadata['private'] = dataset['private']
+    ckanMetadata['author'] = ', '.join(dataset['authors'])
+    ckanMetadata['maintainer'] = dataset['owner']
+    ckanMetadata['notes'] = dataset['short_desc']
+    ckanMetadata['groups'] = [{'name': group}]
+    ckanMetadata['tags'] = list(map(lambda tag: {'name': tag}, dataset['tags']))
+    ckanMetadata['owner_org'] = CKAN_INSTANCE_ORG_ID
+
+    if dataset['gitlink']:
+        ckanMetadata['url'] = dataset['gitlink']
+
+    # todo: add extras (ckanMetadata['extras'] = [{'key': 'value'}]
+
+    packageId = ck.addDatasetMetadata(ckanMetadata)
+    return packageId
+
+
+def uploadDatasetFiles(datasetId, packageId, file):
+    if not(file) or file.filename == '' or not(allowed_file(file.filename)):
+        return "FILE_NOT_ALLOWED"
+
+    try:
+        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
+        es.connect()
+
+        dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]['_source']
+
+        if dataset['ckan_package_id'] != packageId:
+            return "SKIP_UPLOAD_FILES_WRONG_PACKAGE_ID"
+
+        # ckan resource upload
+        filename = file.filename.split('.')[0]
+        resource_data = {}
+        resource_data['package_id'] = packageId
+        resource_data['name'] = filename
+        resource_data['url'] = '{}/files'.format(datasetId)
+
+        resourceId = ck.addDatasetFile(resource_data, file)
+
+        # update dataset - add ckan resourceId and url correlations
+        existing = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]
+        esId = existing['_id']
+        existing = existing['_source']
+        existing['ckan_resource_id'] = resourceId
+        existing['downloadPath'] = CKAN_INSTANCE_DATASET_DOWNLOAD_URL.format(packageId, resourceId)
+        es.update(INDEX_DATASETS, '_doc', esId, existing)
+
+        return {'datasetId': datasetId, 'packageId': packageId, 'resourceId': resourceId}
+
+    except Exception as e:
+        print(e)
+        return "UPLOAD_DATASET_FILES_ERROR"
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in UPLOAD_FILE_ALLOWED_EXTENSIONS
 
 
 def updateDataset(dataset_id, params, current_user):
