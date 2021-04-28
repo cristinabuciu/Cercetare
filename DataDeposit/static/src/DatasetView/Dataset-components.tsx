@@ -3,7 +3,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink, faStar, faPortrait, faCalendar, faUser, faFile, faFileDownload, faGlobe, faDatabase, faEye, faTags, faFemale, faFlag } from "@fortawesome/free-solid-svg-icons";
 
-import { CardBody, Row, Col } from 'reactstrap';
+import { CardBody, Row, Col, Button } from 'reactstrap';
 
 export const AboutBody = props => (
     <CardBody>
@@ -74,7 +74,7 @@ export const AboutBody = props => (
                         </span>
                         <span className="column-item">
                             <span className="column-data">
-                            <FontAwesomeIcon icon={faFileDownload}/> Download Type:
+                            <FontAwesomeIcon icon={faFileDownload}/> Resource Type:
                             </span>
                             {props.shouldHaveDownloadButton ? 
                                 <>{
@@ -84,7 +84,7 @@ export const AboutBody = props => (
                                     <span><FontAwesomeIcon icon={faDatabase} />  Download File</span>
                                 }</>
                                 :
-                                <>No download!</>
+                                <>None</>
                                 }
                         </span>
                         <span className="column-item">
@@ -138,6 +138,17 @@ export const AboutBody = props => (
             <div>
                 {props.dataReuse ? props.dataReuse : "Not specified"}
             </div>
+        </Col>
+    </Row>
+
+    <Row>
+        <Col className="text-align-center">
+            <Button
+                color="primary" 
+                outline className="upload-button-size" 
+                onClick={() => props.handleDownload()}>
+                Download
+            </Button>
         </Col>
     </Row>
     </CardBody>

@@ -263,9 +263,9 @@ export const ModalQuickView = (props) => {
                   </span>
                   <span className="column-item">
                     <span className="column-data">
-                    <FontAwesomeIcon icon={faFileDownload}/> Download Type:
+                    <FontAwesomeIcon icon={faFileDownload}/> Resource Type:
                     </span>
-                      {downloadType ? downloadType : "No download"}
+                      {downloadType ? downloadType : "None"}
                   </span>
                 </div>
 

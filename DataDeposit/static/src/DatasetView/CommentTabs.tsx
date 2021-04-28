@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import AddComment from "../Comment/AddComment";
 import Comment from "../Comment/Comment";
 import ReactStars from "react-rating-stars-component";
-import { faStarHalf, faHatWizard } from "@fortawesome/free-solid-svg-icons";
+import { faStarHalf, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Row, Col, TabContent, TabPane, Nav, NavItem, Button, CardBody, Card, NavLink, Alert } from 'reactstrap';
 import NumericInput from 'react-numeric-input';
@@ -240,7 +240,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                                         className="button-style-sort"
                                         changeValue={this.changeValueSort} 
                                         />
-                                <Button color="link"><FontAwesomeIcon icon={faHatWizard}/></Button>
+                                <Button color="link"><FontAwesomeIcon icon={faSearch}/></Button>
                             </div>
                         </Col>
                     
