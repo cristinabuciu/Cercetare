@@ -90,8 +90,8 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                             downloadType={''}
                             lastUpdatedAt={this.state.searchResult[13]}
 
-                            shouldHaveDownloadButton={this.state.searchResult[14] === 1 || this.state.searchResult[14] === 3 }
-                            shouldHaveDownloadLink={this.state.searchResult[14] === 1}
+                            shouldHaveDownloadButton={this.state.searchResult[14] === 'EXTERNAL' || this.state.searchResult[14] === 'INTERNAL' }
+                            shouldHaveDownloadLink={this.state.searchResult[14] === 'EXTERNAL'}
                             downloadPath={this.state.searchResult[15]}
 
                             dataIntegrity={this.state.searchResult[16]}

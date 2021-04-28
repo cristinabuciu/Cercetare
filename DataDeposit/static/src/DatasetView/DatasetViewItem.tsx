@@ -77,6 +77,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
         });
 
         this.switchPage = this.switchPage.bind(this);
+        this.handleDownload = this.handleDownload.bind(this);
     }
 
     goBack = () =>{
@@ -87,6 +88,10 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
         this.setState({
             shouldDisplayAboutAt: !this.state.shouldDisplayAboutAt
         });
+    }
+
+    handleDownload(): void {
+
     }
 
     render() {  
@@ -111,9 +116,9 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                         <Row>
                             <Col md="3"></Col>
                             {this.state.shouldDisplayAboutAt ? <Title titleSet={translate.useTranslation("about")} md={6} /> : <Title titleSet={translate.useTranslation("edit")} md={6} /> }
-                            <Col md="3" className="text-align-right edit-button"> 
-                                {this.state.shouldDisplayAboutAt ? <FontAwesomeIcon className="about-edit-button" icon={faEdit} onClick={this.switchPage}/> :
-                                <FontAwesomeIcon className="about-edit-button" icon={faTimesCircle} onClick={this.switchPage}/>  }
+                            <Col md="3" className="text-align-right"> 
+                                {this.state.shouldDisplayAboutAt ? <FontAwesomeIcon className="about-edit-button edit-button" icon={faEdit} onClick={this.switchPage}/> :
+                                <FontAwesomeIcon className="about-edit-button edit-button" icon={faTimesCircle} onClick={this.switchPage}/>  }
                             </Col>
                         </Row>
                     </CardTitle>
@@ -134,6 +139,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                             dataIntegrity={this.props.dataIntegrity}
                             continuityAccess={this.props.continuityAccess}
                             dataReuse={this.props.dataReuse}
+                            handleDownload={this.handleDownload}
                         
                             downloadPath={this.props.downloadPath}
                             shouldHaveDownloadButton={this.props.shouldHaveDownloadButton}

@@ -1,6 +1,6 @@
 FLASK_SECRET_KEY = 'development'
 
-DATABASE_IP = '172.19.0.2'
+DATABASE_IP = '172.24.0.2'
 DATABASE_PORT = 9200
 INDEX_USERS = 'logintable'
 INDEX_LOCATIONS = 'locations'

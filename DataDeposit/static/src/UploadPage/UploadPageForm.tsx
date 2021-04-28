@@ -225,24 +225,22 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             }
         })
           .then(response => {
-            console.log("//CCCCCCCCCCCCCCCC//");
-            console.log(response.data);
-            console.log("/CCCCCCCCCCCCCCCCCCCC/");
             let file = this.state.fileToBeSent;
             const formData = new FormData();
-        
+            formData.append("packageId", response.data['packageId'])
             formData.append("file", file);
-            // AICI SE AFLA APELUL PENTRU INCARCARE DE FISIERE, CARE MERGE DAR NU PREA
-            // axios
-            // .post("/uploadFile", formData)
-            // .then(res => console.log(res))
-            // .catch(err => console.warn(err));
 
-            if (response.data === 'Succes') {
-                this.props.changeToSuccess();
-            } else {
-                this.props.changeToSuccess(false);
-            }
+            axios
+            .post("/dataset/" + response.data['datasetId'] + '/files', formData)
+            .then(res => console.log(res))
+            .catch(err => console.warn(err))
+            .finally(() => {
+                if (response.data === 'UPLOAD_DATASET_ERROR') {
+                    this.props.changeToSuccess(false);
+                } else {
+                    this.props.changeToSuccess();
+                }
+            });
           })
           .catch(function (error) {
             console.log(error);
