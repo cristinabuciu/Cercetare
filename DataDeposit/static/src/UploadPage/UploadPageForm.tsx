@@ -199,7 +199,9 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         this.setState({
             loaderVisibility: true
         });
-        
+
+        let hasError: boolean = false;
+
         axios.post( '/datasets', {
             params: {
               	notArrayParams: {
@@ -225,28 +227,37 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             }
         })
           .then(response => {
-            let file = this.state.fileToBeSent;
-            const formData = new FormData();
-            formData.append("packageId", response.data['packageId'])
-            formData.append("file", file);
+              if (this.state.uploadOption.upload) {
+                  let file = this.state.fileToBeSent;
+                  const formData = new FormData();
+                  formData.append("packageId", response.data['packageId'])
+                  formData.append("file", file);
 
-            axios
-            .post("/dataset/" + response.data['datasetId'] + '/files', formData)
-            .then(res => console.log(res))
-            .catch(err => console.warn(err))
-            .finally(() => {
-                if (response.data === 'UPLOAD_DATASET_ERROR') {
-                    this.props.changeToSuccess(false);
-                } else {
-                    this.props.changeToSuccess();
-                }
-            });
+                  axios
+                      .post("/dataset/" + response.data['datasetId'] + '/files', formData)
+                      .then(res => console.log(res))
+                      .catch(err => console.warn(err))
+                      .finally(() => {
+                          if (response.data === 'UPLOAD_DATASET_ERROR') {
+                              hasError = true;
+                              this.props.changeToSuccess(false);
+                          } else {
+                              this.props.changeToSuccess();
+                          }
+                      });
+              }
           })
           .catch(function (error) {
             console.log(error);
+            hasError = true;
           })
-          .finally(function () {
+          .finally( () => {
             // always executed
+              if (hasError) {
+                  this.props.changeToSuccess(false);
+              } else {
+                  this.props.changeToSuccess();
+              }
           }); 
     }
 
@@ -254,15 +265,6 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         this.setState({
             fileToBeSent: e.target.files[0]
         });
-        /////////////////////////////////////////
-        console.log("BAGA SET");
-        // let file = e.target.files[0];
-        // const formData = new FormData();
-        // formData.append("file", file);
-        // axios
-        // .post("/uploadFile", formData)
-        // .then(res => console.log(res))
-        // .catch(err => console.warn(err));
     }
 
     updateUploadOptions = (privateMode : boolean, linkMode : boolean, uploadMode : boolean) => {
@@ -529,7 +531,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                                     id="downloadURL"
                                                     disabled={!this.state.uploadOption.link}
                                                     placeholder="Download Link..."
-                                                    onChange={e => this.changeValue('link_' + e.target.value, 'downloadPath')}
+                                                    onChange={e => this.changeValue(e.target.value, 'downloadPath')}
                                                 />
                                             </FormGroup>
                                         </Card>

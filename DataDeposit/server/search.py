@@ -120,7 +120,7 @@ def findDataset(datasetId):
     for row in datasets:
         elapsedTime = calculateLastUpdatedAt(int(row['lastUpdatedAt']))
 
-        resourceType = ''
+        resourceType = 'NONE'
         downloadPath = ''
 
         if 'downloadPath' in row:
@@ -128,10 +128,12 @@ def findDataset(datasetId):
 
         if downloadPath == '':
             resourceType = 'NONE'
-        elif re.match(r'http://.+\:.+/dataset/.+/resource/.+/download/file', downloadPath) == downloadPath:
-            resourceType = 'INTERNAL'
         else:
-            resourceType = 'EXERNAL'
+            matchResult = re.match(r'http://.+\:.+/dataset/.+/resource/.+/download/.+', downloadPath)
+            if matchResult is None:
+                resourceType = 'EXTERNAL'
+            elif matchResult.group() == downloadPath:
+                resourceType = 'INTERNAL'
         
         result = es.get_es_data_by_id(INDEX_USERS, row['ownerId'])
         hasPhoto = False
