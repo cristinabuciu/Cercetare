@@ -5,7 +5,8 @@ import os
 import subprocess
 import sys
 from search import applyFilters, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById
-from upload import uploadDataset, uploadDatasetFiles, uploadPaths, addComment, updateNumberOfViews, updateDataset
+from upload import uploadDataset, uploadDatasetFiles, addComment, updateNumberOfViews
+from update import updateDataset, updateDatasetFiles
 from delete import hardDeleteDataset, softDeleteDataset, hardDeleteComment
 import zipfile
 from glob import glob
@@ -102,7 +103,7 @@ def addDataset():
 @app.route('/dataset/<dataset_id>/files', methods=['POST'])
 def addDatasetFiles(dataset_id):
     packageId = request.form['packageId']
-    file = request.files['file']
+    file = request.files['file'] if len(request.files) > 0 else None
     return uploadDatasetFiles(dataset_id, packageId, file)
 
 
@@ -112,6 +113,13 @@ def editDataset(dataset_id):
     receivedData = json.loads(request.data.decode('utf-8'))
     _params = receivedData.get('params')
     return updateDataset(dataset_id, _params, current_user)
+
+
+@app.route('/dataset/<dataset_id>/files', methods=['PUT'])
+def editDatasetFiles(dataset_id):
+    packageId = request.form['packageId']
+    file = request.files['file']
+    return updateDatasetFiles(dataset_id, packageId, file)
 
 
 @app.route('/dataset/<dataset_id>', methods=['DELETE'])

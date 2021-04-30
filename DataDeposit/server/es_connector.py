@@ -243,12 +243,14 @@ class ESClass(object):
         return s['hits']['hits']
 
     # insert function
-    def insert(self, index, doc_type, body):
-        return self.es.index(index=index, doc_type=doc_type, body=body)
+    def insert(self, index, doc_type, body, refresh='false'):
+        params = {'refresh': refresh}
+        return self.es.index(index=index, doc_type=doc_type, body=body, params=params)
 
     # update function
-    def update(self, index, doc_type, doc_id, body):
-        return self.es.index(index=index, doc_type=doc_type, id=doc_id, body=body)
+    def update(self, index, doc_type, doc_id, body, refresh='false'):
+        params = {'refresh': refresh}
+        return self.es.index(index=index, doc_type=doc_type, id=doc_id, body=body, params=params)
 
     # delete function
     def delete(self, index, doc_type, event_id):

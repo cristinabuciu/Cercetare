@@ -91,7 +91,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
     }
 
     handleDownload(): void {
-
+        window.open(this.props.downloadPath, "_blank");
     }
 
     render() {  
