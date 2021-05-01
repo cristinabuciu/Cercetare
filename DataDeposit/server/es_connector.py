@@ -205,6 +205,12 @@ class ESClass(object):
         body = { "script" : { "source": "ctx._source.views++", "lang": "painless" }, "query": { "term" : { "id": datasetID } } }
 
         self.update_by_query(index, body)
+
+    # update dataset downloads
+    def update_dataset_downloads(self, index, datasetID):
+        body = { "script" : { "source": "ctx._source.downloads_number++", "lang": "painless" }, "query": { "term" : { "id": datasetID } } }
+
+        self.update_by_query(index, body)
     
     def soft_delete_comments_by_dataset_id(self, index, datasetId, currentTimestamp):
         body = { "script" : { "source": "ctx._source.deleted=true;" + "ctx._source.deletedAt=" + str(currentTimestamp) + ";", "lang": "painless" }, "query": { "term" : { "datasetID": datasetId } } }
@@ -290,7 +296,3 @@ class ESClass(object):
     # bulk operation
     def bulk_insert(self, index, doc_type, json_data):
         self.es.bulk(index=index, doc_type=doc_type, body=json_data)
-
-
-# es = ESClass(server='kibana-api.ne.adobe.net', port=443, use_ssl=True, user='', password='')
-# es.connect()

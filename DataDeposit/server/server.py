@@ -3,17 +3,15 @@ from application_properties import *
 
 import os
 import subprocess
-import sys
-from search import applyFilters, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById
+from search import applyFilters, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById, getDatasetFilesInfo
 from upload import uploadDataset, uploadDatasetFiles, addComment, updateNumberOfViews
-from update import updateDataset, updateDatasetFiles
+from update import updateDataset, updateDatasetFiles, increaseDownloadsNumber
 from delete import hardDeleteDataset, softDeleteDataset, hardDeleteComment
-import zipfile
 from glob import glob
 import es_connector
 ############################### FLASK CONFIG ################################
 from flask import Flask, render_template, request, json, redirect, url_for, flash, session, make_response, jsonify
-from werkzeug.utils import secure_filename
+
 app = Flask(__name__, static_folder=FLASK_STATIC_FOLDER, template_folder=FLASK_TEMPLATE_FOLDER)
 
 UPLOAD_FOLDER = UPLOAD_FOLDER_PATH
@@ -22,8 +20,6 @@ app.config['MAX_CONTENT_LENGTH'] = 160 * 1024 * 1024
 app.secret_key = FLASK_SECRET_KEY
 
 current_user = 'admin'
-
-# Trebuie regandit sistemul de upload fisiere
 
 
 @app.errorhandler(404)
@@ -107,6 +103,11 @@ def addDatasetFiles(dataset_id):
     return uploadDatasetFiles(dataset_id, packageId, file)
 
 
+@app.route('/dataset/<dataset_id>/files', methods=['GET'])
+def getDatasetFiles(dataset_id):
+    return getDatasetFilesInfo(dataset_id)
+
+
 @app.route('/dataset/<dataset_id>', methods=['PUT'])
 def editDataset(dataset_id):
     global current_user
@@ -151,6 +152,10 @@ def deleteComment(dataset_id, comment_id):
     return hardDeleteComment(dataset_id, comment_id)
 
 
+@app.route('/dataset/<dataset_id>/downloads', methods=['PUT'])
+def updateDatasetDownloads(dataset_id):
+    increaseDownloadsNumber(dataset_id)
+
 @app.route('/user/<user_info>', methods=['GET'])
 def getUserDetails(user_info):
     try:
@@ -173,65 +178,6 @@ def getUserDetails(user_info):
 def getDefaultData():
     return getAllDefaultData()
 
-
-
-
-
-# def allowed_file(filename):
-#     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-#
-# @app.route('/uploadFile', methods = ['POST'])
-# def upload_file():
-#     global current_user
-#     if request.method == 'POST':
-#         # check if the post request has the file part
-#         if 'file' not in request.files:
-#             flash('No file part')
-#             return redirect(request.url)
-#         file = request.files['file']
-#         if file.filename == '':
-#             flash('No file selected for uploading')
-#             return redirect(request.url)
-#         if file and allowed_file(file.filename):
-#             # filename = secure_filename(file.filename)
-#             pathToFolder = (os.getcwd() + '/DataDeposit/server/' + app.config['UPLOAD_FOLDER'])
-#             pathToFolderInStaticPDF = (os.getcwd() + '/DataDeposit/static/dist/uploadPdfs/')
-#             pathToFolderInStaticZIP = (os.getcwd() + '/DataDeposit/static/dist/uploadDataset/')
-#             pathToFile = (os.path.join(pathToFolder, (current_user + '.zip')))
-#             file.save(pathToFile)
-#             # dezarhivare arhiva in folder cu numele user.ului
-#             print(os.path.join(pathToFolder, current_user))
-#             if not os.path.exists(os.path.join(pathToFolder, current_user)):
-#                 os.makedirs(os.path.join(pathToFolder, current_user))
-#
-#             with zipfile.ZipFile(pathToFile, 'r') as f:
-#                 f.extractall(os.path.join(pathToFolder, current_user))
-#
-#             pdfFileList = find_file(os.path.join(pathToFolder, current_user), 'pdf')
-#             pdfFile = pdfFileList[0]
-#             os.rename(pdfFile, (os.path.join(pathToFolder, current_user) + '/' + current_user + '.pdf'))
-#             pdfFile = os.path.join(pathToFolder, current_user) + '/' + current_user + '.pdf'
-#             os.system('cp ' + pdfFile + ' ' + pathToFolderInStaticPDF)
-#             ###############################
-#             zipFileList = find_file(os.path.join(pathToFolder, current_user), 'zip')
-#             zipFile = zipFileList[0]
-#             os.rename(zipFile, (os.path.join(pathToFolder, current_user) + '/' + current_user + '_dataset.zip'))
-#             zipFile = os.path.join(pathToFolder, current_user) + '/' + current_user + '_dataset.zip'
-#             os.system('cp ' + zipFile + ' ' + pathToFolderInStaticZIP)
-#
-#             # in folder este un pdf si o arhiva cu setul de date
-#
-#             # cand apesi pe titlu dataset din cautare sa iti afiseze pdf.ul pe o pagina noua
-#
-#             # in info din BD trebuie adaugat calea catre pdf
-#
-#             # incarc daca e public sau private
-#
-#             flash('File successfully uploaded')
-#             return "Success"
-#         else:
-#             #flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')
-#             return 'Bad file'
 
 if __name__ == "__main__":
     if CLEANUP_DATASETS_ENABLED:

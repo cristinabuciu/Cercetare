@@ -5,6 +5,7 @@ import json
 
 actionPath = CKAN_INSTANCE_BASE_URL + '/action'
 getPackageTarget = actionPath + '/package_show'
+getResourceTarget = actionPath + '/resource_show'
 getGroupsTarget = actionPath + '/group_list'
 createGroupTarget = actionPath + '/group_create'
 createPackageTarget = actionPath + '/package_create'
@@ -52,6 +53,10 @@ def getPackage(packageId):
     existing = requests.get(getPackageTarget + '?id=' + packageId)
     return json.loads(existing.content.decode('utf8').replace("'", '"'))['result']
 
+
+def getResource(resourceId):
+    existing = requests.get(getResourceTarget + '?id=' + resourceId)
+    return json.loads(existing.content.decode('utf8').replace("'", '"'))['result']
 
 def updatePackage(packageId, packageData):
     result = requests.post(url=updatePackageTarget + '?id=' + packageId,

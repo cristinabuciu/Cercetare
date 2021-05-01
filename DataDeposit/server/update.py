@@ -153,3 +153,15 @@ def updateDatasetFiles(datasetId, packageId, file):
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in UPLOAD_FILE_ALLOWED_EXTENSIONS
+
+
+def increaseDownloadsNumber(dataset_id):
+    try:
+        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
+        es.connect()
+
+        es.update_dataset_downloads(INDEX_DATASETS, int(dataset_id))
+
+    except Exception as e:
+        print(e)
+        return "INCREASE_DOWNLOADS_ERROR"
