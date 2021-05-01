@@ -2,11 +2,8 @@
 from application_properties import *
 from time import time, sleep
 
-import os
-import sys
-from flask import jsonify, json
 import es_connector
-from operator import itemgetter
+import ckan_connector as ck
 
 
 def hardDeleteComment(datasetId, commentId):
@@ -45,10 +42,17 @@ def hardDeleteComment(datasetId, commentId):
     except:
         return "Eroare"
 
+
 def softDeleteDataset(datasetId):
     try:
         es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
+
+        dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]['_source']
+        if 'ckan_resource_id' in dataset and dataset['ckan_resource_id'] != '':
+            deleteCkanData(datasetId, dataset['ckan_package_id'], dataset['ckan_resource_id'])
+        else:
+            deleteCkanData(datasetId, dataset['ckan_package_id'])
 
         es.soft_delete_comments_by_dataset_id(INDEX_COMMENTS, int(datasetId), str(int(time())))
         es.soft_delete_dataset_by_id(INDEX_DATASETS, int(datasetId), int(time()))
@@ -57,10 +61,17 @@ def softDeleteDataset(datasetId):
     except:
         return "Eroare"
 
+
 def hardDeleteDataset(datasetId):
     try:
         es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
+
+        dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]['_source']
+        if 'ckan_resource_id' in dataset and dataset['ckan_resource_id'] != '':
+            deleteCkanData(datasetId, dataset['ckan_package_id'], dataset['ckan_resource_id'])
+        else:
+            deleteCkanData(datasetId, dataset['ckan_package_id'])
 
         es.delete_comments_by_dataset_id(INDEX_COMMENTS, int(datasetId))
         es.delete_dataset_by_id(INDEX_DATASETS, int(datasetId))
@@ -68,3 +79,14 @@ def hardDeleteDataset(datasetId):
         return "Succes"
     except:
         return "Eroare"
+
+
+def deleteCkanData(datasetId, packageId, resourceId=None):
+    if resourceId is not None:
+        print("Performing resource-delete for datasetId={}, resourceId={}".format(datasetId, resourceId))
+        ck.deleteResource(resourceId)
+        print("Finished resource-delete for datasetId={}, resourceId={}".format(datasetId, resourceId))
+
+    print("Performing package-delete for datasetId={}, packageId={}".format(datasetId, packageId))
+    ck.deletePackage(packageId)
+    print("Finished package-delete for datasetId={}, packageId={}".format(datasetId, packageId))

@@ -11,6 +11,8 @@ createPackageTarget = actionPath + '/package_create'
 createResourceTarget = actionPath + '/resource_create'
 updatePackageTarget = actionPath + '/package_update'
 updateResourceTarget = actionPath + '/resource_update'
+deletePackageTarget = actionPath + '/package_delete'
+deleteResourceTarget = actionPath + '/resource_delete'
 
 
 def getGroups():
@@ -67,3 +69,15 @@ def updateResource(resourceData, file):
                            files={'upload': file})
 
     return json.loads(result.content.decode('utf8').replace("'", '"'))['result']['url']
+
+
+def deletePackage(packageId):
+    requests.post(url=deletePackageTarget,
+                  headers={'Authorization': CKAN_INSTANCE_JWT},
+                  data={'id': packageId})
+
+
+def deleteResource(resourceId):
+    requests.post(url=deleteResourceTarget,
+                  headers={'Authorization': CKAN_INSTANCE_JWT},
+                  data={'id': resourceId})
