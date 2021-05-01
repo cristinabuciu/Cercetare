@@ -4,6 +4,7 @@ from application_properties import *
 import re
 from flask import jsonify, json
 import es_connector
+import ckan_connector as ck
 import time
 from operator import itemgetter
 
@@ -64,27 +65,55 @@ def applyFilters(jsonParams):
     
 
 def completeSearch(datasets, lowLimit, upLimit):
-    returnArray = []
-    # for row in datasets:
+    result = []
     item = lowLimit
     while item < upLimit and item < len(datasets):
-        row = datasets[item]
-        hasDownloadLink = 2
-        downloadPath = ''
-        if 'downloadPath' in row:
-            if row['downloadPath'].startswith('link'):
-                hasDownloadLink = 1
-                downloadPath = row['downloadPath'][5:]
-            elif row['downloadPath'].startswith('private'):
-                hasDownloadLink = 2
-            elif row['downloadPath'].startswith('path'):
-                hasDownloadLink = 3
-                downloadPath = row['downloadPath'][5:]
+        dataset = datasets[item]
+        resourceType, downloadPath = getResourceType(dataset)
 
-        returnArray.append([row['id'], row['domain'], row['tags'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'], row['avg_rating_value'], row['gitlink'], hasDownloadLink, downloadPath, row['owner'], row['private']])
+        aux = {
+                'id': dataset['id'],
+                'domain': dataset['domain'],
+                'tags': dataset['tags'],
+                'country': dataset['country'],
+                'data_format': dataset['data_format'],
+                'authors': dataset['authors'],
+                'year': dataset['year'],
+                'dataset_title': dataset['dataset_title'],
+                'article_title': dataset['article_title'],
+                'short_desc': dataset['short_desc'],
+                'avg_rating_value': dataset['avg_rating_value'],
+                'gitlink': dataset['gitlink'],
+                'resourceType': resourceType,
+                'downloadPath': downloadPath,
+                'owner': dataset['owner'],
+                'private': dataset['private']
+        }
+
+        result.append(aux)
         item += 1
 
-    return json.dumps(returnArray)
+    return json.dumps(result)
+
+
+def getResourceType(dataset):
+    resourceType = 'NONE'
+    downloadPath = ''
+
+    if 'downloadPath' in dataset:
+        downloadPath = dataset['downloadPath']
+
+    if downloadPath == '':
+        resourceType = 'NONE'
+    else:
+        matchResult = re.match(r'http://.+\:.+/dataset/.+/resource/.+/download/.+', downloadPath)
+        if matchResult is None:
+            resourceType = 'EXTERNAL'
+        elif matchResult.group() == downloadPath:
+            resourceType = 'INTERNAL'
+
+    return resourceType, downloadPath
+
 
 def calculateLastUpdatedAt(unixTime):
     
@@ -117,32 +146,22 @@ def findDataset(datasetId):
     if len(datasets) > 1:
         print("WARNING !! -> same id to more than 1 item")
     
-    for row in datasets:
-        elapsedTime = calculateLastUpdatedAt(int(row['lastUpdatedAt']))
+    for dataset in datasets:
+        elapsedTime = calculateLastUpdatedAt(int(dataset['lastUpdatedAt']))
 
-        resourceType = 'NONE'
-        downloadPath = ''
-
-        if 'downloadPath' in row:
-            downloadPath = row['downloadPath']
-
-        if downloadPath == '':
-            resourceType = 'NONE'
-        else:
-            matchResult = re.match(r'http://.+\:.+/dataset/.+/resource/.+/download/.+', downloadPath)
-            if matchResult is None:
-                resourceType = 'EXTERNAL'
-            elif matchResult.group() == downloadPath:
-                resourceType = 'INTERNAL'
+        resourceType, downloadPath = getResourceType(dataset)
         
-        result = es.get_es_data_by_id(INDEX_USERS, row['ownerId'])
+        result = es.get_es_data_by_id(INDEX_USERS, dataset['ownerId'])
         hasPhoto = False
         if result[0]['_source']:
             hasPhoto = result[0]['_source']['hasPhoto']
 
-        returnArray.append([row['id'], row['domain'], row['tags'], row['country'], row['data_format'], row['authors'], row['year'], row['dataset_title'], row['article_title'], row['short_desc'],
-                            row['avg_rating_value'], row['gitlink'], row['owner'], elapsedTime, resourceType, downloadPath, row['dataIntegrity'], row['continuityAccess'], row['dataReuse'],
-                            row['views'], row['ratings_number'], row['updates_number'], row['downloads_number'], hasPhoto])
+        dataset['elapsedTime'] = elapsedTime
+        dataset['resourceType'] = resourceType
+        dataset['downloadPath'] = downloadPath
+        dataset['hasPhoto'] = hasPhoto
+
+        returnArray.append(dataset)
     
     return json.dumps(returnArray)
 
@@ -203,3 +222,25 @@ def getAllComments(datasetID, currentPage, resultsPerPage):
         indexOfFirstTodo += 1
 
     return json.dumps({"results": returnArray, "length": len(allCommentsArray)})
+
+
+def getDatasetFilesInfo(datasetId):
+    try:
+        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
+        es.connect()
+
+        dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]['_source']
+        resourceType, downloadPath = getResourceType(dataset)
+
+        if resourceType == 'NONE':
+            return {'resourceType': resourceType}
+        elif resourceType == 'EXTERNAL':
+            return {'resourceType': resourceType, 'downloadLink': downloadPath}
+        elif resourceType == 'INTERNAL':
+            resourceId = dataset['ckan_resource_id']
+            fileName = ck.getResource(resourceId)['name']
+            return {'resourceType': resourceType, 'resourceId': resourceId, 'fileName': fileName}
+
+    except Exception as e:
+        print(e)
+        return "GET_RESOURCE_INFO_ERROR"
