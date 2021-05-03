@@ -113,42 +113,124 @@ def updateDatasetToCkanInstance(packageId, dataset):
     return ck.updatePackage(packageId, ckanMetadata)
 
 
-def updateDatasetFiles(datasetId, packageId, file):
-    if not(file) or file.filename == '' or not(allowed_file(file.filename)):
+def updateDatasetFilesToNone(datasetId):
+    try:
+        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
+        es.connect()
+
+        dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]
+        esId = dataset['_id']
+        dataset = dataset['_source']
+
+        # cleanup external
+        dataset['downloadPath'] = ''
+
+        # cleanup internal
+        deleteCkanResourceIfNeeded(dataset)
+
+        dataset['updates_number'] += 1
+        dataset['lastUpdatedAt'] = str(int(time()))
+        dataset['downloads_number'] = 0
+
+        es.update(INDEX_DATASETS, '_doc', esId, dataset, WAIT_FOR)
+
+        return "UPDATE_DATASET_FILES_SUCCESS"
+
+    except Exception as e:
+        print(e)
+        return "UPDATE_DATASET_FILES_ERROR"
+
+
+def updateDatasetFilesToExternal(datasetId, downloadUrl):
+    try:
+        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
+        es.connect()
+
+        dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]
+        esId = dataset['_id']
+        dataset = dataset['_source']
+
+        # setup external
+        dataset['downloadPath'] = downloadUrl
+
+        # cleanup internal
+        deleteCkanResourceIfNeeded(dataset)
+
+        dataset['updates_number'] += 1
+        dataset['lastUpdatedAt'] = str(int(time()))
+        dataset['downloads_number'] = 0
+
+        es.update(INDEX_DATASETS, '_doc', esId, dataset, WAIT_FOR)
+
+        return "UPDATE_DATASET_FILES_SUCCESS"
+
+    except Exception as e:
+        print(e)
+        return "UPDATE_DATASET_FILES_ERROR"
+
+
+def deleteCkanResourceIfNeeded(dataset):
+    if 'ckan_resource_id' in dataset and dataset['ckan_resource_id'] != '':
+        ck.deleteResource(dataset['ckan_resource_id'])
+        dataset['ckan_resource_id'] = ''
+
+        print("Ckan resource has been deleted. datasetId={}".format(dataset['id']))
+    else:
+        print("No ckan resource to delete. datasetId={}".format(dataset['id']))
+
+
+def updateDatasetFilesToInternal(datasetId, file):
+    if not file or file.filename == '' or not(allowed_file(file.filename)):
         return "FILE_NOT_ALLOWED"
 
     try:
         es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
         es.connect()
 
-        dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]['_source']
+        dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]
+        esId = dataset['_id']
+        dataset = dataset['_source']
 
-        if dataset['ckan_package_id'] != packageId:
-            return "SKIP_UPDATE_FILES_WRONG_PACKAGE_ID"
+        # cleanup external
+        dataset['downloadPath'] = ''
 
-        resourceId = dataset['ckan_resource_id']
+        # setup internal
+        if 'ckan_resource_id' in dataset and dataset['ckan_resource_id'] != '':
+            # update resource
+            resourceId = dataset['ckan_resource_id']
+            resource_data = {
+                'id': resourceId,
+                'name': file.filename.split('.')[0],
+                'url': '{}/files'.format(datasetId)
+            }
 
-        # ckan resource update
-        filename = file.filename.split('.')[0]
-        resource_data = {}
-        resource_data['id'] = resourceId
-        resource_data['name'] = filename
-        resource_data['url'] = '{}/files'.format(datasetId)
+            resourceUrl = ck.updateResource(resource_data, file)
+            dataset['downloadPath'] = resourceUrl
+        else:
+            # add resource
+            packageId = dataset['ckan_package_id']
 
-        resourceUrl = ck.updateResource(resource_data, file)
+            resource_data = {
+                'package_id': packageId,
+                'name': file.filename.split('.')[0],
+                'url': '{}/files'.format(datasetId)
+            }
 
-        # update dataset - update resource url
-        existing = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]
-        esId = existing['_id']
-        existing = existing['_source']
-        existing['downloadPath'] = resourceUrl
-        es.update(INDEX_DATASETS, '_doc', esId, existing, WAIT_FOR)
+            resourceId, resourceUrl = ck.addResource(resource_data, file)
+            dataset['ckan_resource_id'] = resourceId
+            dataset['downloadPath'] = resourceUrl
 
-        return {'datasetId': datasetId, 'packageId': packageId, 'resourceId': resourceId}
+        dataset['updates_number'] += 1
+        dataset['lastUpdatedAt'] = str(int(time()))
+        dataset['downloads_number'] = 0
+
+        es.update(INDEX_DATASETS, '_doc', esId, dataset, WAIT_FOR)
+
+        return "UPDATE_DATASET_FILES_SUCCESS"
 
     except Exception as e:
         print(e)
-        return "UPLOAD_DATASET_FILES_ERROR"
+        return "UPDATE_DATASET_FILES_ERROR"
 
 
 def allowed_file(filename):
