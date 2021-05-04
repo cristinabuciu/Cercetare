@@ -28,7 +28,8 @@
     "contact": "Contact us",
     "privacy": "Privacy Policy",
     "sponsors": "Sponsors",
-    "developers": "Developers"
+    "developers": "Developers",
+    "ckan": "CKAN Instance"
   },
 
   "Header": {
@@ -55,8 +56,9 @@
     "access": "Continuity of access",
     "reuse": "Data Reuse",
     "edit": "Apply changes",
-    "access-info": "<div> <b>The repository has a continuity plan to ensure ongoing access to and preservation of its holdings.</b><br/><br/> Guidance:<br/> This Requirement covers the governance related to continued operation of the repository over time and during disasters, as well as evidence in relation to succession planning; namely, the measures in place to ensure access to and availability of data holdings, both currently and in the future. Reviewers are seeking evidence that preparations are in place to address the risks inherent in changing circumstances, including in mission and/or scope.<br/><br/> For this Requirement, please describe: <br/><br/> <ul> <li>The level of responsibility undertaken for data holdings, including any guaranteed preservation periods.<br/><br/></li><li>The medium-term (three- to five-year) and long-term (> five years) plans in place to ensure the continued availability and accessibility of the data. In particular, both the response to rapid changes of circumstance and long-term planning should be described, indicating options for relocation or transition of the activity to another body or return of the data holdings to their owners (i.e., data producers). For example, what will happen in the case of cessation of funding, which could be through an unexpected withdrawal of funding, a planned ending of funding for a time-limited project repository, or a shift of host institution interests? Evidence for this Requirement should relate specifically to governance. The technical aspects of business continuity, and disaster and succession planning should be covered in R15 (Technical infrastructure).</li></ul></div>"
-
+    "access-info": "<div> <b>The repository has a continuity plan to ensure ongoing access to and preservation of its holdings.</b><br/><br/> Guidance:<br/> This Requirement covers the governance related to continued operation of the repository over time and during disasters, as well as evidence in relation to succession planning; namely, the measures in place to ensure access to and availability of data holdings, both currently and in the future. Reviewers are seeking evidence that preparations are in place to address the risks inherent in changing circumstances, including in mission and/or scope.<br/><br/> For this Requirement, please describe: <br/><br/> <ul> <li>The level of responsibility undertaken for data holdings, including any guaranteed preservation periods.<br/><br/></li><li>The medium-term (three- to five-year) and long-term (> five years) plans in place to ensure the continued availability and accessibility of the data. In particular, both the response to rapid changes of circumstance and long-term planning should be described, indicating options for relocation or transition of the activity to another body or return of the data holdings to their owners (i.e., data producers). For example, what will happen in the case of cessation of funding, which could be through an unexpected withdrawal of funding, a planned ending of funding for a time-limited project repository, or a shift of host institution interests? Evidence for this Requirement should relate specifically to governance. The technical aspects of business continuity, and disaster and succession planning should be covered in R15 (Technical infrastructure).</li></ul></div>",
+    "metadata-edit": "Edit Metadata",
+    "resource-edit": "Edit Resource"
   },
 
   "Comment": {

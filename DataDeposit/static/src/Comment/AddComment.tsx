@@ -208,7 +208,7 @@ export interface ICommentFormState {
       const rating = this.props.rating;
       const title = this.state.title;
       const comment = this.state.body;
-      debugger;
+
       if (rating > 0) {
         if ((title === '' && comment === '') || (title !== '' && comment !== '')) {
           // SCHIMB CULOAREA BUTONULUI IN VERDE

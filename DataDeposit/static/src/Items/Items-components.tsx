@@ -299,27 +299,22 @@ export const ModalQuickView = (props) => {
   );
 }
 
-// export default class CurrencySelector extends Component {
-//     constructor(props) {
-//         super(props);
+export const PaginationItem = (props) => {
+  const number = props.number;
+  const disabled: boolean = props.disabled;
+  const active: boolean = props.active;
+  var className: string = props.className ? props.className : "";
+  className += active ? " active" : "";
+  className += disabled ? " disabled" : "";
 
-//         this.state = {
-//             currency: DEFAULT_CURRENCY
-//         }
-//     }
-
-//     updateState(newCurrency) {
-//         this.setState({
-//             currency: newCurrency.value
-//         });
-//     }
-
-//     render() {
-//         return (
-//             <ReactSelect
-//                 value={this.state.currency}
-//                 onChange={this.updateState}>
-//             </ReactSelect>
-//         );
-//     }
-// }
+  return (
+    <li
+      key={number}
+      id={number}
+      className={className}
+      onClick={props.handleClick}
+        >
+      {props.value}
+    </li>
+  );
+}

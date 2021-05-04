@@ -280,3 +280,15 @@
   margin: 0 7px;
   opacity: .6;
 }
+
+//////////////////////////////////////////////////////////////
+//////////////////// Download din SearchCard ///////////////////////
+
+.resource-download {
+	cursor: pointer;
+}
+
+.resource-download :hover {
+	cursor: pointer;
+	text-decoration: underline;
+}

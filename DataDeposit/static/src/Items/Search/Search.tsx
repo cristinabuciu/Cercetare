@@ -7,7 +7,7 @@ import {
     CardTitle, CardSubtitle, Button, Input, Row, Col, Badge
   } from 'reactstrap';
 import {InputText, LoaderComponent, CustomSelect} from '../Items-components'
-import DatePicker from "react-datepicker";
+import { SearchCardItems } from '../../models/SearchCardItems'
 import NumericInput from 'react-numeric-input';
 import "../../style_home.scss";
 
@@ -41,7 +41,7 @@ export interface ICardState {
     year: string;
     dataset_title: string | null;
     authors: string | null;
-    resultsSearchArray: Array<String>;
+    resultsSearchArray: Array<SearchCardItems[]>;
     resultsSearchArrayLen: number;
 }
 
@@ -179,7 +179,6 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 this.setState({
                     resultsSearchArray:response.data
                 }, () => {
-                    debugger;
                     this.props.handleLoaderChange(false);
                     this.props.setItemsForShow(this.state.resultsSearchArrayLen, this.state.resultsPerPage, this.state.resultsSearchArray, searchWasPressed, false, this.state.resultsSearchArrayLen == 0);
                 });

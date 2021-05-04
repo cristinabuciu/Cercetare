@@ -33,8 +33,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     onChange = (value) => {
         debugger;
         this.setState({value: value});
-        
-      };
+    };
 
     render() {
         const translate = new MyTranslator("Home");

@@ -1,0 +1,34 @@
+export interface DatasetMetadata {
+	article_title: string;
+	authors: string[];
+	avg_rating_value: number;
+	continuityAccess: string;
+	country: string;
+	dataIntegrity: string;
+	dataReuse: string;
+	data_format: string;
+	dataset_title: string;
+	date: string;
+	deleted: boolean;
+	deletedAt: number;
+	domain: string;
+	downloadPath: string;
+	downloads_number: number;
+	elapsedTime: string;
+	full_desc: string;
+	geo_coord: string;
+	gitlink: string;
+	hasPhoto: boolean;
+	id: number;
+	lastUpdatedAt: string;
+	owner: string;
+	ownerId: number;
+	private: boolean;
+	ratings_number: number;
+	resourceType: string;
+	short_desc: string;
+	tags: string[];
+	updates_number: number;
+	views: number;
+	year: string;
+}

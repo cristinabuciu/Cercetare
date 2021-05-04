@@ -143,12 +143,15 @@ export const AboutBody = props => (
 
     <Row>
         <Col className="text-align-center">
+            {props.shouldHaveDownloadButton ? 
             <Button
                 color="primary" 
                 outline className="upload-button-size" 
                 onClick={() => props.handleDownload()}>
                 Download
             </Button>
+            : <></>
+            }
         </Col>
     </Row>
     </CardBody>

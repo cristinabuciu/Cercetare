@@ -49,7 +49,6 @@ export interface IUploadPageFormState {
     };
     shouldEnterNewDomain: boolean;
     uploadOption: {
-        private: boolean;
         link: boolean;
         upload: boolean;
     };
@@ -107,7 +106,6 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         },
         shouldEnterNewDomain: false,
         uploadOption: {
-            private: false,
             link: false,
             upload: false
         },
@@ -154,6 +152,9 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             // always executed
             this.forceUpdate();
           });
+        
+        /////////// FUNCTIONS /////////////
+        this.updateUploadOptions = this.updateUploadOptions.bind(this);
     }
 
     changeValue = (e, comboBoxTitle, shouldUpdate = false) => {
@@ -267,9 +268,8 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         });
     }
 
-    updateUploadOptions = (privateMode : boolean, linkMode : boolean, uploadMode : boolean) => {
+    updateUploadOptions(linkMode : boolean, uploadMode : boolean): void {
         const newUploadOptions = { 
-            private: privateMode,
             link: linkMode,
             upload: uploadMode
         };
@@ -280,25 +280,19 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
     }
 
     radioHit = (e) => {
+        const currentUploadOptions = this.state.uploadOption;
 
         switch(e.target.id) {
-        case 'private':
-            this.updateUploadOptions(true, false, false);
+        case 'EXTERNAL':
+            this.updateUploadOptions(!currentUploadOptions.link, false);
             break;
-        case 'link':
-            this.updateUploadOptions(false, true, false);
-            break;
-        case 'upload':
-            this.updateUploadOptions(false, false, true);
+        case 'INTERNAL':
+            this.updateUploadOptions(false, !currentUploadOptions.upload);
             break;
         default:
             console.log("No match for radio button in upload !!!");
             return;
         }
-
-        console.log(this.state.uploadOption.link);
-        console.log(this.state.uploadOption.private);
-        console.log(this.state.uploadOption.upload);
     }
 
     handleSelectChange = value => {
@@ -496,7 +490,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                         </FormGroup>
                         <FormGroup>
                             <Row className="padding-top-20">
-                                    <Col sm="4">
+                                    {/* <Col sm="4">
                                         <Card body className={this.state.uploadOption.private ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
                                             <FormGroup check className="margin-top-5">
                                                 <Label check>
@@ -511,15 +505,16 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                                 <>  </><FontAwesomeIcon icon={faPortrait} />
                                             </FormGroup>
                                         </Card>
-                                        </Col>
-                                        <Col sm="4">
+                                        </Col> */}
+                                        <Col sm="6">
                                         <Card body className={this.state.uploadOption.link ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
                                             <FormGroup check className="margin-top-5">
                                                 <Label check>
                                                 <Input 
-                                                    id="link"
+                                                    id="EXTERNAL"
+                                                    checked={this.state.uploadOption.link}
                                                     onClick={this.radioHit}
-                                                    type="radio" 
+                                                    type="checkbox" 
                                                     name="radio2" 
                                                     className="margin-top-5" />{' '}
                                                 Download link 
@@ -536,14 +531,15 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                             </FormGroup>
                                         </Card>
                                         </Col>
-                                        <Col sm="4">
+                                        <Col sm="6">
                                         <Card body className={this.state.uploadOption.upload ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
                                             <FormGroup check disabled className="margin-top-5">
                                                 <Label check>
                                                 <Input
-                                                    id="upload"
+                                                    id="INTERNAL"
+                                                    checked={this.state.uploadOption.upload}
                                                     onClick={this.radioHit}
-                                                    type="radio" 
+                                                    type="checkbox" 
                                                     name="radio2" 
                                                     className="margin-top-5" />{' '}
                                                 Upload dataset
