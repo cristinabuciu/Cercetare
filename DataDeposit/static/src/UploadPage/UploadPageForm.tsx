@@ -155,6 +155,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         
         /////////// FUNCTIONS /////////////
         this.updateUploadOptions = this.updateUploadOptions.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
     }
 
     changeValue = (e, comboBoxTitle, shouldUpdate = false) => {
@@ -262,10 +263,21 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
           }); 
     }
 
-    uploadFile = (e) => {
+    uploadFile(e): boolean {
+        // 100 Mb
+        if(e.target.files[0].size > 100 * 1000 * 1000) { 
+            alert("File is too big!");
+            this.setState({
+                fileToBeSent: ''
+            });
+            return false;
+        };
+
         this.setState({
             fileToBeSent: e.target.files[0]
         });
+
+        return true;
     }
 
     updateUploadOptions(linkMode : boolean, uploadMode : boolean): void {
@@ -550,7 +562,8 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                                         type="file" 
                                                         disabled={!this.state.uploadOption.upload}
                                                         name="myFile" 
-                                                        id="myFile" 
+                                                        id="myFile"
+                                                        value={this.state.fileToBeSent}
                                                         onChange={this.uploadFile} />
                                                 </Col>
                                             </FormGroup>
