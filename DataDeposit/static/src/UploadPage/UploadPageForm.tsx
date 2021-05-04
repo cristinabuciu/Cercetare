@@ -27,6 +27,7 @@ export interface IUploadPageFormProps {
 
 export interface IUploadPageFormState {
     fileToBeSent: string | Blob;
+    fileToBeSentName: string;
     buttonDropDownStatus: boolean;
     startDate: Date;
     dataset_title: string;
@@ -70,6 +71,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
 
     state = {
         fileToBeSent: '',
+        fileToBeSentName: '',
         buttonDropDownStatus: true,
         startDate: new Date(),
         dataset_title: '',
@@ -268,7 +270,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         if(e.target.files[0].size > 100 * 1000 * 1000) { 
             alert("File is too big!");
             this.setState({
-                fileToBeSent: ''
+                fileToBeSentName: ''
             });
             return false;
         };
@@ -563,7 +565,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                                         disabled={!this.state.uploadOption.upload}
                                                         name="myFile" 
                                                         id="myFile"
-                                                        value={this.state.fileToBeSent}
+                                                        value={this.state.fileToBeSentName}
                                                         onChange={this.uploadFile} />
                                                 </Col>
                                             </FormGroup>
