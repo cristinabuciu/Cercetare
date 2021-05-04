@@ -8,4 +8,6 @@ pass:adminadmin
 Organization: Crescdi
 Groups: IT
 
+ckan -c /etc/ckan/default/ckan.ini sysadmin add admin
+
 https://blog.thenets.org/install-ckan-using-docker/
