@@ -35,7 +35,7 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
         this.handleRepairUpload = this.handleRepairUpload.bind(this);
     }
 
-    changeToSuccess(really : boolean = true): void {
+    changeToSuccess(really : boolean = true, errorCode: string = ""): void {
         this.setState({
             isResultReady: true,
             wasSuccess: really

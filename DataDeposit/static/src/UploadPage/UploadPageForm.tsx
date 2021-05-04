@@ -204,7 +204,9 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             loaderVisibility: true
         });
 
-        let hasError: boolean = false;
+        let hasErrorOnMetadata: boolean = false;
+        let errorMessage: string = "";
+        let hasErrorOnFiles: boolean = false;
 
         axios.post( '/datasets', {
             params: {
@@ -230,39 +232,48 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                 private: this.state.valueSwitch
             }
         })
-          .then(response => {
-              if (this.state.uploadOption.upload) {
-                  let file = this.state.fileToBeSent;
-                  const formData = new FormData();
-                  formData.append("packageId", response.data['packageId'])
-                  formData.append("file", file);
+        .then(response => {
+            if (response.data['hasError']) {
+                hasErrorOnMetadata = true;
+                errorMessage = response.data['code'];
 
-                  axios
-                      .post("/dataset/" + response.data['datasetId'] + '/files', formData)
-                      .then(res => console.log(res))
-                      .catch(err => console.warn(err))
-                      .finally(() => {
-                          if (response.data === 'UPLOAD_DATASET_ERROR') {
-                              hasError = true;
-                              this.props.changeToSuccess(false);
-                          } else {
-                              this.props.changeToSuccess();
-                          }
-                      });
-              }
-          })
-          .catch(function (error) {
+            } else {
+                hasErrorOnMetadata = false;
+            }
+
+            if (!hasErrorOnMetadata && this.state.uploadOption.upload) {
+                let file = this.state.fileToBeSent;
+                const formData = new FormData();
+                formData.append("packageId", response.data['packageId'])
+                formData.append("file", file);
+
+                axios
+                .post("/dataset/" + response.data['datasetId'] + '/files', formData)
+                .then(res => console.log(res))
+                .catch(err => console.warn(err))
+                .finally(() => {
+                    if (response.data['hasError']) {
+                        hasErrorOnFiles = true;
+                        errorMessage = response.data['code'];
+
+                    } else {
+                        hasErrorOnFiles = false;
+                    }
+                });
+            }
+        })
+        .catch(function (error) {
             console.log(error);
-            hasError = true;
-          })
-          .finally( () => {
-            // always executed
-              if (hasError) {
-                  this.props.changeToSuccess(false);
-              } else {
-                  this.props.changeToSuccess();
-              }
-          }); 
+            hasErrorOnMetadata = true;
+        })
+        .finally( () => {
+        // always executed
+            if (hasErrorOnMetadata || hasErrorOnFiles) {
+                this.props.changeToSuccess(false, errorMessage);
+            } else {
+                this.props.changeToSuccess();
+            }
+        }); 
     }
 
     uploadFile(e): boolean {
