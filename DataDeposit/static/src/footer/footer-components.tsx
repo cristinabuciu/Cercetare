@@ -11,7 +11,8 @@ export const FooterBody = props => (
     <hr />
     <div style={{ display: 'flex', justifyContent: 'space-between' }} >
        <span className="column-list">
-        <ul><li className="column-list"><NavLink tag={Link} to="/uploadPage">{props.translate.useTranslation("upload")}</NavLink></li>
+        <ul>
+        {props.isAuthenticated ? <li className="column-list"><NavLink tag={Link} to="/uploadPage">{props.translate.useTranslation("upload")}</NavLink></li> : <></>}
         <li className="column-list"><NavLink tag={Link} to="/search">{props.translate.useTranslation("search")}</NavLink></li></ul>
       </span>
       

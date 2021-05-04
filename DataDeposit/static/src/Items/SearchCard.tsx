@@ -42,9 +42,7 @@ export interface ISearchCardProps {
 
 
 export interface ISearchCardState {
-    setTooltipOpen: boolean;
     ratingAvgValue: number;
-    uploadedFileLink: string;
 
     disabledDeleteButton: boolean;
     deleteButtonText: string;
@@ -53,36 +51,13 @@ export interface ISearchCardState {
 export default class SearchCard extends React.Component<ISearchCardProps, ISearchCardState> {
 
     state: ISearchCardState = {
-        setTooltipOpen: false,
         ratingAvgValue: 4.58,
-        uploadedFileLink: '',
 
         disabledDeleteButton: false,
         deleteButtonText: "Delete"
     }
 
-    tooltipOpen(value) {
-        this.setState ({
-            setTooltipOpen: value
-        });
-    }
-
-    openPdf() {
-        const user = localStorage.getItem('login_user_token');
-        if(user) {
-            console.log("INTRA PE AICI in SEARCH CARD");
-            window.open('static/dist/uploadPdfs/' + user + '.pdf', '_blank');
-        }
-        
-    }
-
-    componentDidMount() {
-        const user = localStorage.getItem('login_user_token');
-        if(user) {
-            this.setState({
-                uploadedFileLink: 'static/dist/uploadDataset/' + user + '_dataset.zip'
-            });
-        }
+    componentDidMount(): void {
 
         /////////////// FUNCTIONS /////////////////
         this.deleteItem = this.deleteItem.bind(this);
@@ -199,9 +174,9 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     {this.props.shouldHaveDownloadButton ? 
                     <>{
                         this.props.shouldHaveDownloadLink ? 
-                        <div className="resource-download" onClick={this.handleDownload}><FontAwesomeIcon icon={faLink} /> Download Link</div>
+                        <div className="resource-download" onClick={() => this.handleDownload()}><FontAwesomeIcon icon={faLink} /> Download Link</div>
                         :
-                        <div className="resource-download" onClick={this.handleDownload}><FontAwesomeIcon icon={faDatabase} /> Download File</div>
+                        <div className="resource-download" onClick={() => this.handleDownload()}><FontAwesomeIcon icon={faDatabase} /> Download File</div>
                     }</>
                     :
                     <>No download</>

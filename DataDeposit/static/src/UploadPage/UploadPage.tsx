@@ -11,21 +11,38 @@ export interface IUploadPageProps {
 export interface IUploadPageState {
     isResultReady: boolean;
     wasSuccess: boolean;
+    isAuthenticated: boolean;
 }
 
 export default class UploadPage extends React.Component<IUploadPageProps, IUploadPageState> {
-    state = {
+    state: IUploadPageState = {
         isResultReady: false,
-        wasSuccess: false
+        wasSuccess: false,
+        isAuthenticated: false
     }
-    changeToSuccess = (really : boolean = true) => {
+
+    componentDidMount(): void {
+        this.state.isAuthenticated = false;
+        const token = localStorage.getItem('login_user_token');
+        if(token) {
+            this.setState({
+                isAuthenticated: true
+            })
+        }
+
+        /////////////// FUNCTIONS //////////////////
+        this.changeToSuccess = this.changeToSuccess.bind(this);
+        this.handleRepairUpload = this.handleRepairUpload.bind(this);
+    }
+
+    changeToSuccess(really : boolean = true): void {
         this.setState({
             isResultReady: true,
             wasSuccess: really
         });
     }
 
-    handleRepairUpload = () => {
+    handleRepairUpload(): void {
         this.setState({
             isResultReady: false
         });
@@ -44,7 +61,7 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
         For this Requirement, please describe: <br/><br/>
         <ul>
             <li>The level of responsibility undertaken for data holdings, including any guaranteed preservation periods.<br/><br/></li>
-            <li>The medium-term (three- to five-year) and long-term (> five years) plans in place to ensure the continued availability and accessibility of the data. In particular, both the response to rapid 
+            <li>The medium-term (three- to five-year) and long-term (more than five years) plans in place to ensure the continued availability and accessibility of the data. In particular, both the response to rapid 
         changes of circumstance and long-term planning should be described, indicating options for 
         relocation or transition of the activity to another body or return of the data holdings to their owners 
         (i.e., data producers). For example, what will happen in the case of cessation of funding, which 
@@ -100,7 +117,8 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
         </div>
       return (
           <>
-            {this.state.isResultReady ? 
+          {this.state.isAuthenticated ? 
+            this.state.isResultReady ? 
             <UploadPageResult
                 color={this.props.color}
                 handleRepairUpload={this.handleRepairUpload}
@@ -114,7 +132,9 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
                 contAccess={contAccess}
                 dataInteg={dataInteg}
                 dataReuse={dataReuse}
-                />}
+                />
+                : <></>
+            }
             </>
       )
     }
