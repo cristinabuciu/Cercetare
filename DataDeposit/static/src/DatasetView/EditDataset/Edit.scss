@@ -1,0 +1,19 @@
+@import '../../style_home';
+
+.resource-title {
+	color: rgb(32, 33, 36);
+	font-size: 16px;
+	line-height: 24px;
+	font-weight: 600;
+	display: block;
+	margin-bottom: 16px;
+}
+
+.ResourceToDownloadClass {
+	cursor: pointer;
+}
+
+.ResourceToDownloadClass:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}

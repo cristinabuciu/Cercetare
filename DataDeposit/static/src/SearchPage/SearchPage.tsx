@@ -8,14 +8,15 @@ import { Container } from 'semantic-ui-react';
 import { Title } from '../Items/Title/Title';
 import Search from '../Items/Search/Search';
 import SearchCard from '../Items/SearchCard';
-import {LoaderComponent} from '../Items/Items-components'
+import { LoaderComponent, PaginationItem } from '../Items/Items-components'
+import { SearchCardItems } from '../models/SearchCardItems'
 
 export interface ISearchPageProps {
     greeting: string;
 }
 
 export interface ISearchPageState {
-    searchResult:Array<Array<string>>;
+    searchResult: Array<SearchCardItems[]>;
     numberOfCards: number;
     isAuthenticated: boolean;
     shouldDisplayPagination: boolean;
@@ -27,7 +28,7 @@ export interface ISearchPageState {
 }
 
 export default class SearchPage extends React.Component<ISearchPageProps, ISearchPageState> {
-    state = {
+    state: ISearchPageState = {
         searchResult: [],
         numberOfCards: 0,
         isAuthenticated: false,
@@ -40,7 +41,7 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
         wasInfo: false
     };
 
-    componentDidMount() {
+    componentDidMount(): void {
         this.state.isAuthenticated = false;
         const token = localStorage.getItem('login_user_token');
         console.log(token);
@@ -54,10 +55,12 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
         this.handleClickArrowRight = this.handleClickArrowRight.bind(this);
         this.handleClickOnNumber = this.handleClickOnNumber.bind(this);
         this.setItemsForShow = this.setItemsForShow.bind(this);
+        this.createPageNumberArray = this.createPageNumberArray.bind(this);
+        this.handleClickOnNumber = this.handleClickOnNumber.bind(this);
     }
 
 
-    setItemsForShow(numberOfCards: number, numberOfCardsPerPage: number, searchResultItems: Array<any>, searchWasPressed: boolean = false, itWasAnError: boolean = false, itWasAnInfo: boolean = false): void {
+    setItemsForShow(numberOfCards: number, numberOfCardsPerPage: number, searchResultItems: Array<SearchCardItems[]>, searchWasPressed: boolean = false, itWasAnError: boolean = false, itWasAnInfo: boolean = false): void {
         console.log("CEL MAI MARE HATZ");
 
         if (searchWasPressed) {
@@ -94,28 +97,28 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
         }
     }
 
-    showSearchCards(): any {
-        let cards = this.state.searchResult.map(item => (
+    showSearchCards(): JSX.Element[] {
+        let cards: JSX.Element[] = this.state.searchResult.map((item: Array<SearchCardItems>) => (
             <Row>
                 <Col>
                     <SearchCard
-                        id={item[0]}
-                        domain={item[1]} 
-                        subdomain={item[2]} 
-                        country={item[3]} 
-                        data_format={item[4]} 
-                        authors={item[5]} 
-                        year={item[6]} 
-                        dataset_title={item[7]}
-                        article_title={item[8]} 
-                        short_desc={item[9]}
-                        avg_rating={item[10]}
-                        gitlink={item[11]}
-                        downloadPath={item[13]}
-                        shouldHaveDownloadButton={item[12] === 1 || item[12] === 3 }
-                        shouldHaveDownloadLink={item[12] === 1}
-                        owner={item[14]}
-                        privateItem={item[15]}
+                        id={item['id']}
+                        domain={item['domain']} 
+                        subdomain={item['tags']} 
+                        country={item['country']} 
+                        data_format={item['data_format']} 
+                        authors={item['authors']} 
+                        year={item['year']} 
+                        dataset_title={item['dataset_title']}
+                        article_title={item['article_title']} 
+                        short_desc={item['short_desc']}
+                        avg_rating={item['avg_rating_value']}
+                        gitlink={item['gitlink']}
+                        downloadPath={item['downloadPath']}
+                        shouldHaveDownloadButton={item['resourceType'] === 'EXTERNAL' || item['resourceType'] === 'INTERNAL' }
+                        shouldHaveDownloadLink={item['resourceType'] === 'EXTERNAL'}
+                        owner={item['owner']}
+                        privateItem={item['private']}
                         shouldHaveDelete={false}
                     />
                 </Col>
@@ -132,7 +135,7 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
         });
     }
 
-    handleLoaderChange = (visible) => {
+    handleLoaderChange = (visible: boolean) => {
         this.setState({
             loaderVisibility: visible,
             wasError: false,
@@ -162,6 +165,51 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
         });
     }
 
+    handleClickDots(event): void {}
+
+    createPageNumberArray(): JSX.Element[] {
+        let pageNumbers: Array<any> = new Array<any>();
+        const todosPerPage: number = this.state.todosPerPage;
+        const numberOfPages: number = Math.ceil(this.state.numberOfCards / todosPerPage);
+
+        // LEFT SIDE
+        pageNumbers.push(1);
+        if (this.state.currentPage - 3 > 1) {
+            pageNumbers.push('...');
+        }
+
+        // MIDDLE SIDE
+        for (let i: number = this.state.currentPage - 2; i <= this.state.currentPage + 2; i++) {
+            if (i < 2 || i > numberOfPages - 1) {
+                continue;
+            }
+            pageNumbers.push(i);
+        }
+
+        // RIGHT SIDE
+        if (this.state.currentPage + 3 < numberOfPages) {
+            pageNumbers.push('...');
+        }
+        
+        if (numberOfPages > 1) {
+            pageNumbers.push(numberOfPages);
+        }
+
+        const renderPageNumbers: JSX.Element[] = pageNumbers.map((number: any) => {
+            return (
+            <PaginationItem
+                number={number}
+                disabled={number === '...'}
+                active={this.state.currentPage === number}
+                handleClick={number === '...' ? this.handleClickDots : this.handleClickOnNumber}
+                value={number}
+            />
+            );
+        });
+        
+        return renderPageNumbers;
+    }
+
     render() {
         const searchResult = this.showSearchCards();
         const currentPage = this.state.currentPage;
@@ -178,24 +226,7 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
         // });
     
         // Logic for displaying page numbers
-        const pageNumbers = new Array();
-        for (let i = 1; i <= Math.ceil(this.state.numberOfCards / todosPerPage); i++) {
-          pageNumbers.push(i);
-        }
-    
-        const renderPageNumbers = pageNumbers.map(number => {
-          return (
-            <li
-              key={number}
-              id={number}
-              className={this.state.currentPage === number ? "active" : ""}
-              onClick={this.handleClickOnNumber}
-    			>
-              {number}
-            </li>
-          );
-        });
-
+        const renderPageNumbers = this.createPageNumberArray();
         const translate = new MyTranslator("SearchPage");
         
         return (

@@ -52,7 +52,7 @@ export interface ISearchCardState {
 
 export default class SearchCard extends React.Component<ISearchCardProps, ISearchCardState> {
 
-    state = {
+    state: ISearchCardState = {
         setTooltipOpen: false,
         ratingAvgValue: 4.58,
         uploadedFileLink: '',
@@ -84,7 +84,9 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
             });
         }
 
+        /////////////// FUNCTIONS /////////////////
         this.deleteItem = this.deleteItem.bind(this);
+        this.handleDownload = this.handleDownload.bind(this);
     }
 
     deleteItem () {
@@ -92,7 +94,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
             disabledDeleteButton: true,
             deleteButtonText: "Deleting..."
         });
-        debugger;
+
         axios.delete( '/dataset/' + this.props.id)
           .then(response => {
             console.log("Carolina");
@@ -105,6 +107,19 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
           .finally(function () {
             // always executed
           }); 
+    }
+
+    handleDownload(): boolean {
+        debugger;
+        axios.put( '/dataset/' + this.props.id + '/downloads')
+        .then(response => {})
+        .catch(function (error) {
+            console.log(error);
+            return false;
+        });
+
+        window.open(this.props.downloadPath, "_blank");
+        return true;
     }
   
     render() {  
@@ -184,9 +199,9 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                     {this.props.shouldHaveDownloadButton ? 
                     <>{
                         this.props.shouldHaveDownloadLink ? 
-                        <><FontAwesomeIcon icon={faLink} /> Download Link</>
+                        <div className="resource-download" onClick={this.handleDownload}><FontAwesomeIcon icon={faLink} /> Download Link</div>
                         :
-                        <><FontAwesomeIcon icon={faDatabase} /> Download File</>
+                        <div className="resource-download" onClick={this.handleDownload}><FontAwesomeIcon icon={faDatabase} /> Download File</div>
                     }</>
                     :
                     <>No download</>

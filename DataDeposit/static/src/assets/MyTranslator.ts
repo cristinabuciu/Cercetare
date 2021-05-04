@@ -1,9 +1,7 @@
-import eng from "./translations/en.json"
-import ro from "./translations/ro.json"
+import * as languages from './translations'
 
 class MyTranslator {
 
-  readonly languages = ["GB", "RO"];
   readonly component: string;
 
   constructor(component: string = "None") {
@@ -16,6 +14,8 @@ class MyTranslator {
 
     switch(MyTranslator.staticProperty) {
       case "GB":
+        const eng = languages.getEng();
+
         if (this.component) {
           if (value in eng[this.component]) {
             return eng[this.component][value];
@@ -26,8 +26,10 @@ class MyTranslator {
           return eng["common"][value];
         }
 
-        return "Error-String-Not-Found";
+        return "Error: " + value;
       case "RO":
+        const ro = languages.getRo();
+
         if (ro[this.component]) {
           if (value in ro[this.component]) {
             return ro[this.component][value];
@@ -38,7 +40,7 @@ class MyTranslator {
           return ro["common"][value];
         }
 
-        return "Error-String-Not-Found";
+        return "Error: " + value;
       default:
         console.log(MyTranslator.staticProperty);
         return "Error-Language-Not-Found";

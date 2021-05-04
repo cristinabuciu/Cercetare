@@ -49,7 +49,7 @@ export const ImageTitle = (props) => {
               </div>
               <div className="title-box">
               <div className="ala-de-sus text-align-left">
-                <p> <span>Public</span> </p>
+                <p> <span>{props.status ? props.status : ""}</span> </p>
               </div>
                 <div className="title-in-image text-align-left">
                   <h3 className={"sellGear-title" + propsClassName}>{props.titleSet}</h3>

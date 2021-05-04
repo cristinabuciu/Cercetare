@@ -5,12 +5,12 @@ import MyTranslator from '../assets/MyTranslator'
 import classnames from 'classnames';
 import AddComment from "../Comment/AddComment";
 import Comment from "../Comment/Comment";
-import ReactStars from "react-rating-stars-component";
-import { faStarHalf, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Row, Col, TabContent, TabPane, Nav, NavItem, Button, CardBody, Card, NavLink, Alert } from 'reactstrap';
 import NumericInput from 'react-numeric-input';
 import {InputText, LoaderComponent} from '../Items/Items-components'
+import { CommentItem } from '../models/CommentItem'
 
 export interface ICommentTabsProps {
     id: number;
@@ -27,7 +27,7 @@ export interface ICommentTabsState {
     loaderVisibility: boolean;
     resultsPerPage: number | null;
     wasError: boolean;
-    comments: any;
+    comments: CommentItem[];
 }
 
 export default class CommentTabs extends React.Component<ICommentTabsProps, ICommentTabsState> {
@@ -51,17 +51,20 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
     }
 
     componentDidMount() {
+
+        //////////// FUNCTIONS //////////////
         this.updateComments = this.updateComments.bind(this);
+        this.showSearchCards = this.showSearchCards.bind(this);
         this.updateComments();
     }
 
-    setLoader (value = true) {
+    setLoader (value: boolean = true): void {
         this.setState({
             loaderVisibility: value,
         });
     }
 
-    setPagination (value = true) {
+    setPagination (value: boolean = true): void {
         this.setState({
             shouldDisplayPagination: value,
         });
@@ -75,7 +78,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         });
     }
 
-    updateComments() {
+    updateComments(): void {
         this.setLoader();
         this.setPagination(false);
         axios.get( '/dataset/' + this.props.id + '/comments', {
@@ -152,7 +155,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         }
     }
 
-    showSearchCards() {
+    showSearchCards(): JSX.Element[] {
         console.log("JOHNULE!!!");
         console.log(this.state.comments);
         let cards = this.state.comments.map(item => (

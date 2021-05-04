@@ -16,6 +16,7 @@ import { ImageTitle, Title } from '../Items/Title/Title';
 import './DatasetView.scss';
 
 export interface IDatasetViewLoadingProps {
+    private: boolean;
     id: number;
     domain: string;
     subdomain: Array<String> 
@@ -51,6 +52,7 @@ export interface IDatasetViewLoadingState {
     shouldDisplayLoading: boolean;
     userID: string;
     shouldDisplayAboutAt: boolean;
+    hasEditPerm: boolean;
 }
 
 export default class DatasetViewLoading extends React.Component<IDatasetViewLoadingProps, IDatasetViewLoadingState> {
@@ -59,10 +61,11 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
         shouldGiveRating: true,
         shouldDisplayLoading: true,
         userID: "0",
-        shouldDisplayAboutAt: true
+        shouldDisplayAboutAt: true,
+        hasEditPerm: false
     }
 
-    componentDidMount () {
+    componentDidMount(): void {
         axios.get( '/user/' + this.props.owner)
           .then(response => {
             this.setState({
@@ -75,7 +78,17 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
           .finally( () => {
             // always executed
         });
+        
+        const token = localStorage.getItem('login_user_token');
+        
+        if (this.props.owner === token) {
+            this.setState({
+                hasEditPerm: true,
+                shouldDisplayAboutAt: true
+            });
+        }
 
+        ////////// FUNCTIONS ///////////
         this.switchPage = this.switchPage.bind(this);
         this.handleDownload = this.handleDownload.bind(this);
     }
@@ -90,8 +103,17 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
         });
     }
 
-    handleDownload(): void {
+    handleDownload(): boolean {
+        debugger;
+        axios.put( '/dataset/' + this.props.id + '/downloads')
+        .then(response => {})
+        .catch(function (error) {
+            console.log(error);
+            return false;
+        });
+
         window.open(this.props.downloadPath, "_blank");
+        return true;
     }
 
     render() {  
@@ -101,6 +123,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
             <Row>
                 <Col md={{ size: 12, offset: 0 }}>
                     <ImageTitle 
+                        status={this.props.private ? "Private" : "Public"}
                         className="margin-bottom-10p" 
                         titleSet={this.props.dataset_title}
                         image={this.props.domain + "_domain.jpg"}
@@ -117,8 +140,13 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                             <Col md="3"></Col>
                             {this.state.shouldDisplayAboutAt ? <Title titleSet={translate.useTranslation("about")} md={6} /> : <Title titleSet={translate.useTranslation("edit")} md={6} /> }
                             <Col md="3" className="text-align-right"> 
-                                {this.state.shouldDisplayAboutAt ? <FontAwesomeIcon className="about-edit-button edit-button" icon={faEdit} onClick={this.switchPage}/> :
-                                <FontAwesomeIcon className="about-edit-button edit-button" icon={faTimesCircle} onClick={this.switchPage}/>  }
+                                {this.state.hasEditPerm ?
+                                <>
+                                    {this.state.shouldDisplayAboutAt ? <FontAwesomeIcon className="about-edit-button edit-button" icon={faEdit} onClick={this.switchPage}/> :
+                                    <FontAwesomeIcon className="about-edit-button edit-button" icon={faTimesCircle} onClick={this.switchPage}/>  }
+                                </>
+                                : <></>
+                                }
                             </Col>
                         </Row>
                     </CardTitle>
@@ -147,6 +175,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                     />
                         :
                         <DatasetUpdate 
+                            private={this.props.private}
                             id={this.props.id}
                             domain={this.props.domain}
                             subdomain={this.props.subdomain} 
@@ -162,7 +191,8 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                             dataIntegrity={this.props.dataIntegrity}
                             continuityAccess={this.props.continuityAccess}
                             dataReuse={this.props.dataReuse}
-                            switchPage={this.switchPage} />
+                            switchPage={this.switchPage}
+                            handleDownload={this.handleDownload} />
                     }
                     
                 </Card>

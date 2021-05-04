@@ -62,6 +62,11 @@ $grid-line-color: rgb(187, 228, 240);
   user-select: none;
 }
 
+.pagination > li.disabled {
+  background-color: white !important;
+  cursor: auto;
+}
+
 .pagination > li.active {
   background-color: #007bff;
   color: white;
