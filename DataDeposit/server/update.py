@@ -244,6 +244,8 @@ def increaseDownloadsNumber(dataset_id):
 
         es.update_dataset_downloads(INDEX_DATASETS, int(dataset_id))
 
+        return "INCREASE_DOWNLOADS_SUCCESS"
+
     except Exception as e:
         print(e)
         return "INCREASE_DOWNLOADS_ERROR"

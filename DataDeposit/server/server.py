@@ -160,7 +160,8 @@ def deleteComment(dataset_id, comment_id):
 
 @app.route('/dataset/<dataset_id>/downloads', methods=['PUT'])
 def updateDatasetDownloads(dataset_id):
-    increaseDownloadsNumber(dataset_id)
+    return increaseDownloadsNumber(dataset_id)
+
 
 @app.route('/user/<user_info>', methods=['GET'])
 def getUserDetails(user_info):
@@ -170,13 +171,6 @@ def getUserDetails(user_info):
     except ValueError:
         _username = user_info
         return findUserID(_username)
-
-    # if type(user_info) == int:
-    #     _user_id = user_info
-    #     return getUserInfoById(_user_id)
-    # elif type(user_info) == str:
-    #     _username = user_info
-    #     return findUserID(_username)
 
 
 # Domain, Tags, Country
