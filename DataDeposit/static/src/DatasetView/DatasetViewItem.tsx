@@ -104,7 +104,6 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
     }
 
     handleDownload(): boolean {
-        debugger;
         axios.put( '/dataset/' + this.props.id + '/downloads')
         .then(response => {})
         .catch(function (error) {

@@ -14,6 +14,7 @@ import Search from '../Items/Search/Search';
 import SearchCard from '../Items/SearchCard';
 
 import {LoaderComponent} from '../Items/Items-components'
+import { SearchCardItems } from '../models/SearchCardItems'
 
 import './userpage.scss';
 
@@ -129,37 +130,36 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
         console.log(this.state)
     }
 
-    showSearchCards() {
+    showSearchCards(): JSX.Element[]  {
         console.log("JOHNULE!!!");
         console.log(this.state.searchResult);
-        let cards = this.state.searchResult.map(item => (
+        let cards: JSX.Element[] = this.state.searchResult.map((item: Array<SearchCardItems>) => (
             <Row>
                 <Col>
                     <SearchCard
-                        id={item[0]}
-                        domain={item[1]} 
-                        subdomain={item[2]} 
-                        country={item[3]} 
-                        data_format={item[4]} 
-                        authors={item[5]} 
-                        year={item[6]} 
-                        dataset_title={item[7]}
-                        article_title={item[8]} 
-                        short_desc={item[9]}
-                        avg_rating={item[10]}
-                        gitlink={item[11]}
-                        downloadPath={item[13]}
-                        shouldHaveDownloadButton={item[12] === 1 || item[12] === 3 }
-                        shouldHaveDownloadLink={item[12] === 1}
-                        owner={item[14]}
-                        privateItem={item[15]}
+                        id={item['id']}
+                        domain={item['domain']} 
+                        subdomain={item['tags']} 
+                        country={item['country']} 
+                        data_format={item['data_format']} 
+                        authors={item['authors']} 
+                        year={item['year']} 
+                        dataset_title={item['dataset_title']}
+                        article_title={item['article_title']} 
+                        short_desc={item['short_desc']}
+                        avg_rating={item['avg_rating_value']}
+                        gitlink={item['gitlink']}
+                        downloadPath={item['downloadPath']}
+                        shouldHaveDownloadButton={item['resourceType'] === 'EXTERNAL' || item['resourceType'] === 'INTERNAL' }
+                        shouldHaveDownloadLink={item['resourceType'] === 'EXTERNAL'}
+                        owner={item['owner']}
+                        privateItem={item['private']}
                         shouldHaveDelete={true}
                     />
                 </Col>
             </Row>
           )
         )
-
         return cards;
     }
 

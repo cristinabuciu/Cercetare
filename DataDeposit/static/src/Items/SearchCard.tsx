@@ -85,7 +85,6 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
     }
 
     handleDownload(): boolean {
-        debugger;
         axios.put( '/dataset/' + this.props.id + '/downloads')
         .then(response => {})
         .catch(function (error) {

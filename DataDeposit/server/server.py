@@ -39,6 +39,7 @@ def find_file(dir, ext):
 
 @app.route("/login", methods=['POST'])
 def login():
+    global current_user
     receivedData = json.loads(request.data.decode('utf-8'))
     _username = receivedData.get('username')
     _password = receivedData.get('password')
@@ -89,7 +90,6 @@ def getDataset(dataset_id):
 
 @app.route('/datasets', methods=['POST'])
 def addDataset():
-    global current_user
     receivedData = json.loads(request.data.decode('utf-8'))
     _params = receivedData.get('params')
 
