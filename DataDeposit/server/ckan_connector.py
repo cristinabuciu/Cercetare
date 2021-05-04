@@ -30,7 +30,7 @@ def createGroupIfNeeded(group):
                       data=json.dumps({'name': group}))
 
 
-def addDatasetMetadata(datasetInfo):
+def addPackage(datasetInfo):
     result = requests.post(url=createPackageTarget,
                            headers={'Content-Type': 'application/json', 'Authorization': CKAN_INSTANCE_JWT},
                            data=json.dumps(datasetInfo))
@@ -39,7 +39,7 @@ def addDatasetMetadata(datasetInfo):
     return packageId
 
 
-def addDatasetFile(resourceInfo, file):
+def addResource(resourceInfo, file):
     result = requests.post(url=createResourceTarget,
                            headers={'Authorization': CKAN_INSTANCE_JWT},
                            data=resourceInfo,

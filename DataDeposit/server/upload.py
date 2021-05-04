@@ -185,7 +185,7 @@ def uploadDatasetToCkanInstance(dataset):
 
     # todo: add extras if needed (ckanMetadata['extras'] = [{'key': 'value'}]
 
-    packageId = ck.addDatasetMetadata(ckanMetadata)
+    packageId = ck.addPackage(ckanMetadata)
     return packageId
 
 
@@ -209,7 +209,7 @@ def uploadDatasetFiles(datasetId, packageId, file):
         resource_data['name'] = filename
         resource_data['url'] = '{}/files'.format(datasetId)
 
-        resourceId, resourceUrl = ck.addDatasetFile(resource_data, file)
+        resourceId, resourceUrl = ck.addResource(resource_data, file)
 
         # update dataset - add ckan resourceId and url correlations
         existing = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]

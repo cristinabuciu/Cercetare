@@ -5,7 +5,7 @@ import os
 import subprocess
 from search import applyFilters, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById, getDatasetFilesInfo
 from upload import uploadDataset, uploadDatasetFiles, addComment, updateNumberOfViews
-from update import updateDataset, updateDatasetFiles, increaseDownloadsNumber
+from update import updateDataset, increaseDownloadsNumber, updateDatasetFilesToNone, updateDatasetFilesToExternal, updateDatasetFilesToInternal
 from delete import hardDeleteDataset, softDeleteDataset, hardDeleteComment
 from glob import glob
 import es_connector
@@ -118,9 +118,15 @@ def editDataset(dataset_id):
 
 @app.route('/dataset/<dataset_id>/files', methods=['PUT'])
 def editDatasetFiles(dataset_id):
-    packageId = request.form['packageId']
-    file = request.files['file']
-    return updateDatasetFiles(dataset_id, packageId, file)
+    resourceType = request.form['newResourceType']
+    if resourceType == 'NONE':
+        return updateDatasetFilesToNone(dataset_id)
+    elif resourceType == 'EXTERNAL':
+        downloadUrl = request.form['downloadUrl']
+        return updateDatasetFilesToExternal(dataset_id, downloadUrl)
+    elif resourceType == 'INTERNAL':
+        file = request.files['file']
+        return updateDatasetFilesToInternal(dataset_id, file)
 
 
 @app.route('/dataset/<dataset_id>', methods=['DELETE'])
