@@ -1,7 +1,7 @@
 # upload.py
 from application_properties import *
 
-import os
+from os import SEEK_SET, SEEK_END
 import sys
 from datetime import datetime, timedelta
 import es_connector
@@ -192,6 +192,13 @@ def uploadDatasetToCkanInstance(dataset):
 def uploadDatasetFiles(datasetId, packageId, file):
     if not(file) or file.filename == '' or not(allowed_file(file.filename)):
         return "FILE_NOT_ALLOWED"
+
+    file.seek(0, SEEK_END)
+    fileSize = file.tell()
+    file.seek(0, SEEK_SET)
+
+    if fileSize > UPLOAD_FILE_SIZE_MAX:
+        return "FILE_SIZE_EXCEEDED"
 
     try:
         es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
