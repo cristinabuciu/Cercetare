@@ -1,6 +1,6 @@
 # update.py
 from application_properties import *
-from upload import findUserID, getCoordinates
+from utils import findUserID, getCountryCoordinates
 
 import os
 import sys
@@ -42,7 +42,7 @@ def updateDataset(dataset_id, params, current_user):
         new_dataset['avg_rating_value'] = existingDataset['avg_rating_value']
         new_dataset['ratings_number'] = existingDataset['ratings_number']
         new_dataset['views'] = existingDataset['views']
-        new_dataset['geo_coord'] = getCoordinates(params['notArrayParams']['country'])
+        new_dataset['geo_coord'] = getCountryCoordinates(params['notArrayParams']['country'])
         new_dataset['date'] = existingDataset['date']
         new_dataset['lastUpdatedAt'] = str(int(time()))
 

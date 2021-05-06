@@ -1,0 +1,3 @@
+SUCCESS = 'SUCCESS'
+ERROR = 'ERROR'
+WAIT_FOR = 'wait_for'

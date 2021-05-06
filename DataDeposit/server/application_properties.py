@@ -9,7 +9,7 @@ INDEX_DOMAINS = 'domains'
 INDEX_TAGS = 'tags'
 INDEX_COMMENTS = 'comments'
 INDEX_ID_GENERATOR = 'id_generator'
-WAIT_FOR = 'wait_for'
+WAIT_FOR = 'wait_for'  # todo delete
 
 UPLOAD_FOLDER_PATH = './uploadFiles'
 UPLOAD_FILE_ALLOWED_EXTENSIONS = ['csv', 'zip', 'tar.gz', 'jpg']
