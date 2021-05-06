@@ -1,11 +1,13 @@
 import * as React from 'react';
 import axios from 'axios';
 import "./AddComment.scss"
+import MyTranslator from '../assets/MyTranslator'
 
 import { faStarHalf, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactStars from "react-rating-stars-component";
 import { Card, CardTitle, CardText, Form, Row, Col, Alert } from 'reactstrap';
+import { LoaderComponent } from '../Items/Items-components'
 
 export interface IAddCommentProps {
   id: number;
@@ -15,6 +17,8 @@ export interface IAddCommentState {
     showComments: boolean;
     rating: number;
     itWasPosted: boolean;
+    hasError: boolean;
+    errorMessage: string;
 }
 
 export default class AddComment extends React.Component<IAddCommentProps, IAddCommentState> {
@@ -23,6 +27,8 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
         showComments: false,
         rating: 0,
         itWasPosted: false,
+        hasError: false,
+        errorMessage: "",
         comments: [
             {id: 1, author: "landiggity", body: "This is my first comment on this forum so don't be rude"},
             {id: 2, author: "scarlett-jo", body: "That's a mighty fine comment you've got there my good looking fellow..."},
@@ -41,9 +47,11 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
       }
   }
 
-    onReceiveAnswerFromPost (): void {
+    onReceiveAnswerFromPost(hasError: boolean, errorMessage: string = ""): void {
       this.setState({
-        itWasPosted: true
+        itWasPosted: true,
+        hasError: hasError,
+        errorMessage: errorMessage
       });
     }
     
@@ -57,21 +65,30 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
         buttonText = 'Hide Comments';
         commentNodes = <div className="comment-list">{comments}</div>;
       }
+
+      const translate = new MyTranslator("AddComment");
       
       return(
         <Card className="border-0">
             <CardTitle><h2>Join the Discussion!</h2></CardTitle>
                 <CardText>
-                {this.state.itWasPosted ?
+                {this.state.itWasPosted ? this.state.hasError ?
+                    <Row>
+                      <Col>
+                        <Alert color="danger">
+                            {this.state.errorMessage}
+                          </Alert>
+                      </Col>
+                  </Row>    
+                  :
                 <Row>
                     <Col>
                       <Alert color="success">
                           Review posted successfully !
                         </Alert>
                     </Col>
-                </Row>
-                      
-                      : <>
+                </Row>   
+                : <>
                   <Row>
                     <Col className="rating-lg">
                     
@@ -151,24 +168,38 @@ export interface ICommentFormState {
     // COMMENTS WARNINGS
     noRatingWarning: boolean; 
     noTitleAndBodyWarning: boolean;
+    loaderVisibility: boolean;
 }
   
   class CommentForm extends React.Component<ICommentFormProps, ICommentFormState> {
 
-    state = {
+    state: ICommentFormState = {
       title: '',
       body: '',
       noRatingWarning: false,
-      noTitleAndBodyWarning: false
+      noTitleAndBodyWarning: false,
+      loaderVisibility: false
+    }
+
+    componentDidMount(): void {
+      //////////////// FUNCTIONS //////////////////
+      this.changeLoader = this.changeLoader.bind(this);
     }
 
     changeValue = (e, comboBoxTitle) => {
       this.state[comboBoxTitle] = '' + e;
       this.forceUpdate();
-  }
+    }
+
+    changeLoader(value: boolean = false): void {
+      this.setState({
+        loaderVisibility: value
+      });
+    }
 
 
     render() {
+      const translate = new MyTranslator("Error-codes");
       return (
         <Form className="comment-form" onSubmit={this._handleSubmit.bind(this)}>
           <div className="comment-form-fields">
@@ -176,18 +207,18 @@ export interface ICommentFormState {
             <textarea placeholder="Comment" onChange={e => this.changeValue(e.target.value, 'body')}></textarea>
           </div>
           <div className="comment-form-actions">
-            <button type="submit" className="button-add-comment">Post Comment</button>
+            {this.state.loaderVisibility ? <LoaderComponent visible={this.state.loaderVisibility}/> : <button type="submit" className="button-add-comment">Post Comment</button>}
             <Row className={this.state.noRatingWarning ? "" : "display-none"}>
               <Col className="margin-top-10">
                   <Alert color="danger" className="text-align-center">
-                      Comment can not be submitted. Missing rating value.
+                      {translate.useTranslation("ADD_DATASET_COMMENT_ERROR_MISSING_RATING")}
                   </Alert>
               </Col>
           </Row>
           <Row className={this.state.noTitleAndBodyWarning ? "" : "display-none"}>
               <Col className="margin-top-10">
                   <Alert color="danger" className="text-align-center">
-                      Comment can not be submitted. Both title and comment should be filled in.
+                      {translate.useTranslation("ADD_DATASET_COMMENT_ERROR_MISSING_TITLE_OR_COMMENT")}
                   </Alert>
               </Col>
           </Row>
@@ -198,12 +229,15 @@ export interface ICommentFormState {
       );
     } // end render
     
-    _handleSubmit(event) { 
+    _handleSubmit(event): void { 
+      this.changeLoader(true);
+      const translate = new MyTranslator("Error-codes");
       event.preventDefault();   // prevents page from reloading on submit
       //   let author = this._author;
       //   let body = this._body;
       //   this.props.addComment(author.value, body.value);
       const token = localStorage.getItem('login_user_token');
+      let errorMessage: string = "";
 
       const rating = this.props.rating;
       const title = this.state.title;
@@ -211,7 +245,6 @@ export interface ICommentFormState {
 
       if (rating > 0) {
         if ((title === '' && comment === '') || (title !== '' && comment !== '')) {
-          // SCHIMB CULOAREA BUTONULUI IN VERDE
           axios.post( '/dataset/' + this.props.id + '/comments', {
             comment: {
                 username: token,
@@ -221,14 +254,24 @@ export interface ICommentFormState {
             }
         })
           .then(response => {
+            debugger;
             console.log(response.data);
-            this.props.onReceiveAnswerFromPost();
+            if (response.data['statusCode'] === 200) {
+              this.props.onReceiveAnswerFromPost(false);
+            } else {
+              errorMessage = translate.useTranslation(response.data['data']);
+              this.props.onReceiveAnswerFromPost(true, errorMessage);
+            }
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
+            errorMessage = translate.useTranslation("ADD_DATASET_COMMENT_ERROR");
+            this.props.onReceiveAnswerFromPost(true, errorMessage);
           })
           .finally(() => {
             // always executed
+            debugger;
+            this.changeLoader(false);
             this.setState({
               noTitleAndBodyWarning: false,
               noRatingWarning: false
@@ -236,12 +279,14 @@ export interface ICommentFormState {
           });
         }
         else {
+          this.changeLoader(false);
           this.setState({
             noTitleAndBodyWarning: true
           });
         }
       }
       else {
+        this.changeLoader(false);
         this.setState({
           noRatingWarning: true
         });

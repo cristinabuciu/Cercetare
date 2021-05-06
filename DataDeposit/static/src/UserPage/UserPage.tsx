@@ -13,8 +13,10 @@ import { Title } from '../Items/Title/Title';
 import Search from '../Items/Search/Search';
 import SearchCard from '../Items/SearchCard';
 
-import {LoaderComponent} from '../Items/Items-components'
+import { LoaderComponent, PaginationItem } from '../Items/Items-components'
 import { SearchCardItems } from '../models/SearchCardItems'
+import MyTranslator from '../assets/MyTranslator'
+import { DeleteMessageItem } from '../models/DeleteMessageItem'
 
 import './userpage.scss';
 
@@ -86,6 +88,40 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
           .finally(() => {
             // always executed
         });
+
+        //////////// FUNCTIONS //////////////
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleClickOnNumber = this.handleClickOnNumber.bind(this);
+        this.createPageNumberArray = this.createPageNumberArray.bind(this);
+        this.handleClickDots = this.handleClickDots.bind(this);
+    }
+
+    handleClickDots(event): void {}
+
+    async handleDelete(id: number): Promise<DeleteMessageItem> {
+        let returnMessage: DeleteMessageItem = {};
+        const translate = new MyTranslator("Error-codes");
+
+        await axios.delete( '/dataset/' + id)
+        .then(response => {
+            if (response.data['statusCode'] === 200) {
+                returnMessage.wasSuccess = true;
+                returnMessage.message = translate.useTranslation(response.data['data']);
+            } else {
+                returnMessage.wasError = true;
+                returnMessage.message = translate.useTranslation(response.data['data']);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            returnMessage.wasError = true;
+            returnMessage.message = translate.useTranslation("DELETE_DATASET_ERROR");
+        })
+        .finally(() => {
+            // always executed
+        });
+        debugger;
+        return returnMessage;
     }
 
 
@@ -155,6 +191,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                         owner={item['owner']}
                         privateItem={item['private']}
                         shouldHaveDelete={true}
+                        handleDelete={this.handleDelete}
                     />
                 </Col>
             </Row>
@@ -163,12 +200,13 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
         return cards;
     }
 
-    handleClick = (event) => {
+    handleClickOnNumber(event): void {
         this.setState({
             currentPage: Number(event.target.id)
             
         });
-      }
+    }
+    
     handleLoaderChange = (visible) => {
         console.log("UNGURICA");
         this.setState({
@@ -203,27 +241,54 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
         });
     }
 
-    render() {
-        const searchResult = this.showSearchCards();
-        const todosPerPage = this.state.todosPerPage;
-    
-        const pageNumbers = new Array();
-        for (let i = 1; i <= Math.ceil(this.state.numberOfCards / todosPerPage); i++) {
+    createPageNumberArray(): JSX.Element[] {
+        let pageNumbers: Array<any> = new Array<any>();
+        const todosPerPage: number = this.state.todosPerPage;
+        const numberOfPages: number = Math.ceil(this.state.numberOfCards / todosPerPage);
+
+        // LEFT SIDE
+        pageNumbers.push(1);
+        if (this.state.currentPage - 3 > 1) {
+            pageNumbers.push('...');
+        }
+
+        // MIDDLE SIDE
+        for (let i: number = this.state.currentPage - 2; i <= this.state.currentPage + 2; i++) {
+            if (i < 2 || i > numberOfPages - 1) {
+                continue;
+            }
             pageNumbers.push(i);
         }
-    
-        const renderPageNumbers = pageNumbers.map(number => {
+
+        // RIGHT SIDE
+        if (this.state.currentPage + 3 < numberOfPages) {
+            pageNumbers.push('...');
+        }
+        
+        if (numberOfPages > 1) {
+            pageNumbers.push(numberOfPages);
+        }
+
+        const renderPageNumbers: JSX.Element[] = pageNumbers.map((number: any) => {
             return (
-            <li
-                key={number}
-                id={number}
-                className={this.state.currentPage === number ? "active" : ""}
-                onClick={this.handleClick}
-            >
-                {number}
-            </li>
+            <PaginationItem
+                number={number}
+                disabled={number === '...'}
+                active={this.state.currentPage === number}
+                handleClick={number === '...' ? this.handleClickDots : this.handleClickOnNumber}
+                value={number}
+            />
             );
         });
+        
+        return renderPageNumbers;
+    }
+
+    render() {
+        const searchResult = this.showSearchCards();
+        const renderPageNumbers = this.createPageNumberArray();
+
+        const translate = new MyTranslator("UserPage");
         return (
                 //  <button onClick={() => this.setState({count: this.state.count+1})}>
                 //     This button has been clicked {this.state.count} times.
@@ -301,10 +366,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                                 </Row>
                             </>
                             }
-
-                            
                         </Col>
-                        
                     </Row>
                 </Container>
             

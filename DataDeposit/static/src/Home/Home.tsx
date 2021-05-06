@@ -2,12 +2,14 @@ import * as React from 'react';
 import MyTranslator from '../assets/MyTranslator'
 
 import './Home.scss';
+import 'semantic-ui-css/semantic.min.css'
 import LeftBar from "../LeftBar/LeftBar";
 import { Row, Col, Alert } from 'reactstrap';
 import { Container } from 'semantic-ui-react';
 import { Title } from '../Items/Title/Title';
 import ReactTextFormat from 'react-text-format';
 import RichTextEditor from 'react-rte';
+
 
 export interface IHomeProps {
     greeting: string;
@@ -26,9 +28,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         value: RichTextEditor.createEmptyValue()
     };
 
-    public componentDidMount(): void {
-
-    }
+    public componentDidMount(): void {}
 
     onChange = (value) => {
         debugger;
@@ -58,7 +58,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                             </Col>
 
                             <Col>
-                            dsfs
+                                jjj
                             </Col>
                         </Row>
 

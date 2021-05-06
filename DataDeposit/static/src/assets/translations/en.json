@@ -1,17 +1,39 @@
 {
   "None": {},
+
+  "Error-codes": {
+    "FILE_NOT_ALLOWED": "File is missing or the file format is not supported.",
+    "FILE_SIZE_EXCEEDED": "The size of the selected file exceeds the limit.",
+    "SKIP_UPLOAD_FILES_WRONG_PACKAGE_ID": "File can not be attached to the desired package.",
+    "UPLOAD_DATASET_FILES_ERROR": "There was an unexpected error while uploading your files.",
+    "UPLOAD_DATASET_ERROR": "There was an unexpected error while adding the dataset.",
+    "ADD_DATASET_COMMENT_ERROR": "There was an unexpected error while adding your comment.",
+    "ADD_DATASET_COMMENT_ERROR_MISSING_RATING": "Comments without rating are not allowed.",
+    "ADD_DATASET_COMMENT_ERROR_MISSING_TITLE_OR_COMMENT": "Comment can not be submitted. Both title and comment should be filled in.",
+    "DELETE_DATASET_ERROR": "There was an unexpected error while deleting your dataset.",
+    "DELETE_DATASET_COMMENT_ERROR": "There was an unexpected error while deleting your comment."
+  },
   
   "common": {
     "yes": "Yes",
     "no": "No",
     "cancel": "Cancel",
     "None": "None",
-    "Back": "Back"
+    "Back": "Back",
+    "delete": "Delete"
   },
 
   "SearchPage": {
       "items-not-found": "No items found !",
       "items-error": "There was an error at search !" 
+  },
+
+  "UserPage": {
+
+  },
+
+  "ModalConfirm": {
+    "message-body": "Are you sure you want to delete this?"
   },
 
   "Search": {

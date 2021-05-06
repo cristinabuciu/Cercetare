@@ -12,13 +12,17 @@ export interface IUploadPageState {
     isResultReady: boolean;
     wasSuccess: boolean;
     isAuthenticated: boolean;
+    errorCode: string;
+    newDatasetId: number;
 }
 
 export default class UploadPage extends React.Component<IUploadPageProps, IUploadPageState> {
     state: IUploadPageState = {
         isResultReady: false,
         wasSuccess: false,
-        isAuthenticated: false
+        isAuthenticated: false,
+        errorCode: "",
+        newDatasetId: 0 
     }
 
     componentDidMount(): void {
@@ -35,10 +39,12 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
         this.handleRepairUpload = this.handleRepairUpload.bind(this);
     }
 
-    changeToSuccess(really : boolean = true, errorCode: string = ""): void {
+    changeToSuccess(datasetId: number, really : boolean = true, errorCode: string = ""): void {
         this.setState({
             isResultReady: true,
-            wasSuccess: really
+            wasSuccess: really,
+            errorCode: errorCode,
+            newDatasetId: datasetId
         });
     }
 
@@ -123,6 +129,8 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
                 color={this.props.color}
                 handleRepairUpload={this.handleRepairUpload}
                 wasSuccess={this.state.wasSuccess}
+                errorCode={this.state.errorCode}
+                newDatasetId={this.state.newDatasetId}
                 />
                 :
             <UploadPageForm 

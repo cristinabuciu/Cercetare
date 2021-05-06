@@ -13,6 +13,7 @@ import { Container } from 'semantic-ui-react';
 import { faLink, faDownload, faPortrait } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Title } from '../Items/Title/Title';
+import MyTranslator from '../assets/MyTranslator'
  
 
 
@@ -200,6 +201,8 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
     }
 
     handleSubmit = () => {
+        const translate = new MyTranslator("Error-codes");
+
         this.setState({
             loaderVisibility: true
         });
@@ -207,6 +210,8 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         let hasErrorOnMetadata: boolean = false;
         let errorMessage: string = "";
         let hasErrorOnFiles: boolean = false;
+        let datasetId: number = -1;
+        const formData = new FormData();
 
         axios.post( '/datasets', {
             params: {
@@ -226,54 +231,64 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                     downloadPath: this.state.downloadPath,
                 },
                 arrayParams: {
-                        tags: this.state.subdomain,
-                        authors: this.state.dataset_authors.split(", ")
+                    tags: this.state.subdomain,
+                    authors: this.state.dataset_authors.split(", ")
                 },
                 private: this.state.valueSwitch
             }
         })
         .then(response => {
-            if (response.data['hasError']) {
-                hasErrorOnMetadata = true;
-                errorMessage = response.data['code'];
+            if (response.data['statusCode'] === 200) {
+                hasErrorOnMetadata = false;
+                formData.append("packageId", response.data['packageId']);
+                datasetId = response.data['data']['datasetId'];
 
             } else {
-                hasErrorOnMetadata = false;
-            }
-
-            if (!hasErrorOnMetadata && this.state.uploadOption.upload) {
-                let file = this.state.fileToBeSent;
-                const formData = new FormData();
-                formData.append("packageId", response.data['packageId'])
-                formData.append("file", file);
-
-                axios
-                .post("/dataset/" + response.data['datasetId'] + '/files', formData)
-                .then(res => console.log(res))
-                .catch(err => console.warn(err))
-                .finally(() => {
-                    if (response.data['hasError']) {
-                        hasErrorOnFiles = true;
-                        errorMessage = response.data['code'];
-
-                    } else {
-                        hasErrorOnFiles = false;
-                    }
-                });
+                hasErrorOnMetadata = true;
+                errorMessage = translate.useTranslation(response.data['data']);
             }
         })
         .catch(function (error) {
             console.log(error);
             hasErrorOnMetadata = true;
+            errorMessage = translate.useTranslation("UPLOAD_DATASET_ERROR");
         })
         .finally( () => {
-        // always executed
-            if (hasErrorOnMetadata || hasErrorOnFiles) {
-                this.props.changeToSuccess(false, errorMessage);
+            // always executed
+            if (!hasErrorOnMetadata && this.state.uploadOption.upload) {
+                let file = this.state.fileToBeSent;
+                formData.append("file", file);
+
+                axios
+                .post("/dataset/" + datasetId + '/files', formData)
+                .then(res => {
+                    if (res.data['statusCode'] === 200) {
+                        hasErrorOnFiles = false;
+                    } else {
+                        hasErrorOnFiles = true;
+                        errorMessage = translate.useTranslation(res.data['data']);
+                    }
+                })
+                .catch(err => {
+                    console.warn(err);
+                    hasErrorOnFiles = true;
+                    errorMessage = translate.useTranslation("UPLOAD_DATASET_FILES_ERROR");
+                })
+                .finally(() => {
+                    if (hasErrorOnFiles) {
+                        this.props.changeToSuccess(0, false, errorMessage);
+                    } else {
+                        this.props.changeToSuccess(datasetId);
+                    }
+                });
             } else {
-                this.props.changeToSuccess();
+                if (hasErrorOnMetadata) {
+                    this.props.changeToSuccess(0, false, errorMessage);
+                } else {
+                    this.props.changeToSuccess(datasetId);
+                }
             }
-        }); 
+        });
     }
 
     uploadFile(e): boolean {
