@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react'
 import axios from 'axios';
 import "./AddComment.scss"
+import MyTranslator from '../assets/MyTranslator'
 
 import StarRatings from 'react-star-ratings';
 import {
@@ -90,6 +91,8 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
 
     handleClickDelete(): void {
         const token = localStorage.getItem('login_user_token');
+        const translate = new MyTranslator("Error-codes");
+        let errorMessage: string = "";
 
         this.setState({
             disabledDeleteButton: true
@@ -102,10 +105,18 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
             console.log(response.data);
             console.log("Jambala");
 
+            if (response.data['statusCode'] === 200) {
+                // this.props.onReceiveAnswerFromPost(false);
+            } else {
+                errorMessage = translate.useTranslation(response.data['data']);
+                // this.props.onReceiveAnswerFromPost(true, errorMessage);
+            }
+
             this.props.updateComments();
           })
           .catch(function (error) {
             console.log(error);
+            errorMessage = translate.useTranslation("DELETE_DATASET_COMMENT_ERROR");
           })
           .finally(function () {
             // always executed

@@ -1,6 +1,10 @@
 {
   "None": {},
   
+  "Error-codes": {
+
+  },
+  
   "common": {
     "yes": "Da",
     "no": "Nu",

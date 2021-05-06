@@ -8,6 +8,8 @@ import "../style_home.scss";
 import "./upload.scss";
 import LeftBar from "../LeftBar/LeftBar";
 import { Container } from 'semantic-ui-react';
+import { NavLink } from 'reactstrap';
+import { NavLink as Link } from 'react-router-dom';
  
 
 
@@ -15,24 +17,19 @@ export interface IUploadPageResultProps {
     color: string;
     handleRepairUpload: Function;
     wasSuccess: boolean;
+    errorCode: string;
+    newDatasetId: number;
 }
 
-export interface IUploadPageResultState {
-    buttonDropDownStatus: boolean;
-}
+export interface IUploadPageResultState {}
 
 export default class UploadPageResult extends React.Component<IUploadPageResultProps, IUploadPageResultState> {
 
-    state = {
-        buttonDropDownStatus: true
-    }
+    state: IUploadPageResultState = {}
 
-
-    componentDidMount() {
-
-    }
+    componentDidMount(): void {}
   
-    render() {  
+    render() {
 
       return (
         <Container className="themed-container" fluid={true}>
@@ -55,7 +52,7 @@ export default class UploadPageResult extends React.Component<IUploadPageResultP
                         </Alert>
                         :
                         <><Alert color="danger">
-                            Error: Dataset has not been uploaded  !
+                            {this.props.errorCode}
                         </Alert>
                         <Alert color="warning">
                             If this didn't happened before please try again
@@ -67,13 +64,20 @@ export default class UploadPageResult extends React.Component<IUploadPageResultP
                     <CardText>
                         <Row>
                         <Col className="text-align-center">
-                                <Button 
-                                    color="primary" 
-                                    outline className="upload-button-size" 
-                                    onClick={() => this.props.handleRepairUpload()}>
-                                        Upload another dataset
-                                    </Button>
-                                </Col>
+                            {this.props.wasSuccess ? 
+                            <NavLink tag={Link} to={'/datasetView/' + this.props.newDatasetId}><Button 
+                                color="primary" 
+                                outline className="upload-button-size">
+                                    Go to your dataset
+                                </Button></NavLink>
+                             : <></>}
+                            <Button 
+                                color="primary" 
+                                outline className="upload-button-size" 
+                                onClick={() => this.props.handleRepairUpload()}>
+                                    Upload another dataset
+                                </Button>
+                            </Col>
                                 
                         </Row>
                     </CardText>

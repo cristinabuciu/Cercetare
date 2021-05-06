@@ -15,6 +15,7 @@ import { Nav } from 'react-bootstrap';
 import { NavLink } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import "./items.scss"
+import ModalConfirm from '../common/ModalConfirm'
  
 import { translate, Translate } from 'react-jhipster';
 
@@ -38,13 +39,13 @@ export interface ISearchCardProps {
     owner: string;
 
     shouldHaveDelete: boolean;
+    handleDelete?: Function;
 }
 
 
 export interface ISearchCardState {
     ratingAvgValue: number;
 
-    disabledDeleteButton: boolean;
     deleteButtonText: string;
 }
 
@@ -53,35 +54,13 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
     state: ISearchCardState = {
         ratingAvgValue: 4.58,
 
-        disabledDeleteButton: false,
         deleteButtonText: "Delete"
     }
 
     componentDidMount(): void {
 
         /////////////// FUNCTIONS /////////////////
-        this.deleteItem = this.deleteItem.bind(this);
         this.handleDownload = this.handleDownload.bind(this);
-    }
-
-    deleteItem () {
-        this.setState({
-            disabledDeleteButton: true,
-            deleteButtonText: "Deleting..."
-        });
-
-        axios.delete( '/dataset/' + this.props.id)
-          .then(response => {
-            console.log("Carolina");
-            console.log(response.data);
-            console.log("Jambala");
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          .finally(function () {
-            // always executed
-          }); 
     }
 
     handleDownload(): boolean {
@@ -184,10 +163,14 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                 </Col>
                 {this.props.shouldHaveDelete ?
                     <Col className="spanSpecial resizable-1350 text-align-right">
-                        <Button 
-                            color="danger" 
-                            disabled={this.state.disabledDeleteButton} 
-                            onClick={this.deleteItem}>{this.state.deleteButtonText}</Button>{' '}
+                        <ModalConfirm
+                            idToBeConfirmed={this.props.id}
+                            buttonLabel="Delete"
+                            buttonClassName="quick-view-button" 
+                            modalTitle="Delete Dataset"
+                            modalBody="You have requested to delete the following dataset: <titlu>"
+                            handleConfirm={this.props.handleDelete}
+                            />
                     </Col>
                     :
                     <></>
