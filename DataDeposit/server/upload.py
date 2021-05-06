@@ -1,105 +1,28 @@
 # upload.py
-from application_properties import *
+from application_properties import INDEX_DATASETS, INDEX_ID_GENERATOR, INDEX_DOMAINS, INDEX_TAGS, INDEX_COMMENTS, CKAN_INSTANCE_ORG_ID, UPLOAD_FILE_SIZE_MAX
+from utils import getCountryCoordinates, findUserID, isFileAllowed, createResponse, getTransaction, getFileSize
+from constants import WAIT_FOR, SUCCESS, ERROR
 
-from os import SEEK_SET, SEEK_END
-import sys
 from datetime import datetime, timedelta
-import es_connector
+from time import time
+from http import HTTPStatus
+
 import ckan_connector as ck
-from time import sleep, time
-
-# TREBUIE FACUT FISIER CU FUNTII COMUNE
-def findUserID(user):
-
-    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-    es.connect()
-
-    found = es.get_es_data_by_userName(INDEX_USERS, user)
-    if not(found):
-        return "0"
-    else:
-        return str(found[0]['_source']['id'])
-
-
-def updateNumberOfViews(id):
-    try:
-        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-        es.connect()
-
-        es.update_dataset_views(INDEX_DATASETS, int(id))
-
-        return "Succes"
-    except:
-        return "Eroare" 
-
-
-def addComment(datasetId, comment):
-    if comment['rating'] == 0:
-        return "Skip"
-
-    try:
-        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-        es.connect()
-
-        result = es.get_es_data_by_id(INDEX_DATASETS, datasetId)
-
-        datasets = []
-        for dataset in result:
-            datasets.append(dataset['_source'])
-        
-        if len(datasets) > 1:
-            print("WARNING !! -> same id to more than 1 item")
-        currentRatingValue = datasets[0]['avg_rating_value']
-        currentNumberOfRatings = datasets[0]['ratings_number']
-
-        newNumberOfRatings = currentNumberOfRatings + 1
-        newRatingValue = (currentRatingValue * currentNumberOfRatings + comment['rating']) / newNumberOfRatings
-
-        es.update_dataset_rating(INDEX_DATASETS, datasets[0]['id'], round(newRatingValue, 2), newNumberOfRatings)
-
-        currentCommentID = es.get_es_index(INDEX_ID_GENERATOR)[0]['_source'][INDEX_COMMENTS] + 1
-
-        newComment = {
-            "id": currentCommentID,
-            "datasetID": datasetId,
-            "username": comment['username'],
-            "commentTitle": comment['commentTitle'],
-            "commentBody": comment['commentBody'],
-            "createdAt": str(time()),
-            "rating": comment['rating']}
-        
-        es.insert(INDEX_COMMENTS, '_doc', newComment)
-        es.update_id_generator(INDEX_ID_GENERATOR, INDEX_COMMENTS)
-
-        return "Succes"
-    except:
-        return "Eroare" 
-
-
-def getCoordinates(country):
-    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-    es.connect()
-
-    locations = es.get_es_index(INDEX_LOCATIONS)[0]['_source']
-
-    return ", ".join(str(x) for x in locations[country])
 
 
 def uploadDataset(params, current_user):
     try:
-        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-        es.connect()
+        es = getTransaction()
 
         ownerID = int(findUserID(current_user))
-
-        # lastDatasetID = es.count_es_data(INDEX_DATASETS)
         currentDatasetID = es.get_es_index(INDEX_ID_GENERATOR)[0]['_source'][INDEX_DATASETS] + 1
 
-        dataset_json = {}
-        dataset_json['private'] = params['private']
-        dataset_json['owner'] = current_user
-        dataset_json['ownerId'] = ownerID
-        
+        dataset_json = {
+            'private': params['private'],
+            'owner': current_user,
+            'ownerId': ownerID
+        }
+
         for k, v in params['notArrayParams'].items():
             dataset_json[k] = v
 
@@ -114,8 +37,8 @@ def uploadDataset(params, current_user):
         dataset_json['avg_rating_value'] = 0
         dataset_json['ratings_number'] = 0
         dataset_json['views'] = 0
-        dataset_json['geo_coord'] = getCoordinates(params['notArrayParams']['country'])
-        dataset_json['date'] = (datetime.now() - timedelta(hours = 3)).strftime('%Y-%m-%dT%H:%M:%S+0000')
+        dataset_json['geo_coord'] = getCountryCoordinates(params['notArrayParams']['country'])
+        dataset_json['date'] = (datetime.now() - timedelta(hours=3)).strftime('%Y-%m-%dT%H:%M:%S+0000')
         dataset_json['lastUpdatedAt'] = str(int(time()))
 
         dataset_json['deleted'] = False
@@ -124,17 +47,17 @@ def uploadDataset(params, current_user):
         es.insert(INDEX_DATASETS, '_doc', dataset_json, WAIT_FOR)
         es.update_id_generator(INDEX_ID_GENERATOR, INDEX_DATASETS)
 
-        ### UPDATE DOMAINS
+        # update domains
         domain = params['notArrayParams']['domain'].upper()
 
         isDomainNew = not(es.get_es_data_by_domainName(INDEX_DOMAINS, domain))
         if isDomainNew:
             es.insert(INDEX_DOMAINS, '_doc', {"domainName": domain})
         
-        ### UPDATE TAGS
+        # update tags
         tags = params['arrayParams']['tags']
 
-        if not(isDomainNew):
+        if not isDomainNew:
             for tag in tags:
                 tagName = tag['value'].lower()
                 tagName = tagName.capitalize()
@@ -158,27 +81,27 @@ def uploadDataset(params, current_user):
         existing['ckan_package_id'] = packageId
         es.update(INDEX_DATASETS, '_doc', esId, existing, WAIT_FOR)
 
-        return {'datasetId': dataset_json['id'], 'packageId': packageId}
+        return createResponse(HTTPStatus.OK.value, {'datasetId': dataset_json['id'], 'packageId': packageId})
     except Exception as e:
         print(e)
-        return "UPLOAD_DATASET_ERROR"
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR.value, "UPLOAD_DATASET_ERROR")
 
 
 def uploadDatasetToCkanInstance(dataset):
     group = dataset['domain'].replace(" ", "-").lower()
     ck.createGroupIfNeeded(group)
 
-    ckanMetadata = {}
-
-    ckanMetadata['title'] = dataset['dataset_title']
-    ckanMetadata['name'] = str(dataset['id'])
-    ckanMetadata['private'] = dataset['private']
-    ckanMetadata['author'] = ', '.join(dataset['authors'])
-    ckanMetadata['maintainer'] = dataset['owner']
-    ckanMetadata['notes'] = dataset['short_desc']
-    ckanMetadata['groups'] = [{'name': group}]
-    ckanMetadata['tags'] = list(map(lambda tag: {'name': tag}, dataset['tags']))
-    ckanMetadata['owner_org'] = CKAN_INSTANCE_ORG_ID
+    ckanMetadata = {
+        'title': dataset['dataset_title'],
+        'name': str(dataset['id']),
+        'private': dataset['private'],
+        'author': ', '.join(dataset['authors']),
+        'maintainer': dataset['owner'],
+        'notes': dataset['short_desc'],
+        'groups': [{'name': group}],
+        'tags': list(map(lambda tag: {'name': tag}, dataset['tags'])),
+        'owner_org': CKAN_INSTANCE_ORG_ID
+    }
 
     if dataset['gitlink']:
         ckanMetadata['url'] = dataset['gitlink']
@@ -190,31 +113,27 @@ def uploadDatasetToCkanInstance(dataset):
 
 
 def uploadDatasetFiles(datasetId, packageId, file):
-    if not(file) or file.filename == '' or not(allowed_file(file.filename)):
-        return "FILE_NOT_ALLOWED"
+    if not file or file.filename == '' or not(isFileAllowed(file.filename)):
+        return createResponse(HTTPStatus.BAD_REQUEST.value, "FILE_NOT_ALLOWED")
 
-    file.seek(0, SEEK_END)
-    fileSize = file.tell()
-    file.seek(0, SEEK_SET)
-
-    if fileSize > UPLOAD_FILE_SIZE_MAX:
-        return "FILE_SIZE_EXCEEDED"
+    if getFileSize(file) > UPLOAD_FILE_SIZE_MAX:
+        return createResponse(HTTPStatus.BAD_REQUEST.value, "FILE_SIZE_EXCEEDED")
 
     try:
-        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-        es.connect()
+        es = getTransaction()
 
         dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]['_source']
 
         if dataset['ckan_package_id'] != packageId:
-            return "SKIP_UPLOAD_FILES_WRONG_PACKAGE_ID"
+            return createResponse(HTTPStatus.BAD_REQUEST.value, "SKIP_UPLOAD_FILES_WRONG_PACKAGE_ID")
 
         # ckan resource upload
         filename = file.filename.split('.')[0]
-        resource_data = {}
-        resource_data['package_id'] = packageId
-        resource_data['name'] = filename
-        resource_data['url'] = '{}/files'.format(datasetId)
+        resource_data = {
+            'package_id': packageId,
+            'name': filename,
+            'url': '{}/files'.format(datasetId)
+        }
 
         resourceId, resourceUrl = ck.addResource(resource_data, file)
 
@@ -226,13 +145,55 @@ def uploadDatasetFiles(datasetId, packageId, file):
         existing['downloadPath'] = resourceUrl
         es.update(INDEX_DATASETS, '_doc', esId, existing, WAIT_FOR)
 
-        return {'datasetId': datasetId, 'packageId': packageId, 'resourceId': resourceId}
+        return createResponse(HTTPStatus.OK.value, {'datasetId': datasetId, 'packageId': packageId, 'resourceId': resourceId})
 
     except Exception as e:
         print(e)
-        return "UPLOAD_DATASET_FILES_ERROR"
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR.value, "UPLOAD_DATASET_FILES_ERROR")
 
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in UPLOAD_FILE_ALLOWED_EXTENSIONS
+def addComment(datasetId, comment):
+    if comment['rating'] == 0:
+        return createResponse(HTTPStatus.BAD_REQUEST.value, "ADD_DATASET_COMMENT_ERROR_MISSING_RATING")
 
+    try:
+        es = getTransaction()
+
+        dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]['_source']
+
+        currentRatingValue = dataset['avg_rating_value']
+        currentNumberOfRatings = dataset['ratings_number']
+
+        newNumberOfRatings = currentNumberOfRatings + 1
+        newRatingValue = (currentRatingValue * currentNumberOfRatings + comment['rating']) / newNumberOfRatings
+
+        es.update_dataset_rating(INDEX_DATASETS, dataset['id'], round(newRatingValue, 2), newNumberOfRatings)
+
+        currentCommentID = es.get_es_index(INDEX_ID_GENERATOR)[0]['_source'][INDEX_COMMENTS] + 1
+
+        newComment = {
+            "id": currentCommentID,
+            "datasetID": datasetId,
+            "username": comment['username'],
+            "commentTitle": comment['commentTitle'],
+            "commentBody": comment['commentBody'],
+            "createdAt": str(time()),
+            "rating": comment['rating']}
+
+        es.insert(INDEX_COMMENTS, '_doc', newComment)
+        es.update_id_generator(INDEX_ID_GENERATOR, INDEX_COMMENTS)
+
+        return createResponse(HTTPStatus.OK.value, "ADD_DATASET_COMMENT_SUCCESS")
+    except Exception as e:
+        print(e)
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR.value, "ADD_DATASET_COMMENT_ERROR")
+
+
+def updateNumberOfViews(datasetId):
+    try:
+        es = getTransaction()
+        es.update_dataset_views(INDEX_DATASETS, int(datasetId))
+        return SUCCESS
+    except Exception as e:
+        print(e)
+        return ERROR
