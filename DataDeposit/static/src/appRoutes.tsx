@@ -27,8 +27,8 @@ export default class AppRoutes extends Component {
        
         return (
             <Switch >
-                <Route path="/test" exact render={(props) => <Home {...props} greeting={""} />}/>
-                <Route path="/" exact render={(props) => <SearchPage {...props} greeting={""} />}/>
+                <Route path="/" exact render={(props) => <Home {...props} greeting={""} />}/>
+                {/* <Route path="/" exact render={(props) => <SearchPage {...props} greeting={""} />}/> */}
                 <Route path="/LoginForm" exact render={(props) => <LoginForm {...props} color={"black"} />} />
                 <Route path="/search" exact render={(props) => <SearchPage {...props} greeting={""} />}/>
                 <Route path="/uploadPage" exact render={(props) => <UploadPage {...props} color={"UPLOAD "} />} />

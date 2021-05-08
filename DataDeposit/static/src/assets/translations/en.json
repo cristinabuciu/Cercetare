@@ -47,7 +47,7 @@
   },
 
   "SearchPage": {
-      "items-error": "There was an error at search !" 
+    "items-error": "There was an error at search !" 
   },
 
   "UserPage": {
@@ -73,7 +73,8 @@
     "privacy": "Privacy Policy",
     "sponsors": "Sponsors",
     "developers": "Developers",
-    "ckan": "CKAN Instance"
+    "ckan": "CKAN Instance",
+    "kibana": "Dashboard"
   },
 
   "Header": {
@@ -113,5 +114,9 @@
   "View": {
     "about": "About",
     "edit": "Update"
+  },
+
+  "Home": {
+    "home-title": "Welcome to University Politehnica of Bucharest!"
   }
 }
