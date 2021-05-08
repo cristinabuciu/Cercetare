@@ -1,6 +1,7 @@
 # upload.py
 from application_properties import INDEX_DATASETS, INDEX_ID_GENERATOR, INDEX_DOMAINS, INDEX_TAGS, INDEX_COMMENTS, CKAN_INSTANCE_ORG_ID, UPLOAD_FILE_SIZE_MAX
-from utils import getCountryCoordinates, findUserID, isFileAllowed, createResponse, getTransaction, getFileSize
+from utils import getCountryCoordinates, isFileAllowed, createResponse, getTransaction, getFileSize
+from search import getUserIdByName
 from constants import WAIT_FOR, SUCCESS, ERROR
 
 from datetime import datetime, timedelta
@@ -14,7 +15,7 @@ def uploadDataset(params, current_user):
     try:
         es = getTransaction()
 
-        ownerID = int(findUserID(current_user))
+        ownerID = int(getUserIdByName(current_user))
         currentDatasetID = es.get_es_index(INDEX_ID_GENERATOR)[0]['_source'][INDEX_DATASETS] + 1
 
         dataset_json = {
@@ -37,7 +38,7 @@ def uploadDataset(params, current_user):
         dataset_json['avg_rating_value'] = 0
         dataset_json['ratings_number'] = 0
         dataset_json['views'] = 0
-        dataset_json['geo_coord'] = getCountryCoordinates(params['notArrayParams']['country'])
+        dataset_json['geo_coord'] = getCountryCoordinates(es, params['notArrayParams']['country'])
         dataset_json['date'] = (datetime.now() - timedelta(hours=3)).strftime('%Y-%m-%dT%H:%M:%S+0000')
         dataset_json['lastUpdatedAt'] = str(int(time()))
 
@@ -45,12 +46,12 @@ def uploadDataset(params, current_user):
         dataset_json['deletedAt'] = -1
 
         es.insert(INDEX_DATASETS, '_doc', dataset_json, WAIT_FOR)
-        es.update_id_generator(INDEX_ID_GENERATOR, INDEX_DATASETS)
+        es.update_id_generator(INDEX_DATASETS)
 
         # update domains
         domain = params['notArrayParams']['domain'].upper()
 
-        isDomainNew = not(es.get_es_data_by_domainName(INDEX_DOMAINS, domain))
+        isDomainNew = not(es.get_domain_by_name(domain))
         if isDomainNew:
             es.insert(INDEX_DOMAINS, '_doc', {"domainName": domain})
         
@@ -61,7 +62,7 @@ def uploadDataset(params, current_user):
             for tag in tags:
                 tagName = tag['value'].lower()
                 tagName = tagName.capitalize()
-                isTagNew = not(es.get_es_data_by_domainName_and_tagName(INDEX_TAGS, domain, tagName))
+                isTagNew = not(es.get_tag_of_domain(domain, tagName))
 
                 if isTagNew:
                     es.insert(INDEX_TAGS, '_doc', {"domainName": domain, "tagName": tagName})
@@ -81,10 +82,10 @@ def uploadDataset(params, current_user):
         existing['ckan_package_id'] = packageId
         es.update(INDEX_DATASETS, '_doc', esId, existing, WAIT_FOR)
 
-        return createResponse(HTTPStatus.OK.value, {'datasetId': dataset_json['id'], 'packageId': packageId})
+        return createResponse(HTTPStatus.OK, {'datasetId': dataset_json['id'], 'packageId': packageId})
     except Exception as e:
         print(e)
-        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR.value, "UPLOAD_DATASET_ERROR")
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "UPLOAD_DATASET_ERROR")
 
 
 def uploadDatasetToCkanInstance(dataset):
@@ -114,10 +115,10 @@ def uploadDatasetToCkanInstance(dataset):
 
 def uploadDatasetFiles(datasetId, packageId, file):
     if not file or file.filename == '' or not(isFileAllowed(file.filename)):
-        return createResponse(HTTPStatus.BAD_REQUEST.value, "FILE_NOT_ALLOWED")
+        return createResponse(HTTPStatus.BAD_REQUEST, "FILE_NOT_ALLOWED")
 
     if getFileSize(file) > UPLOAD_FILE_SIZE_MAX:
-        return createResponse(HTTPStatus.BAD_REQUEST.value, "FILE_SIZE_EXCEEDED")
+        return createResponse(HTTPStatus.BAD_REQUEST, "FILE_SIZE_EXCEEDED")
 
     try:
         es = getTransaction()
@@ -125,13 +126,12 @@ def uploadDatasetFiles(datasetId, packageId, file):
         dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]['_source']
 
         if dataset['ckan_package_id'] != packageId:
-            return createResponse(HTTPStatus.BAD_REQUEST.value, "SKIP_UPLOAD_FILES_WRONG_PACKAGE_ID")
+            return createResponse(HTTPStatus.BAD_REQUEST, "SKIP_UPLOAD_FILES_WRONG_PACKAGE_ID")
 
         # ckan resource upload
-        filename = file.filename.split('.')[0]
         resource_data = {
             'package_id': packageId,
-            'name': filename,
+            'name': file.filename,
             'url': '{}/files'.format(datasetId)
         }
 
@@ -145,16 +145,16 @@ def uploadDatasetFiles(datasetId, packageId, file):
         existing['downloadPath'] = resourceUrl
         es.update(INDEX_DATASETS, '_doc', esId, existing, WAIT_FOR)
 
-        return createResponse(HTTPStatus.OK.value, {'datasetId': datasetId, 'packageId': packageId, 'resourceId': resourceId})
+        return createResponse(HTTPStatus.OK, {'datasetId': datasetId, 'packageId': packageId, 'resourceId': resourceId})
 
     except Exception as e:
         print(e)
-        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR.value, "UPLOAD_DATASET_FILES_ERROR")
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "UPLOAD_DATASET_FILES_ERROR")
 
 
 def addComment(datasetId, comment):
     if comment['rating'] == 0:
-        return createResponse(HTTPStatus.BAD_REQUEST.value, "ADD_DATASET_COMMENT_ERROR_MISSING_RATING")
+        return createResponse(HTTPStatus.BAD_REQUEST, "ADD_DATASET_COMMENT_ERROR_MISSING_RATING")
 
     try:
         es = getTransaction()
@@ -167,7 +167,7 @@ def addComment(datasetId, comment):
         newNumberOfRatings = currentNumberOfRatings + 1
         newRatingValue = (currentRatingValue * currentNumberOfRatings + comment['rating']) / newNumberOfRatings
 
-        es.update_dataset_rating(INDEX_DATASETS, dataset['id'], round(newRatingValue, 2), newNumberOfRatings)
+        es.update_dataset_rating(dataset['id'], round(newRatingValue, 2), newNumberOfRatings)
 
         currentCommentID = es.get_es_index(INDEX_ID_GENERATOR)[0]['_source'][INDEX_COMMENTS] + 1
 
@@ -181,18 +181,18 @@ def addComment(datasetId, comment):
             "rating": comment['rating']}
 
         es.insert(INDEX_COMMENTS, '_doc', newComment)
-        es.update_id_generator(INDEX_ID_GENERATOR, INDEX_COMMENTS)
+        es.update_id_generator(INDEX_COMMENTS)
 
-        return createResponse(HTTPStatus.OK.value, "ADD_DATASET_COMMENT_SUCCESS")
+        return createResponse(HTTPStatus.OK, "ADD_DATASET_COMMENT_SUCCESS")
     except Exception as e:
         print(e)
-        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR.value, "ADD_DATASET_COMMENT_ERROR")
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "ADD_DATASET_COMMENT_ERROR")
 
 
 def updateNumberOfViews(datasetId):
     try:
         es = getTransaction()
-        es.update_dataset_views(INDEX_DATASETS, int(datasetId))
+        es.update_dataset_views(int(datasetId))
         return SUCCESS
     except Exception as e:
         print(e)

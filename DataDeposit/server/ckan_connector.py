@@ -1,4 +1,4 @@
-from application_properties import *
+from application_properties import CKAN_INSTANCE_BASE_URL, CKAN_INSTANCE_JWT
 
 import requests
 import json
@@ -57,6 +57,7 @@ def getPackage(packageId):
 def getResource(resourceId):
     existing = requests.get(getResourceTarget + '?id=' + resourceId)
     return json.loads(existing.content.decode('utf8').replace("'", '"'))['result']
+
 
 def updatePackage(packageId, packageData):
     result = requests.post(url=updatePackageTarget + '?id=' + packageId,

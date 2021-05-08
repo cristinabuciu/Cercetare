@@ -1,16 +1,17 @@
 # server.py
-from application_properties import *
+from application_properties import FLASK_STATIC_FOLDER, FLASK_TEMPLATE_FOLDER, UPLOAD_FOLDER_PATH, FLASK_SECRET_KEY, INDEX_USERS, SOFT_DELETE, CLEANUP_DATASETS_ENABLED
+from utils import getTransaction, createResponse
 
-import os
-import subprocess
-from search import applyFilters, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById, getDatasetFilesInfo
+from search import searchDatasets, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById, getDatasetFilesInfo
 from upload import uploadDataset, uploadDatasetFiles, addComment, updateNumberOfViews
 from update import updateDataset, increaseDownloadsNumber, updateDatasetFilesToNone, updateDatasetFilesToExternal, updateDatasetFilesToInternal
 from delete import hardDeleteDataset, softDeleteDataset, hardDeleteComment
-from glob import glob
-import es_connector
+
 ############################### FLASK CONFIG ################################
 from flask import Flask, render_template, request, json, redirect, url_for, flash, session, make_response, jsonify
+from http import HTTPStatus
+
+import subprocess
 
 app = Flask(__name__, static_folder=FLASK_STATIC_FOLDER, template_folder=FLASK_TEMPLATE_FOLDER)
 
@@ -33,9 +34,6 @@ def index():
 
 
 ##############################################################################
-def find_file(dir, ext):
-    return glob(os.path.join(dir, "*.{}".format(ext)))
-
 
 @app.route("/login", methods=['POST'])
 def login():
@@ -44,28 +42,32 @@ def login():
     _username = receivedData.get('username')
     _password = receivedData.get('password')
 
-    es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-    es.connect()
-    result = es.get_es_index(INDEX_USERS)
-    isAuthenticated = False
-    currentUser = ''
-    currentUserId = 0
-    errorMessage = ""
+    try:
+        es = getTransaction()
 
-    for entry in result:
-        if entry['_source']['username'] == _username and entry['_source']['password'] == _password:
-            current_user = _username
-            isAuthenticated = True
-            session['login'] = True
-            session['username'] = _username
-            currentUser = _username
-            currentUserId = entry['_source']['id']
-            resp = make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, userId=currentUserId, errorMessage=errorMessage))
-            resp.set_cookie("current_username", _username)
-            return resp
+        result = es.get_es_index(INDEX_USERS)
+        isAuthenticated = False
+        currentUser = ''
+        currentUserId = 0
+        errorMessage = ""
 
-    errorMessage = "User-or-password-wrong"
-    return make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, userId=currentUserId, errorMessage=errorMessage))
+        for entry in result:
+            if entry['_source']['username'] == _username and entry['_source']['password'] == _password:
+                current_user = _username
+                isAuthenticated = True
+                session['login'] = True
+                session['username'] = _username
+                currentUser = _username
+                currentUserId = entry['_source']['id']
+                resp = make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, userId=currentUserId, errorMessage=errorMessage))
+                resp.set_cookie("current_username", _username)
+                return resp
+
+        errorMessage = "User-or-password-wrong"
+        return make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, userId=currentUserId, errorMessage=errorMessage))
+    except Exception as e:
+        print(e)
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "LOGIN_ERROR")
 
 
 @app.route("/logout", methods=['POST'])
@@ -77,9 +79,9 @@ def logout():
 
 
 @app.route('/datasets', methods=['GET'])
-def searchDatasets():
+def getDatasets():
     _allFilters = json.loads(request.args['allFilters'])
-    return applyFilters(_allFilters)
+    return searchDatasets(_allFilters)
 
 
 @app.route('/dataset/<dataset_id>', methods=['GET'])
@@ -173,7 +175,7 @@ def getUserDetails(user_info):
         return findUserID(_username)
 
 
-# Domain, Tags, Country
+# Domains, Tags, Country
 @app.route('/getDefaultData', methods=['GET'])
 def getDefaultData():
     return getAllDefaultData()
