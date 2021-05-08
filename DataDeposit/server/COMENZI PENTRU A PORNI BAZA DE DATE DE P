@@ -94,6 +94,11 @@ sudo curl -X PUT "172.23.0.2:9200/datasets?pretty" -H 'Content-Type: application
 }
 '
 
+curl -X PUT "172.24.0.2:9200/_all/_settings" -H 'Content-Type: application/json' -d'
+{
+  "index.blocks.read_only_allow_delete": null
+}'
+
 curl -X POST "172.23.0.2:9200/_xpack/sql/translate" -H 'Content-Type: application/json' -d'
 {
     "query": "SELECT * from datasets WHERE year LIKE \"%2%\" AND domain LIKE \"%i%\ ORDER BY domain DESC" ", 

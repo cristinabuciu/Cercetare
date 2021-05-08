@@ -4,14 +4,16 @@ import React from 'react';
 import axios from 'axios';
 
 import { CardBody, Row, Col, CardTitle, CardSubtitle, CardText, Card,
-    Button, Input, Form, FormGroup, FormText } from 'reactstrap';
+    Button, Input, Form, FormGroup, FormText, Alert } from 'reactstrap';
 import {InputText, Switch, LoaderComponent, TooltipButton, CustomCreatableSelect} from '../../Items/Items-components'
+import { ResponseStatus } from '../../models/ResponseStatus'
+import { ICustomSelectList } from '../../models/ICustomSelectList'
 
 export interface IMetadataEditProps {
 	private: boolean;
 	id: number;
     domain: string;
-    subdomain: Array<String> 
+    subdomain: Array<string> 
     country: string;
     data_format: string; 
     authors: Array<String>;
@@ -38,16 +40,16 @@ export interface IMetadataEditState {
     year: number;
     domain: string;
     otherDomain: string | null;
-    subdomain: any;
+    subdomain: ICustomSelectList[];
     dataFormat: string;
     country: string;
     valueSwitch: boolean;
     gitlink: string;
     uploadInputOptions: {
-        domain: Array<String>;
-        subdomain: Array<String>;
-        country: Array<String>;
-        dataFormat: Array<String>;
+        domain: Array<string>;
+        subdomain: Array<string>;
+        country: Array<string>;
+        dataFormat: Array<string>;
     };
     shouldEnterNewDomain: boolean;
     uploadOption: {
@@ -67,6 +69,10 @@ export interface IMetadataEditState {
     contAccess: string;
     dataIntegrity: string;
     downloadPath: string;
+
+	shouldRenderForm: boolean;
+	responseStatus: ResponseStatus;
+	responseGetStatus: ResponseStatus;
 }
 
 export default class MetadataEdit extends React.Component<IMetadataEditProps, IMetadataEditState> {
@@ -84,7 +90,7 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
         domain: "Select Domain  ",
         otherDomain: null,
         country: "Select Country  ",
-        subdomain: [],
+        subdomain: [{label: "", value: ""}],
         dataFormat: "Select Dataformat  ",
         dataReuse: '',
         contAccess: '',
@@ -112,31 +118,60 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
             short_desc: false
         },
         buttonUpload: false,
-        loaderVisibility: true
+        loaderVisibility: true,
+
+		responseStatus: {
+			wasError: false,
+			wasSuccess: false,
+			responseMessage: ""
+		},
+		responseGetStatus: {
+			wasError: false,
+			wasSuccess: false,
+			responseMessage: ""
+		},
+		shouldRenderForm: true
     }
 
     componentDidMount (): void {
+		let responseGetStatus: ResponseStatus = {};
+		const translate = new MyTranslator("Response-codes");
+
+        this.setState({
+            loaderVisibility: true,
+			shouldRenderForm: false
+        });
+
 		axios.get( '/getDefaultData')
 		.then(response => {
-            let domains = response.data[0].concat("Other");
-            this.state.uploadInputOptions.domain = domains;
+			if (response.data['statusCode'] === 200) {
+                responseGetStatus.wasSuccess = true;
 
-            for(var domain in response.data[1]) {
-                if(domain in this.state.uploadInputOptions.subdomainList) {
-                    this.state.uploadInputOptions.subdomainList[domain].concat(response.data[1][domain]);
-                } else {
-                    this.state.uploadInputOptions.subdomainList[domain] = response.data[1][domain];
-                }
+				let domains = response.data['data'][0].concat("Other");
+				this.state.uploadInputOptions.domain = domains;
+	
+				for(var domain in response.data['data'][1]) {
+					if(domain in this.state.uploadInputOptions.subdomainList) {
+						this.state.uploadInputOptions.subdomainList[domain].concat(response.data['data'][1][domain]);
+					} else {
+						this.state.uploadInputOptions.subdomainList[domain] = response.data['data'][1][domain];
+					}
+				}
+				this.state.uploadInputOptions.country = response.data['data'][2];
+            } else {
+                responseGetStatus.wasError = true;
+                responseGetStatus.responseMessage = translate.useTranslation(response.data['data']);
             }
-            this.state.uploadInputOptions.country = response.data[2];
 		})
 		.catch(function (error) {
 			console.log(error);
+			responseGetStatus.wasError = true;
+			responseGetStatus.responseMessage = translate.useTranslation("GET_DEFAULT_DATA_ERROR");
 		})
 		.finally( () => {
 			// always executed
-			let currentTags: {label: String, value: String}[]= [];
-
+			let currentTags: ICustomSelectList[] = [];
+			debugger;
 			this.props.subdomain.forEach(function(part, index) {
 				currentTags.push({label: part, value: part});
 			});
@@ -157,7 +192,9 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 				subdomain: currentTags,
 				shouldEnterNewDomain: false,
 				otherDomain: null,
-				loaderVisibility: false
+				loaderVisibility: false,
+				shouldRenderForm: responseGetStatus.wasSuccess ? true : false,
+				responseGetStatus: responseGetStatus
 			});
 
 			this.state.uploadInputOptions.subdomain = this.state.uploadInputOptions.subdomainList[this.props.domain];
@@ -233,8 +270,12 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 	}
 	
 	handleSubmit(): void {
+		let responseStatus: ResponseStatus = {};
+		const translate = new MyTranslator("Response-codes");
+
         this.setState({
-            loaderVisibility: true
+            loaderVisibility: true,
+			shouldRenderForm: false
         });
         
         axios.put( '/dataset/' + this.props.id, {
@@ -262,24 +303,35 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
             }
         })
 		.then(response => {
-            // if (response.data === 'Succes') {
-            //     this.props.changeToSuccess();
-            // } else {
-            //     this.props.changeToSuccess(false);
-			// }
-			
+			if (response.data['statusCode'] === 200) {
+                responseStatus.wasSuccess = true;
+                responseStatus.responseMessage = translate.useTranslation("UPDATE_DATASET_SUCCESS");
+            } else {
+                responseStatus.wasError = true;
+                responseStatus.responseMessage = translate.useTranslation(response.data['data']);
+            }
 		})
 		.catch(function (error) {
             console.log(error);
-		});
+			responseStatus.wasError = true;
+			responseStatus.responseMessage = translate.useTranslation("UPDATE_DATASET_ERROR");
+		})
+		.finally(() => {
+            // always executed
+			this.setState({
+				responseStatus: responseStatus,
+				loaderVisibility: false
+			});
+        });
     }
 
     render() {  
         const translate = new MyTranslator("Upload");
         return (
 			<>
-			{this.state.loaderVisibility ? <LoaderComponent visible={this.state.loaderVisibility}/> :
+			
 			<CardBody>
+			{this.state.shouldRenderForm ? <>
 				<CardTitle></CardTitle>
 				<CardSubtitle></CardSubtitle>
 				<CardText>
@@ -498,19 +550,12 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 					<FormGroup>
 						<Row className="padding-top-20">
 							<Col md="3"></Col>
-							<Col md="6" className="text-align-center">
-								{this.state.loaderVisibility ?
-								<LoaderComponent visible={this.state.loaderVisibility}/> 
-								:                                    
+							<Col md="6" className="text-align-center">                                
 								<Button 
-								color="primary" 
-								outline className="upload-button-size" 
-								disabled={this.state.buttonUpload}
-								onClick={() => this.handleSubmit()}>
-									{translate.useTranslation("edit")}
-								</Button>
-								}
-							
+									color="primary" 
+									outline className="upload-button-size" 
+									disabled={this.state.buttonUpload}
+									onClick={() => this.handleSubmit()}>{translate.useTranslation("edit")}</Button>
 							</Col>
 							<Col md="3" className="text-align-right">
 								{/* <a onClick={this.switchPageBack}>{translate.useTranslation("cancel")}</a> */}
@@ -519,9 +564,36 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 					</FormGroup>
 					</Form>
 				</CardText>
-			
+			{/* END FORM */}
+			</> : 
+			<>
+				<LoaderComponent visible={this.state.loaderVisibility}/>
+				<Row className={this.state.responseStatus.wasError ? "" : "display-none"}>
+					<Col>
+						<Alert color="danger" className="text-align-center">
+							{this.state.responseStatus.responseMessage}
+						</Alert>
+					</Col>
+				</Row>
+
+				<Row className={this.state.responseGetStatus.wasError ? "" : "display-none"}>
+					<Col>
+						<Alert color="danger" className="text-align-center">
+							{this.state.responseGetStatus.responseMessage}
+						</Alert>
+					</Col>
+				</Row>
+
+				<Row className={this.state.responseStatus.wasSuccess ? "" : "display-none"}>
+					<Col>
+						<Alert color="success" className="text-align-center">
+							{this.state.responseStatus.responseMessage}
+						</Alert>
+					</Col>
+				</Row>
+			</>
+			} 
 			</CardBody>
-			}
 			</>
 		)
     }

@@ -11,6 +11,7 @@ import { Row, Col, TabContent, TabPane, Nav, NavItem, Button, CardBody, Card, Na
 import NumericInput from 'react-numeric-input';
 import {InputText, LoaderComponent} from '../Items/Items-components'
 import { CommentItem } from '../models/CommentItem'
+import { ResponseStatus } from '../models/ResponseStatus'
 
 export interface ICommentTabsProps {
     id: number;
@@ -21,13 +22,12 @@ export interface ICommentTabsState {
     currentPage: number;
     numberOfCards: number;
     shouldDisplayPagination: boolean;
-    wasInfo: boolean;
     sortBy: String;
-    sortByList: Array<String>;
+    sortByList: Array<string>;
     loaderVisibility: boolean;
     resultsPerPage: number | null;
-    wasError: boolean;
     comments: CommentItem[];
+    responseGetStatus: ResponseStatus;
 }
 
 export default class CommentTabs extends React.Component<ICommentTabsProps, ICommentTabsState> {
@@ -38,19 +38,20 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         numberOfCards: 0,
         resultsPerPage: 5,
         shouldDisplayPagination: false,
-        wasInfo: false,
-        wasError: false,
         sortBy: "Sort By  ",
         sortByList: ['# TODO'],
         loaderVisibility: false,
+        responseGetStatus: {
+			wasError: false,
+            wasInfo: false,
+			wasSuccess: false,
+			responseMessage: ""
+		},
 
         comments: []
-            // {id: 1, value: 3.5, author: "landiggity", title: "Hatz", body: "This is my first comment on this forum so don't be rude", date: "20-10-2020"},
-            // {id: 2, value: 1, author: "scarlett-jo", title: "Inoanta Chelutu", body: "That's a mighty fine comment you've got there my good looking fellow...", date: "20-10-2020"},
-            // {id: 3, value: 4, author: "rosco", title: "Swalala", body: "What is the meaning of all of this 'React' mumbo-jumbo?", date: "20-10-2020"}
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
 
         //////////// FUNCTIONS //////////////
         this.updateComments = this.updateComments.bind(this);
@@ -70,7 +71,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         });
     }
 
-    setNewPage (nextPage : number) {
+    setNewPage(nextPage : number): void {
         this.setState({
             currentPage: nextPage
         }, () => {
@@ -79,6 +80,9 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
     }
 
     updateComments(): void {
+        let responseGetStatus: ResponseStatus = {};
+		const translate = new MyTranslator("Response-codes");
+
         this.setLoader();
         this.setPagination(false);
         axios.get( '/dataset/' + this.props.id + '/comments', {
@@ -87,30 +91,33 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                 resultsPerPage: this.state.resultsPerPage
             }
         })
-          .then(response => {
-            const numberOfCardsLen = response.data.length;
-            if (numberOfCardsLen > 0) {
-                this.state.comments = response.data['results']
+        .then(response => {
+            if (response.data['statusCode'] === 200) {
+                responseGetStatus.wasSuccess = true;
+                const numberOfCardsLen = response.data['data']['result'].length;
+                responseGetStatus.wasInfo = numberOfCardsLen <= 0;
+                responseGetStatus.responseMessage = translate.useTranslation("NO_REVIEWS");
+                this.state.comments = response.data['data']['result'];
                 this.setState({
-                    numberOfCards: response.data['length'],
-                    wasInfo: false,
-                    wasError: false
+                    numberOfCards: response.data['data']['total']
                 });
-                this.setPagination();
+
+                this.setPagination(!responseGetStatus.wasInfo);
             } else {
-                this.setState({
-                    wasInfo: true
-                });
+                responseGetStatus.wasError = true;
+                responseGetStatus.responseMessage = translate.useTranslation(response.data['data']);
             }
-          })
-          .catch((error) => {
+        })
+        .catch((error) => {
             console.log(error);
-            this.setState({
-                wasError: true
-            });
-          })
-          .finally(() => {
+            responseGetStatus.wasError = true;
+            responseGetStatus.responseMessage = translate.useTranslation("GET_DATASET_COMMENTS_ERROR");
+        })
+        .finally(() => {
             // always executed
+            this.setState({
+                responseGetStatus: responseGetStatus
+            });
             this.setLoader(false);
         });
     }
@@ -251,18 +258,18 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
 
                         {this.state.shouldDisplayPagination ? searchResult : <></>}
                         <LoaderComponent visible={this.state.loaderVisibility}/>
-                        <Row className={this.state.wasInfo ? "" : "display-none"}>
+                        <Row className={this.state.responseGetStatus.wasInfo ? "" : "display-none"}>
                             <Col>
                                 <Alert color="info" className="text-align-center">
-                                    {translate.useTranslation("no-reviews")}
+                                    {this.state.responseGetStatus.responseMessage}
                                 </Alert>
                             </Col>
                         </Row>
 
-                        <Row className={this.state.wasError ? "" : "display-none"}>
+                        <Row className={this.state.responseGetStatus.wasError ? "" : "display-none"}>
                             <Col>
                                 <Alert color="danger" className="text-align-center">
-                                    {translate.useTranslation("error-reviews")}
+                                    {this.state.responseGetStatus.responseMessage}
                                 </Alert>
                             </Col>
                         </Row>

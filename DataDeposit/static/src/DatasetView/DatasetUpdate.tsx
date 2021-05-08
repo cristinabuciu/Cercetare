@@ -12,10 +12,10 @@ export interface IDatasetUpdateProps {
     private: boolean;
 	id: number;
     domain: string;
-    subdomain: Array<String> 
+    subdomain: Array<string> 
     country: string;
     data_format: string; 
-    authors: Array<String>;
+    authors: Array<string>;
     year: string;
     dataset_title: string;
     article_title: string; 

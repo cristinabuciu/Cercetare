@@ -10,6 +10,7 @@ import Search from '../Items/Search/Search';
 import SearchCard from '../Items/SearchCard';
 import { LoaderComponent, PaginationItem } from '../Items/Items-components'
 import { SearchCardItems } from '../models/SearchCardItems'
+import { ResponseStatus } from '../models/ResponseStatus'
 
 export interface ISearchPageProps {
     greeting: string;
@@ -23,8 +24,7 @@ export interface ISearchPageState {
     currentPage: number;
     todosPerPage: number;
     loaderVisibility: boolean;
-    wasError: boolean;
-    wasInfo: boolean;
+    responseStatus: ResponseStatus;
 }
 
 export default class SearchPage extends React.Component<ISearchPageProps, ISearchPageState> {
@@ -37,8 +37,12 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
         currentPage: 1,
         todosPerPage: 3,
         loaderVisibility: false,
-        wasError: false,
-        wasInfo: false
+
+        responseStatus: {
+			wasError: false,
+			wasSuccess: false,
+			responseMessage: ""
+		}
     };
 
     componentDidMount(): void {
@@ -60,41 +64,18 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
     }
 
 
-    setItemsForShow(numberOfCards: number, numberOfCardsPerPage: number, searchResultItems: Array<SearchCardItems[]>, searchWasPressed: boolean = false, itWasAnError: boolean = false, itWasAnInfo: boolean = false): void {
+    setItemsForShow(numberOfCards: number, numberOfCardsPerPage: number, searchResultItems: Array<SearchCardItems[]>, searchWasPressed: boolean = false, responseStatus: ResponseStatus): void {
         console.log("CEL MAI MARE HATZ");
 
-        if (searchWasPressed) {
-            this.setState({
-                numberOfCards: numberOfCards,
-                searchResult: searchResultItems,
-                todosPerPage: numberOfCardsPerPage,
-                currentPage: 1,
-                shouldDisplayPagination: true,
-                loaderVisibility: false
-            });
-        } else {
-            this.setState({
-                numberOfCards: numberOfCards,
-                searchResult: searchResultItems,
-                todosPerPage: numberOfCardsPerPage,
-                shouldDisplayPagination: true,
-                loaderVisibility: false
-            });
-        }
-
-        if (itWasAnInfo) {
-            this.setState({
-                shouldDisplayPagination: false,
-                wasInfo: true
-            });
-        }
-
-        if (itWasAnError) {
-            this.setState({
-                shouldDisplayPagination: false,
-                wasError: true
-            });
-        }
+        this.setState({
+            numberOfCards: numberOfCards,
+            searchResult: searchResultItems,
+            todosPerPage: numberOfCardsPerPage,
+            currentPage: searchWasPressed ? 1 : this.state.currentPage,
+            shouldDisplayPagination: responseStatus.wasError || responseStatus.wasInfo ? false : true,
+            loaderVisibility: false,
+            responseStatus: responseStatus
+        });
     }
 
     showSearchCards(): JSX.Element[] {
@@ -138,8 +119,12 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
     handleLoaderChange = (visible: boolean) => {
         this.setState({
             loaderVisibility: visible,
-            wasError: false,
-            wasInfo: false
+            responseStatus: {
+                wasError: false,
+                wasInfo: false,
+                wasSuccess: false,
+                responseMessage: ""
+            }
         });
     }
 
@@ -256,17 +241,17 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
                             : 
                             <>
                                 {searchResult}
-                                <Row className={this.state.wasError ? "" : "display-none"}>
+                                <Row className={this.state.responseStatus.wasError ? "" : "display-none"}>
                                     <Col>
                                         <Alert color="danger" className="text-align-center">
-                                            {translate.useTranslation("items-error")}
+                                            {this.state.responseStatus.responseMessage}
                                         </Alert>
                                     </Col>
                                 </Row>
-                                <Row className={this.state.wasInfo ? "" : "display-none"}>
+                                <Row className={this.state.responseStatus.wasInfo ? "" : "display-none"}>
                                     <Col>
                                         <Alert color="info" className="text-align-center">
-                                            {translate.useTranslation("items-not-found")}
+                                            {this.state.responseStatus.responseMessage}
                                         </Alert>
                                     </Col>
                                 </Row>

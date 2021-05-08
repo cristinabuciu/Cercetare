@@ -14,6 +14,7 @@ import { faLink, faDownload, faPortrait } from "@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Title } from '../Items/Title/Title';
 import MyTranslator from '../assets/MyTranslator'
+import { ResponseStatus } from '../models/ResponseStatus'
  
 
 
@@ -130,31 +131,40 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         });
     };
 
-    componentDidMount() {
+    componentDidMount(): void {
+        let responseGetStatus: ResponseStatus = {};
+		const translate = new MyTranslator("Response-codes");
+
         // Domains, Tags, Countries
         axios.get( '/getDefaultData')
-          .then(response => {
-            // ['All domains  '].push(response.data)
-
-            let domains = response.data[0].concat("Other");
-            this.state.uploadInputOptions.domain = domains;
-
-            for(var domain in response.data[1]) {
-                if(domain in this.state.uploadInputOptions.subdomainList) {
-                    this.state.uploadInputOptions.subdomainList[domain].concat(response.data[1][domain]);
-                } else {
-                    this.state.uploadInputOptions.subdomainList[domain] = response.data[1][domain];
+        .then(response => {
+            if (response.data['statusCode'] === 200) {
+                responseGetStatus.wasSuccess = true;
+                let domains = response.data['data'][0].concat("Other");
+                this.state.uploadInputOptions.domain = domains;
+    
+                for(var domain in response.data['data'][1]) {
+                    if(domain in this.state.uploadInputOptions.subdomainList) {
+                        this.state.uploadInputOptions.subdomainList[domain].concat(response.data['data'][1][domain]);
+                    } else {
+                        this.state.uploadInputOptions.subdomainList[domain] = response.data['data'][1][domain];
+                    }
                 }
+                this.state.uploadInputOptions.country = response.data['data'][2];
+            } else {
+                responseGetStatus.wasError = true;
+                responseGetStatus.responseMessage = translate.useTranslation(response.data['data']);
             }
-            this.state.uploadInputOptions.country = response.data[2];
-          })
-          .catch(function (error) {
+        })
+        .catch(function (error) {
             console.log(error);
-          })
-          .finally( () => {
+            responseGetStatus.wasError = true;
+            responseGetStatus.responseMessage = translate.useTranslation("GET_DEFAULT_DATA_ERROR");
+        })
+        .finally( () => {
             // always executed
             this.forceUpdate();
-          });
+        });
         
         /////////// FUNCTIONS /////////////
         this.updateUploadOptions = this.updateUploadOptions.bind(this);
@@ -201,7 +211,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
     }
 
     handleSubmit = () => {
-        const translate = new MyTranslator("Error-codes");
+        const translate = new MyTranslator("Response-codes");
 
         this.setState({
             loaderVisibility: true
@@ -240,7 +250,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         .then(response => {
             if (response.data['statusCode'] === 200) {
                 hasErrorOnMetadata = false;
-                formData.append("packageId", response.data['packageId']);
+                formData.append("packageId", response.data['data']['packageId']);
                 datasetId = response.data['data']['datasetId'];
 
             } else {
@@ -293,6 +303,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
 
     uploadFile(e): boolean {
         // 100 Mb
+        debugger;
         if(e.target.files[0].size > 100 * 1000 * 1000) { 
             alert("File is too big!");
             this.setState({
@@ -302,6 +313,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         };
 
         this.setState({
+            fileToBeSentName: "C:\\fakepath\\" + e.target.files[0].name,
             fileToBeSent: e.target.files[0]
         });
 

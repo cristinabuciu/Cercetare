@@ -12,57 +12,17 @@ import {
 
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-// VARIANTA CU REPLY
-// export const MyComment = ({ comment, allComments, createComment, user_id, post_id, parent_id }) => {
-
-//   const childComments = () => allComments.filter(c => c.parent_id === comment.id)
-
-//   return (
-//     <Comment
-//       author={
-//         <Link to={`/profile/${comment.user.id}`}>
-//           {comment.user.name}
-//         </Link>
-//       }
-//       avatar={
-//         <Link to={`/profile/${comment.user.id}`}>
-//           <Avatar
-//             src={comment.user.avatar}
-//             alt={`${comment.user.name}-avatar`}
-//           />
-//         </Link>
-//       }
-//       content={
-//         <p>{`${comment.id} - ${comment.text}`}</p>
-//       }
-//     //   datetime={displayPostDate(comment.created_at)}
-//     >
-//     {
-//       childComments().map(c => (
-//         <MyComment 
-//           key={c.id} 
-//           comment={c} 
-//           allComments={allComments}
-//           createComment={createComment}
-//           user_id={user_id}
-//           post_id={post_id}
-//           parent_id={c.id}
-//         />
-//       ))
-//     }
-//     </Comment>
-//   )
-// }
+import ModalConfirm from '../common/ModalConfirm'
+import { DeleteMessageItem } from '../models/DeleteMessageItem'
 
 export interface ICommentProps {
     id: number;
     datasetID: number;
     value: number;
-    author: String;
-    title: String;
-    body: String;
-    date: String;
+    author: string;
+    title: string;
+    body: string;
+    date: string;
     updateComments: Function;
 }
 
@@ -89,38 +49,39 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
         }
     }
 
-    handleClickDelete(): void {
+    async handleClickDelete(): Promise<DeleteMessageItem> {
         const token = localStorage.getItem('login_user_token');
-        const translate = new MyTranslator("Error-codes");
-        let errorMessage: string = "";
+        let returnMessage: DeleteMessageItem = {};
+        const translate = new MyTranslator("Response-codes");
 
         this.setState({
             disabledDeleteButton: true
         });
-        // AICI AM RAMAS 10.01.2021
-        // TODO BACKEND
-        axios.delete( '/dataset/' + this.props.datasetID + '/comment/' + this.props.id)
-          .then(response => {
+
+        await axios.delete( '/dataset/' + this.props.datasetID + '/comment/' + this.props.id)
+        .then(response => {
             console.log("Carolina ");
             console.log(response.data);
             console.log("Jambala");
 
             if (response.data['statusCode'] === 200) {
-                // this.props.onReceiveAnswerFromPost(false);
+                returnMessage.wasSuccess = true;
+                returnMessage.message = translate.useTranslation(response.data['data']);
             } else {
-                errorMessage = translate.useTranslation(response.data['data']);
-                // this.props.onReceiveAnswerFromPost(true, errorMessage);
+                returnMessage.wasError = true;
+                returnMessage.message = translate.useTranslation(response.data['data']);
             }
-
-            this.props.updateComments();
-          })
-          .catch(function (error) {
+        })
+        .catch(function (error) {
             console.log(error);
-            errorMessage = translate.useTranslation("DELETE_DATASET_COMMENT_ERROR");
-          })
-          .finally(function () {
+            returnMessage.wasError = true;
+            returnMessage.message = translate.useTranslation("DELETE_DATASET_COMMENT_ERROR");
+        })
+        .finally(function () {
             // always executed
-          }); 
+        });
+
+        return returnMessage;
     }
 
     render () {
@@ -143,11 +104,15 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
                         <h3 className="review-title">{this.props.title}</h3>
                         </Col>
                         {this.state.shouldDisplayDeleteButton ? <Col className="text-align-center">
-                            <Button 
-                                color="danger" 
-                                className="delete-comment-btn" 
-                                onClick={this.handleClickDelete}
-                                disabled={this.state.disabledDeleteButton} ><FontAwesomeIcon icon={faTimesCircle}/></Button>
+                            <ModalConfirm
+                                idToBeConfirmed={this.props.id}
+                                buttonLabel={<FontAwesomeIcon icon={faTimesCircle}/>}
+                                buttonClassName="delete-comment-btn" 
+                                modalTitle="Delete Comment"
+                                modalBody="You have requested to delete the following comment:"
+                                modalSubtitle={this.props.title}
+                                handleConfirm={this.handleClickDelete}
+                                successCallback={this.props.updateComments} /> 
                         </Col> : <></>}
                         </Row>
                         <div className="star-rating-container">
