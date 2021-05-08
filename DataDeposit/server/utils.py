@@ -1,5 +1,7 @@
-from application_properties import *
+from application_properties import DATABASE_IP, DATABASE_PORT, INDEX_LOCATIONS, UPLOAD_FILE_ALLOWED_EXTENSIONS
 from os import SEEK_SET, SEEK_END
+
+from time import time
 
 import es_connector
 
@@ -10,22 +12,9 @@ def getTransaction():
     return es
 
 
-def getCountryCoordinates(country):
-    es = getTransaction()
-
+def getCountryCoordinates(es, country):
     locations = es.get_es_index(INDEX_LOCATIONS)[0]['_source']
-
     return ", ".join(str(x) for x in locations[country])
-
-
-def findUserID(username):
-    es = getTransaction()
-
-    found = es.get_es_data_by_userName(INDEX_USERS, username)
-    if not found:
-        return "0"
-    else:
-        return str(found[0]['_source']['id'])
 
 
 def isFileAllowed(filename):
@@ -39,5 +28,23 @@ def getFileSize(file):
     return fileSize
 
 
-def createResponse(statusCode, data):
-    return {'statusCode': statusCode, 'data': data}
+def calculateLastUpdatedAt(unixTime):
+
+    currentTime = int(time())
+    elapsedTime = currentTime - unixTime
+    if elapsedTime < 60:
+        return str(elapsedTime) + " seconds ago"
+    elif elapsedTime < 60 * 60:
+        return str(int(elapsedTime / 60)) + " minutes ago"
+    elif elapsedTime < 24 * 60 * 60:
+        return str(int(elapsedTime / (60 * 60))) + " hours ago"
+    elif elapsedTime < 30 * 24 * 60 * 60:
+        return str(int(elapsedTime / (24 * 60 * 60))) + " days ago"
+    elif elapsedTime < 12 * 30 * 24 * 60 * 60:
+        return str(int(elapsedTime / (30 * 24 * 60 * 60))) + " months ago"
+    else:
+        return str(int(elapsedTime / (12 * 30 * 24 * 60 * 60))) + " years ago"
+
+
+def createResponse(httpStatus, data):
+    return {'statusCode': httpStatus.value, 'data': data}

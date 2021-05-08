@@ -17,13 +17,13 @@ def softDeleteDataset(datasetId):
         else:
             deleteCkanData(datasetId, dataset['ckan_package_id'])
 
-        es.soft_delete_comments_by_dataset_id(INDEX_COMMENTS, int(datasetId), str(int(time())))
-        es.soft_delete_dataset_by_id(INDEX_DATASETS, int(datasetId), int(time()))
+        es.soft_delete_dataset_comments(int(datasetId), str(int(time())))
+        es.soft_delete_dataset(int(datasetId), int(time()))
 
-        return createResponse(HTTPStatus.OK.value, "DELETE_DATASET_SUCCESS")
+        return createResponse(HTTPStatus.OK, "DELETE_DATASET_SUCCESS")
     except Exception as e:
         print(e)
-        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR.value, "DELETE_DATASET_ERROR")
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "DELETE_DATASET_ERROR")
 
 
 def hardDeleteDataset(datasetId):
@@ -36,13 +36,13 @@ def hardDeleteDataset(datasetId):
         else:
             deleteCkanData(datasetId, dataset['ckan_package_id'])
 
-        es.delete_comments_by_dataset_id(INDEX_COMMENTS, int(datasetId))
-        es.delete_dataset_by_id(INDEX_DATASETS, int(datasetId))
+        es.hard_delete_dataset_comments(int(datasetId))
+        es.hard_delete_dataset(int(datasetId))
 
-        return createResponse(HTTPStatus.OK.value, "DELETE_DATASET_SUCCESS")
+        return createResponse(HTTPStatus.OK, "DELETE_DATASET_SUCCESS")
     except Exception as e:
         print(e)
-        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR.value, "DELETE_DATASET_ERROR")
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "DELETE_DATASET_ERROR")
 
 
 def deleteCkanData(datasetId, packageId, resourceId=None):
@@ -63,7 +63,7 @@ def hardDeleteComment(datasetId, commentId):
         comment = es.get_es_data_by_id(INDEX_COMMENTS, int(commentId))[0]['_source']
         commentRating = comment['rating']
 
-        es.delete_comment_by_id(INDEX_COMMENTS, int(commentId))
+        es.hard_delete_comment(int(commentId))
 
         # recalculate dataset rating
         dataset = es.get_es_data_by_id(INDEX_DATASETS, int(datasetId))[0]['_source']
@@ -77,10 +77,10 @@ def hardDeleteComment(datasetId, commentId):
         if newNumberOfRatings != 0:
             newRatingValue = (currentRatingValue * currentNumberOfRatings - commentRating) / newNumberOfRatings
 
-        es.update_dataset_rating(INDEX_DATASETS, dataset['id'], round(newRatingValue, 2), newNumberOfRatings)
+        es.update_dataset_rating(dataset['id'], round(newRatingValue, 2), newNumberOfRatings)
         sleep(1)
 
-        return createResponse(HTTPStatus.OK.value, "DELETE_DATASET_COMMENT_SUCCESS")
+        return createResponse(HTTPStatus.OK, "DELETE_DATASET_COMMENT_SUCCESS")
     except Exception as e:
         print(e)
-        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR.value, "DELETE_DATASET_COMMENT_ERROR")
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "DELETE_DATASET_COMMENT_ERROR")

@@ -1,6 +1,8 @@
+from application_properties import INDEX_DATASETS, INDEX_DOMAINS, INDEX_COMMENTS, INDEX_TAGS, INDEX_USERS, INDEX_ID_GENERATOR
+
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 import urllib3
-import json
+
 
 # connector class
 class ESClass(object):
@@ -53,105 +55,53 @@ class ESClass(object):
         s = self.es.search(index=index, body=query, size=1)
         return s['hits']['hits'][0]['_id']
 
-    # old query for matching branch name
-    def match_branch_query(self, branch):
-        # {"query": { "bool": { "must": [{ "match": { "branch": branch }}, { "match": { "state": state }}]}}}
-        # return {"query": { "bool": { "must": [{ "match": { "branch": branch }}]}}}
-        # return {'query': {'must': [{'term': {'branch': branch}}]}}
-        return {'query': {'match': { 'branch': branch}}}
-
-    # new query for matching branch name
-    def match_vip_branch_query(self, branch):
-        return {"query": {"match_phrase": {"branch": branch}}}
-
-    # delete the vip with specified branch name
-    def delete_by_branch(self, index, branch):
-        return self.es.delete_by_query(index=index, body=self.match_vip_branch_query(branch))
-
-    # get element by branch
-    def get_es_branch(self, index, branch):
-        s = self.es.search(index=index, body=self.match_vip_branch_query(branch), size=1)
-        return s['hits']['hits'][0]
-
     # get elements by index
     def get_es_index(self, index):
         s = self.es.search(index=index, body=ESClass.MATCH_ALL_QUERY, size=2000)
-        return s['hits']['hits']#['total']
-    
-    def get_es_data(self, index, domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
-        DATASETS_MATCH = "{\"sort\": [ { \"dataset_title\": {\"order\": \"desc\"} } ], \
-                \"query\": { \
-                    \"bool\": { \
-                    \"must\": [ \
-                        {}\
-                        { \
-                        \"match_phrase\": { \
-                            \"domain\": \"" + domain + "\" \
-                        } \
-                        }, \
-                        { \
-                        \"match_phrase\": { \
-                            \"country\": \" " + country +" \" \
-                        } \
-                        }, \
-                        { \
-                        \"match_phrase\": { \
-                            \"data_format\": \"" + data_format + "\" \
-                        } \
-                        }, \
-                        {  \
-                        \"match_phrase\": { \
-                            \"year\": \"" + year + "\" \
-                        } \
-                        } \
-                    ] \
-                    } \
-                } \
-            }"
-            
-        # a = json.loads(DATASETS_MATCH)
-        s = self.es.search(index=index, body=self.match_dataset(domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate), size=2000)
-        return s['hits']['hits']#['total']
+        return s['hits']['hits']
     
     def get_es_data_by_id(self, index, id):
         searchJson = {"query": { "match": {"id": id } } }
 
         s = self.es.search(index=index, body=searchJson, size=2000)
-        return s['hits']['hits']#['total']
+        return s['hits']['hits']
     
-    def get_es_data_by_domainName(self, index, domainName):
+    def get_domain_by_name(self, domainName):
         searchJson = {"query": { "match": {"domainName": domainName } } }
 
-        s = self.es.search(index=index, body=searchJson, size=2000)
-        return s['hits']['hits']#['total']
+        s = self.es.search(index=INDEX_DOMAINS, body=searchJson, size=2000)
+        return s['hits']['hits']
     
-    def get_es_data_by_datasetID(self, index, datasetID):
-        # searchJson = {"query": {"bool": {"must": {"match": {"datasetID": datasetID }}}},
-        #  "sort": {"createdAt": {"order": "desc"}}}
-        searchJson = {"query": { "match": {"datasetID": datasetID } } }
+    def get_dataset_comments(self, datasetId):
+        searchJson = {"query": { "match": {"datasetID": datasetId } } }
 
-        s = self.es.search(index=index, body=searchJson, size=2000)
-        return s['hits']['hits']#['total']
+        s = self.es.search(index=INDEX_COMMENTS, body=searchJson, size=2000)
+        return s['hits']['hits']
     
-    def get_es_data_by_domainName_and_tagName(self, index, domainName, tagName):
+    def get_tag_of_domain(self, domainName, tagName):
         searchJson = {"query": {"bool": {"must": [
             {"match": {"domainName": domainName}},
             {"match": {"tagName": tagName}}
             ]}}}
 
-        s = self.es.search(index=index, body=searchJson, size=2000)
-        return s['hits']['hits']#['total']
+        s = self.es.search(index=INDEX_TAGS, body=searchJson, size=2000)
+        return s['hits']['hits']
     
-    def get_es_data_by_userName(self, index, username):
+    def get_user_by_name(self, username):
         searchJson = {"query": { "match": {"username": username } } }
 
-        s = self.es.search(index=index, body=searchJson, size=2000)
-        return s['hits']['hits']#['total']
+        s = self.es.search(index=INDEX_USERS, body=searchJson, size=2000)
+        return s['hits']['hits']
 
-    def match_dataset(self, domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
+    def get_filtered_datasets(self, domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
+        s = self.es.search(index=INDEX_DATASETS, body=self.match_dataset(domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate), size=2000)
+        return s['hits']['hits']
+
+    @staticmethod
+    def match_dataset(domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
         # Search pattern
         searchJson = {"query": { "bool": {"must": [
-            {"wildcard": {"domain": {"value": domain.lower()}}}, 
+            {"wildcard": {"domain": {"value": domain.lower()}}},
             {"wildcard": {"country": {"value": country.lower()}}},
             {"wildcard": {"data_format": {"value": data_format.lower()}}},
             {"wildcard": {"year": {"value": year.lower()}}},
@@ -162,10 +112,10 @@ class ESClass(object):
         # Used for the user page
         if userId:
             searchJson['query']['bool']['must'].append({"match": {"ownerId": int(userId)}})
-        
+
         # If this is set on true, datasets are displayed on the user page
         # Otherwise, datasets are displayed on the main page
-        if not(shouldDisplayPrivate):
+        if not shouldDisplayPrivate:
             searchJson['query']['bool']['must'].append({"match": {"private": False}})
 
         # Sort the result
@@ -178,74 +128,63 @@ class ESClass(object):
             searchJson["sort"] = sortList
             return searchJson
 
+    def count_datasets_by_ownerId(self, ownerId, isPrivate):
+        body = {"query": { "bool": {"must": [{ "match": {"ownerId": int(ownerId) } }, { "match": {"private": isPrivate } }]}}}
 
-    def count_es_data_by_ownerId(self, index, ownerId, isPrivate):
-        # body = {"query": { "match": {"ownerId": int(ownerId) } } }
-        body = {"query": { "bool": {"must": [
-            { "match": {"ownerId": int(ownerId) } },
-            { "match": {"private": isPrivate } }]}}}
-
-        s = self.count(index, body)
-        return s['count']
-    
-    def count_es_data(self, index):
-        # body = {"query": { "match": {"ownerId": int(ownerId) } } }
-
-        s = self.count(index, self.MATCH_ALL_QUERY)
+        s = self.count(INDEX_DATASETS, body)
         return s['count']
     
     # update dataset rating
-    def update_dataset_rating(self, index, datasetID, newRatingValue, newRatingNumber):
-        body = { "script" : { "source": "ctx._source.avg_rating_value=" + str(newRatingValue) + ";" + "ctx._source.ratings_number=" + str(newRatingNumber) + ";", "lang": "painless" }, "query": { "term" : { "id": datasetID } } }
+    def update_dataset_rating(self, datasetId, newRatingValue, newRatingNumber):
+        body = { "script" : { "source": "ctx._source.avg_rating_value=" + str(newRatingValue) + ";" + "ctx._source.ratings_number=" + str(newRatingNumber) + ";", "lang": "painless" },
+                 "query": { "term" : { "id": datasetId } } }
 
-        self.update_by_query(index, body)
+        self.update_by_query(INDEX_DATASETS, body)
     
     # update dataset views
-    def update_dataset_views(self, index, datasetID):
-        body = { "script" : { "source": "ctx._source.views++", "lang": "painless" }, "query": { "term" : { "id": datasetID } } }
+    def update_dataset_views(self, datasetId):
+        body = { "script" : { "source": "ctx._source.views++", "lang": "painless" }, "query": { "term" : { "id": datasetId } } }
 
-        self.update_by_query(index, body)
+        self.update_by_query(INDEX_DATASETS, body)
 
     # update dataset downloads
-    def update_dataset_downloads(self, index, datasetID):
-        body = { "script" : { "source": "ctx._source.downloads_number++", "lang": "painless" }, "query": { "term" : { "id": datasetID } } }
+    def update_dataset_downloads(self, datasetId):
+        body = { "script" : { "source": "ctx._source.downloads_number++", "lang": "painless" }, "query": { "term" : { "id": datasetId } } }
 
-        self.update_by_query(index, body)
+        self.update_by_query(INDEX_DATASETS, body)
     
-    def soft_delete_comments_by_dataset_id(self, index, datasetId, currentTimestamp):
-        body = { "script" : { "source": "ctx._source.deleted=true;" + "ctx._source.deletedAt=" + str(currentTimestamp) + ";", "lang": "painless" }, "query": { "term" : { "datasetID": datasetId } } }
+    def soft_delete_dataset_comments(self, datasetId, deletedAt):
+        body = { "script" : { "source": "ctx._source.deleted=true;" + "ctx._source.deletedAt=" + str(deletedAt) + ";", "lang": "painless" }, "query": { "term" : { "datasetID": datasetId } } }
 
-        self.update_by_query(index, body)
+        self.update_by_query(INDEX_COMMENTS, body)
 
-    def soft_delete_dataset_by_id(self, index, datasetId, currentTimestamp):
-        body = { "script" : { "source": "ctx._source.deleted=true;" + "ctx._source.deletedAt=" + str(currentTimestamp) + ";" + "ctx._source.lastUpdatedAt=" + str(currentTimestamp) + ";", "lang": "painless" }, "query": { "term" : { "id": datasetId } } }
+    def soft_delete_dataset(self, datasetId, deletedAt):
+        body = { "script" : { "source": "ctx._source.deleted=true;" + "ctx._source.deletedAt=" + str(deletedAt) + ";" + "ctx._source.lastUpdatedAt=" + str(deletedAt) + ";", "lang": "painless" },
+                 "query": { "term" : { "id": datasetId } } }
 
-        self.update_by_query(index, body)
+        self.update_by_query(INDEX_DATASETS, body)
     
-    def delete_comments_by_dataset_id(self, index, datasetId):
+    def hard_delete_dataset_comments(self, datasetId):
         body = {"query": {"match": {"datasetID": datasetId}}}
-        self.es.delete_by_query(index, body)
+        self.es.delete_by_query(INDEX_COMMENTS, body)
 
-    def delete_dataset_by_id(self, index, datasetId):
+    def hard_delete_dataset(self, datasetId):
         body = {"query": {"match": {"id": datasetId}}}
-        self.es.delete_by_query(index, body)
+        self.es.delete_by_query(INDEX_DATASETS, body)
     
-    def delete_comment_by_id(self, index, commentId):
+    def hard_delete_comment(self, commentId):
         body = {"query": {"match": {"id": commentId}}}
-        self.es.delete_by_query(index, body)
+        self.es.delete_by_query(INDEX_COMMENTS, body)
 
-    def update_id_generator(self, index, field):
+    def update_id_generator(self, field):
         body = { "script" : { "source": "ctx._source." + field + "++", "lang": "painless" } }
-
-        self.update_by_query(index, body)
+        self.update_by_query(INDEX_ID_GENERATOR, body)
     
     # Cleanup datasets
-    def get_datasets_cleanup(self, index, deletedAtBefore):
-        body = {"query": {"bool": {"must": [{"range": {"deletedAt": {"lte": deletedAtBefore} } }, 
-        { "match": {"deleted": True } }
-        ] }}}
+    def get_datasets_cleanup(self, deletedAtBefore):
+        body = {"query": {"bool": {"must": [{"range": {"deletedAt": {"lte": deletedAtBefore} } }, { "match": {"deleted": True } }]}}}
 
-        s = self.es.search(index=index, body=body)
+        s = self.es.search(index=INDEX_DATASETS, body=body)
         return s['hits']['hits']
 
     # insert function

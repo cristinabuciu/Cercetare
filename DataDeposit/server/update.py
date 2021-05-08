@@ -1,32 +1,32 @@
 # update.py
-from application_properties import *
-from utils import findUserID, getCountryCoordinates
+from application_properties import INDEX_DATASETS, INDEX_DOMAINS, INDEX_TAGS, CKAN_INSTANCE_ORG_ID, UPLOAD_FILE_SIZE_MAX
+from utils import getCountryCoordinates, isFileAllowed, createResponse, getTransaction, getFileSize
+from search import getUserIdByName
+from constants import WAIT_FOR
 
-import os
-import sys
-from datetime import datetime, timedelta
-import es_connector
+from time import time
+from http import HTTPStatus
+
 import ckan_connector as ck
-from time import sleep, time
 
 
 def updateDataset(dataset_id, params, current_user):
     try:
-        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-        es.connect()
+        es = getTransaction()
 
-        existingDataset = es.get_es_data_by_id(INDEX_DATASETS, dataset_id)[0]
-        existingDataset_ES_ID = existingDataset['_id']
-        existingDataset = existingDataset['_source']
+        existing = es.get_es_data_by_id(INDEX_DATASETS, dataset_id)[0]
+        existingDataset_ES_ID = existing['_id']
+        existing = existing['_source']
 
-        current_userID = findUserID(current_user)
-        if current_user != existingDataset['owner'] or int(current_userID) != existingDataset['ownerId']:
-            return "SKIP_UPDATE_DATASET_WRONG_USER"
+        current_userID = getUserIdByName(current_user)
+        if current_user != existing['owner'] or int(current_userID) != int(existing['ownerId']):
+            return createResponse(HTTPStatus.BAD_REQUEST, "SKIP_UPDATE_DATASET_WRONG_USER")
 
-        new_dataset = {}
-        new_dataset['private'] = params['private']
-        new_dataset['owner'] = existingDataset['owner']
-        new_dataset['ownerId'] = existingDataset['ownerId']
+        new_dataset = {
+            'private': params['private'],
+            'owner': existing['owner'],
+            'ownerId': existing['ownerId']
+        }
 
         for key, value in params['notArrayParams'].items():
             new_dataset[key] = value
@@ -37,39 +37,40 @@ def updateDataset(dataset_id, params, current_user):
         new_dataset['tags'] = list(map(lambda x: x['value'], new_dataset['tags']))
 
         new_dataset['id'] = dataset_id
-        new_dataset['updates_number'] = existingDataset['updates_number'] + 1
-        new_dataset['downloads_number'] = existingDataset['downloads_number']
-        new_dataset['avg_rating_value'] = existingDataset['avg_rating_value']
-        new_dataset['ratings_number'] = existingDataset['ratings_number']
-        new_dataset['views'] = existingDataset['views']
-        new_dataset['geo_coord'] = getCountryCoordinates(params['notArrayParams']['country'])
-        new_dataset['date'] = existingDataset['date']
+        new_dataset['updates_number'] = existing['updates_number'] + 1
+        new_dataset['downloads_number'] = existing['downloads_number']
+        new_dataset['avg_rating_value'] = existing['avg_rating_value']
+        new_dataset['ratings_number'] = existing['ratings_number']
+        new_dataset['views'] = existing['views']
+        new_dataset['geo_coord'] = getCountryCoordinates(es, params['notArrayParams']['country'])
+        new_dataset['date'] = existing['date']
         new_dataset['lastUpdatedAt'] = str(int(time()))
+        new_dataset['downloadPath'] = existing['downloadPath']
 
-        new_dataset['ckan_package_id'] = existingDataset['ckan_package_id']
-        new_dataset['ckan_resource_id'] = existingDataset['ckan_resource_id']
-        new_dataset['downloadPath'] = existingDataset['downloadPath']
+        new_dataset['ckan_package_id'] = existing['ckan_package_id']
+        if 'ckan_resource_id' in existing:
+            new_dataset['ckan_resource_id'] = existing['ckan_resource_id']
 
         new_dataset['deleted'] = False
         new_dataset['deletedAt'] = -1
 
         es.update(INDEX_DATASETS, '_doc', existingDataset_ES_ID, new_dataset, WAIT_FOR)
 
-        ### UPDATE DOMAINS
+        # update domains
         domain = params['notArrayParams']['domain'].upper()
 
-        isDomainNew = not(es.get_es_data_by_domainName(INDEX_DOMAINS, domain))
+        isDomainNew = not(es.get_domain_by_name(domain))
         if isDomainNew:
             es.insert(INDEX_DOMAINS, '_doc', {"domainName": domain})
 
-        ### UPDATE TAGS
+        # update tags
         tags = params['arrayParams']['tags']
 
-        if not(isDomainNew):
+        if not isDomainNew:
             for tag in tags:
                 tagName = tag['value'].lower()
                 tagName = tagName.capitalize()
-                isTagNew = not(es.get_es_data_by_domainName_and_tagName(INDEX_TAGS, domain, tagName))
+                isTagNew = not(es.get_tag_of_domain(domain, tagName))
 
                 if isTagNew:
                     es.insert(INDEX_TAGS, '_doc', {"domainName": domain, "tagName": tagName})
@@ -80,13 +81,14 @@ def updateDataset(dataset_id, params, current_user):
                 es.insert(INDEX_TAGS, '_doc', {"domainName": domain, "tagName": tagName})
 
         # ckan package update
-        packageId = existingDataset['ckan_package_id']
+        packageId = existing['ckan_package_id']
         updateDatasetToCkanInstance(packageId, new_dataset)
 
-        return {'datasetId': dataset_id, 'packageId': packageId}
+        return createResponse(HTTPStatus.OK, {'datasetId': dataset_id, 'packageId': packageId})
 
-    except:
-        return "UPDATE_DATASET_ERROR"
+    except Exception as e:
+        print(e)
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "UPDATE_DATASET_ERROR")
 
 
 def updateDatasetToCkanInstance(packageId, dataset):
@@ -115,8 +117,7 @@ def updateDatasetToCkanInstance(packageId, dataset):
 
 def updateDatasetFilesToNone(datasetId):
     try:
-        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-        es.connect()
+        es = getTransaction()
 
         dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]
         esId = dataset['_id']
@@ -134,17 +135,16 @@ def updateDatasetFilesToNone(datasetId):
 
         es.update(INDEX_DATASETS, '_doc', esId, dataset, WAIT_FOR)
 
-        return "UPDATE_DATASET_FILES_SUCCESS"
+        return createResponse(HTTPStatus.OK, "UPDATE_DATASET_FILES_SUCCESS")
 
     except Exception as e:
         print(e)
-        return "UPDATE_DATASET_FILES_ERROR"
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "UPDATE_DATASET_FILES_ERROR")
 
 
 def updateDatasetFilesToExternal(datasetId, downloadUrl):
     try:
-        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-        es.connect()
+        es = getTransaction()
 
         dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]
         esId = dataset['_id']
@@ -162,11 +162,11 @@ def updateDatasetFilesToExternal(datasetId, downloadUrl):
 
         es.update(INDEX_DATASETS, '_doc', esId, dataset, WAIT_FOR)
 
-        return "UPDATE_DATASET_FILES_SUCCESS"
+        return createResponse(HTTPStatus.OK, "UPDATE_DATASET_FILES_SUCCESS")
 
     except Exception as e:
         print(e)
-        return "UPDATE_DATASET_FILES_ERROR"
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "UPDATE_DATASET_FILES_ERROR")
 
 
 def deleteCkanResourceIfNeeded(dataset):
@@ -180,12 +180,14 @@ def deleteCkanResourceIfNeeded(dataset):
 
 
 def updateDatasetFilesToInternal(datasetId, file):
-    if not file or file.filename == '' or not(allowed_file(file.filename)):
-        return "FILE_NOT_ALLOWED"
+    if not file or file.filename == '' or not(isFileAllowed(file.filename)):
+        return createResponse(HTTPStatus.BAD_REQUEST, "FILE_NOT_ALLOWED")
+
+    if getFileSize(file) > UPLOAD_FILE_SIZE_MAX:
+        return createResponse(HTTPStatus.BAD_REQUEST, "FILE_SIZE_EXCEEDED")
 
     try:
-        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-        es.connect()
+        es = getTransaction()
 
         dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]
         esId = dataset['_id']
@@ -200,7 +202,7 @@ def updateDatasetFilesToInternal(datasetId, file):
             resourceId = dataset['ckan_resource_id']
             resource_data = {
                 'id': resourceId,
-                'name': file.filename.split('.')[0],
+                'name': file.filename,
                 'url': '{}/files'.format(datasetId)
             }
 
@@ -212,7 +214,7 @@ def updateDatasetFilesToInternal(datasetId, file):
 
             resource_data = {
                 'package_id': packageId,
-                'name': file.filename.split('.')[0],
+                'name': file.filename,
                 'url': '{}/files'.format(datasetId)
             }
 
@@ -226,26 +228,21 @@ def updateDatasetFilesToInternal(datasetId, file):
 
         es.update(INDEX_DATASETS, '_doc', esId, dataset, WAIT_FOR)
 
-        return "UPDATE_DATASET_FILES_SUCCESS"
+        return createResponse(HTTPStatus.OK, "UPDATE_DATASET_FILES_SUCCESS")
 
     except Exception as e:
         print(e)
-        return "UPDATE_DATASET_FILES_ERROR"
-
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in UPLOAD_FILE_ALLOWED_EXTENSIONS
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "UPDATE_DATASET_FILES_ERROR")
 
 
 def increaseDownloadsNumber(dataset_id):
     try:
-        es = es_connector.ESClass(server=DATABASE_IP, port=DATABASE_PORT)
-        es.connect()
+        es = getTransaction()
 
-        es.update_dataset_downloads(INDEX_DATASETS, int(dataset_id))
+        es.update_dataset_downloads(int(dataset_id))
 
-        return "INCREASE_DOWNLOADS_SUCCESS"
+        return createResponse(HTTPStatus.OK, "INCREASE_DOWNLOADS_SUCCESS")
 
     except Exception as e:
         print(e)
-        return "INCREASE_DOWNLOADS_ERROR"
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "INCREASE_DOWNLOADS_ERROR")
