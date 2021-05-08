@@ -4,3 +4,4 @@ Flask-Session
 Flask-Cors
 apscheduler
 elasticsearch==7.0.2
+python-magic

@@ -17,6 +17,8 @@ import { LoaderComponent, PaginationItem } from '../Items/Items-components'
 import { SearchCardItems } from '../models/SearchCardItems'
 import MyTranslator from '../assets/MyTranslator'
 import { DeleteMessageItem } from '../models/DeleteMessageItem'
+import { IUserInfo } from './IUserInfo'
+import { ResponseStatus } from '../models/ResponseStatus'
 
 import './userpage.scss';
 
@@ -26,7 +28,7 @@ export interface IDatasetViewProps extends RouteComponentProps {
 }
 
 export interface IDatasetViewState {
-    searchResult:Array<string>;
+    searchResult: Array<SearchCardItems[]>;
     shoudLoad: boolean;
 
     numberOfCards: number;
@@ -35,17 +37,10 @@ export interface IDatasetViewState {
     currentPage: number;
     todosPerPage: number;
     loaderVisibility: boolean;
-    wasError: boolean;
-    wasInfo: boolean;
 
-    userInfo: {
-        username: string;
-        country: string;
-        email: string;
-        privDatasets: number;
-        pubDatasets: number;
-        hasPhoto: boolean;
-    }
+    userInfo: IUserInfo;
+    responseStatusUser: ResponseStatus;
+    responseGetStatus: ResponseStatus;
 }
 
 export default class DatasetView extends React.Component<IDatasetViewProps, IDatasetViewState> {
@@ -61,8 +56,6 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
         currentPage: 1,
         todosPerPage: 3,
         loaderVisibility: false,
-        wasError: false,
-        wasInfo: false,
 
         userInfo: {
             username: "",
@@ -71,22 +64,47 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
             privDatasets: 0,
             pubDatasets: 0,
             hasPhoto: false
-        }
+        },
+        responseStatusUser: {
+			wasError: false,
+			wasSuccess: false,
+			responseMessage: ""
+		},
+
+        responseGetStatus: {
+			wasError: false,
+            wasInfo: false,
+			wasSuccess: false,
+			responseMessage: ""
+		}
     }
       
     componentDidMount(): void {
-        axios.get( '/user/' + this.props.userId)
-          .then(response => {
-            this.setState({
-                userInfo: response.data
-            });
+        let responseStatus: ResponseStatus = {};
+		const translate = new MyTranslator("Response-codes");
 
-          })
-          .catch((error) => {
+        axios.get( '/user/' + this.props.userId)
+        .then(response => {
+            if (response.data['statusCode'] === 200) {
+                responseStatus.wasSuccess = true;
+                this.setState({
+                    userInfo: response.data['data']
+                });
+            } else {
+                responseStatus.wasError = true;
+                responseStatus.responseMessage = translate.useTranslation(response.data['data']);
+            }
+        })
+        .catch((error) => {
             console.log(error);
-          })
-          .finally(() => {
+            responseStatus.wasError = true;
+            responseStatus.responseMessage = translate.useTranslation("GET_USER_INFO_ERROR");
+        })
+        .finally(() => {
             // always executed
+            this.setState({
+                responseStatusUser: responseStatus
+            });
         });
 
         //////////// FUNCTIONS //////////////
@@ -94,13 +112,14 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
         this.handleClickOnNumber = this.handleClickOnNumber.bind(this);
         this.createPageNumberArray = this.createPageNumberArray.bind(this);
         this.handleClickDots = this.handleClickDots.bind(this);
+        this.setItemsForShow = this.setItemsForShow.bind(this);
     }
 
     handleClickDots(event): void {}
 
     async handleDelete(id: number): Promise<DeleteMessageItem> {
         let returnMessage: DeleteMessageItem = {};
-        const translate = new MyTranslator("Error-codes");
+        const translate = new MyTranslator("Response-codes");
 
         await axios.delete( '/dataset/' + id)
         .then(response => {
@@ -125,45 +144,18 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
     }
 
 
-    setItemsForShow = (numberOfCards, numberOfCardsPerPage, searchResultItems, searchWasPressed = false, itWasAnError = false, itWasAnInfo = false) => {
+    setItemsForShow(numberOfCards: number, numberOfCardsPerPage: number, searchResultItems: Array<SearchCardItems[]>, searchWasPressed: boolean = false, responseStatus: ResponseStatus): void {
         console.log("CEL MAI MARE HATZ");
 
-        if (searchWasPressed) {
-            this.setState({
-                numberOfCards: numberOfCards,
-                searchResult: searchResultItems,
-                todosPerPage: numberOfCardsPerPage,
-                currentPage: 1,
-                shouldDisplayPagination: true,
-                loaderVisibility: false
-            });
-        } else {
-            this.setState({
-                numberOfCards: numberOfCards,
-                searchResult: searchResultItems,
-                todosPerPage: numberOfCardsPerPage,
-                shouldDisplayPagination: true,
-                loaderVisibility: false
-            });
-        }
-
-        if (itWasAnInfo) {
-            this.setState({
-                shouldDisplayPagination: false,
-                wasInfo: true
-            });
-
-            // return;
-        }
-
-        if (itWasAnError) {
-            this.setState({
-                shouldDisplayPagination: false,
-                wasError: true
-            });
-        }
-        
-        console.log(this.state)
+        this.setState({
+            numberOfCards: numberOfCards,
+            searchResult: searchResultItems,
+            todosPerPage: numberOfCardsPerPage,
+            currentPage: searchWasPressed ? 1 : this.state.currentPage,
+            shouldDisplayPagination: responseStatus.wasError || responseStatus.wasInfo ? false : true,
+            loaderVisibility: false,
+            responseGetStatus: responseStatus
+        });
     }
 
     showSearchCards(): JSX.Element[]  {
@@ -211,8 +203,12 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
         console.log("UNGURICA");
         this.setState({
             loaderVisibility: visible,
-            wasError: false,
-            wasInfo: false
+            responseGetStatus: {
+                wasError: false,
+                wasInfo: false,
+                wasSuccess: false,
+                responseMessage: ""
+            }
         });
     }
 
@@ -338,18 +334,18 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                             : 
                             <>
                                 {searchResult}
-                                <Row className={this.state.wasError ? "" : "display-none"}>
+                                <Row className={this.state.responseGetStatus.wasError ? "" : "display-none"}>
                                     <Col>
                                         <Alert color="danger" className="text-align-center">
-                                            There was an error at search !
+                                            {this.state.responseGetStatus.responseMessage}
                                         </Alert>
                                     </Col>
                                 </Row>
 
-                                <Row className={this.state.wasInfo ? "" : "display-none"}>
+                                <Row className={this.state.responseGetStatus.wasInfo ? "" : "display-none"}>
                                     <Col>
                                         <Alert color="info" className="text-align-center">
-                                            No items found !
+                                            {this.state.responseGetStatus.responseMessage}
                                         </Alert>
                                     </Col>
                                 </Row>

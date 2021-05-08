@@ -4,11 +4,12 @@ import React from 'react';
 import axios from 'axios';
 
 import { CardBody, Row, Col, CardTitle, CardSubtitle, CardText, Card,
-    Button, Input, Form, FormGroup, FormText, Label } from 'reactstrap';
+    Button, Input, Form, FormGroup, Alert, Label } from 'reactstrap';
 import {InputText, Switch, LoaderComponent } from '../../Items/Items-components'
 import { faLink, faDownload, faPortrait } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ResourceToDownload } from './Edit-components'
+import { ResponseStatus } from '../../models/ResponseStatus'
 
 export interface IMetadataEditProps {
 	id: number;
@@ -31,6 +32,10 @@ export interface IMetadataEditState {
         Internal: boolean;
     };
 	newDownloadPath: string;
+
+	shouldRenderForm: boolean;
+	responseStatus: ResponseStatus;
+	responseGetStatus: ResponseStatus;
 }
 
 export default class MetadataEdit extends React.Component<IMetadataEditProps, IMetadataEditState> {
@@ -48,44 +53,73 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 			External: false,
 			Internal: false
 		},
-		newDownloadPath: ''
+		newDownloadPath: '',
+
+		responseStatus: {
+			wasError: false,
+			wasSuccess: false,
+			responseMessage: ""
+		},
+		responseGetStatus: {
+			wasError: false,
+			wasSuccess: false,
+			responseMessage: ""
+		},
+		shouldRenderForm: true
     }
 
     componentDidMount (): void {
+		let responseGetStatus: ResponseStatus = {};
+		const translate = new MyTranslator("Response-codes");
+		let currentResource = '';
+		let currentOptions = {
+			None: false,
+			External: false,
+			Internal: false
+		}
+
+		this.setState({
+            loaderVisibility: true,
+			shouldRenderForm: false
+        });
+
 		axios.get( '/dataset/' + this.props.id + '/files')
 		.then(response => {
-			let currentResource = '';
-			let currentOptions = {
-				None: false,
-				External: false,
-				Internal: false
-			}
+			if (response.data['statusCode'] === 200) {
+                responseGetStatus.wasSuccess = true;
 
-			switch(response.data['resourceType']) {
-			case 'NONE':
-				currentResource = '';
-				currentOptions.None = true;
-				break;
-			case 'EXTERNAL':
-				currentResource = response.data['downloadLink'];
-				currentOptions.External = true;
-				break;
-			case 'INTERNAL':
-				currentResource = response.data['fileName'];
-				currentOptions.Internal = true;
-				break;
+				switch(response.data['data']['resourceType']) {
+				case 'NONE':
+					currentResource = '';
+					currentOptions.None = true;
+					break;
+				case 'EXTERNAL':
+					currentResource = response.data['data']['downloadLink'];
+					currentOptions.External = true;
+					break;
+				case 'INTERNAL':
+					currentResource = response.data['data']['fileName'];
+					currentOptions.Internal = true;
+					break;
+				}
+            } else {
+                responseGetStatus.wasError = true;
+                responseGetStatus.responseMessage = translate.useTranslation(response.data['data']);
 			}
-
-			this.setState({
-				currentResource: currentResource,
-				currentOptions: currentOptions
-			});
 		})
 		.catch(function (error) {
 			console.log(error);
+			responseGetStatus.wasError = true;
+			responseGetStatus.responseMessage = translate.useTranslation("GET_RESOURCE_INFO_ERROR");
 		})
 		.finally( () => {
 			// always executed
+			this.setState({
+				currentResource: currentResource,
+				currentOptions: currentOptions,
+				shouldRenderForm: responseGetStatus.wasSuccess ? true : false,
+				loaderVisibility: false
+			});
 		});
 
 		//////////// FUNCTIONS //////////////
@@ -115,10 +149,13 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 	}
 	
 	handleSubmit(): void {
-        // this.setState({
-        //     loaderVisibility: true
-        // });
-		let hasError: boolean = false;
+		let responseStatus: ResponseStatus = {};
+		const translate = new MyTranslator("Response-codes");
+
+        this.setState({
+            loaderVisibility: true,
+			shouldRenderForm: false
+        });
 		const formData = new FormData();
 		
 		if (this.state.uploadOption.private) {
@@ -134,17 +171,25 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 
 		axios.put("/dataset/" + this.props.id + '/files', formData)
 		.then(response => {
-			if (response.data === 'UPDATE_DATASET_FILES_ERROR') {
-				hasError = true;
-			} else {
-				hasError = false;
-			}
+			if (response.data['statusCode'] === 200) {
+                responseStatus.wasSuccess = true;
+                responseStatus.responseMessage = translate.useTranslation(response.data['data']);
+            } else {
+                responseStatus.wasError = true;
+                responseStatus.responseMessage = translate.useTranslation(response.data['data']);
+            }
 		})
 		.catch(err => {
 			console.warn(err);
-			hasError = true;
+			responseStatus.wasSuccess = true;
+			responseStatus.responseMessage = translate.useTranslation("UPDATE_DATASET_FILES_ERROR");
 		})
-		.finally(() => {});
+		.finally(() => {
+			this.setState({
+				responseStatus: responseStatus,
+				loaderVisibility: false
+			});
+		});
     }
 
 	updateUploadOptions(privateMode : boolean, linkMode : boolean, uploadMode : boolean): void {
@@ -188,8 +233,9 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
         const translate = new MyTranslator("Upload");
         return (
 			<>
-			{this.state.loaderVisibility ? <LoaderComponent visible={this.state.loaderVisibility}/> :
+			
 			<CardBody>
+			{this.state.shouldRenderForm ? <>
 				<CardTitle></CardTitle>
 				<CardSubtitle></CardSubtitle>
 				<CardText>
@@ -300,9 +346,35 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 					</FormGroup>
 					</Form>
 				</CardText>
-			
+			</> : 
+			<>
+				<LoaderComponent visible={this.state.loaderVisibility}/>
+				<Row className={this.state.responseStatus.wasError ? "" : "display-none"}>
+					<Col>
+						<Alert color="danger" className="text-align-center">
+							{this.state.responseStatus.responseMessage}
+						</Alert>
+					</Col>
+				</Row>
+
+				<Row className={this.state.responseGetStatus.wasError ? "" : "display-none"}>
+					<Col>
+						<Alert color="danger" className="text-align-center">
+							{this.state.responseGetStatus.responseMessage}
+						</Alert>
+					</Col>
+				</Row>
+
+				<Row className={this.state.responseStatus.wasSuccess ? "" : "display-none"}>
+					<Col>
+						<Alert color="success" className="text-align-center">
+							{this.state.responseStatus.responseMessage}
+						</Alert>
+					</Col>
+				</Row>
+				
+				</>}
 			</CardBody>
-			}
 			</>
 		)
     }

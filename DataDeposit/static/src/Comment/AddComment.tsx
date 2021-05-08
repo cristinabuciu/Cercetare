@@ -84,7 +84,7 @@ export default class AddComment extends React.Component<IAddCommentProps, IAddCo
                 <Row>
                     <Col>
                       <Alert color="success">
-                          Review posted successfully !
+                        {this.state.errorMessage}
                         </Alert>
                     </Col>
                 </Row>   
@@ -199,7 +199,7 @@ export interface ICommentFormState {
 
 
     render() {
-      const translate = new MyTranslator("Error-codes");
+      const translate = new MyTranslator("Response-codes");
       return (
         <Form className="comment-form" onSubmit={this._handleSubmit.bind(this)}>
           <div className="comment-form-fields">
@@ -231,7 +231,7 @@ export interface ICommentFormState {
     
     _handleSubmit(event): void { 
       this.changeLoader(true);
-      const translate = new MyTranslator("Error-codes");
+      const translate = new MyTranslator("Response-codes");
       event.preventDefault();   // prevents page from reloading on submit
       //   let author = this._author;
       //   let body = this._body;
@@ -257,7 +257,8 @@ export interface ICommentFormState {
             debugger;
             console.log(response.data);
             if (response.data['statusCode'] === 200) {
-              this.props.onReceiveAnswerFromPost(false);
+              errorMessage = translate.useTranslation(response.data['data']);
+              this.props.onReceiveAnswerFromPost(false, errorMessage);
             } else {
               errorMessage = translate.useTranslation(response.data['data']);
               this.props.onReceiveAnswerFromPost(true, errorMessage);

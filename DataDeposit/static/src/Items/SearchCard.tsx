@@ -64,15 +64,26 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
     }
 
     handleDownload(): boolean {
+        let wasError: boolean = false;
         axios.put( '/dataset/' + this.props.id + '/downloads')
-        .then(response => {})
+        .then(response => {
+            if (response.data['statusCode'] === 200) {
+                wasError = false;
+            } else {
+                wasError = true;
+            }
+        })
         .catch(function (error) {
             console.log(error);
-            return false;
+            wasError = true;
+        })
+        .finally( () => {
+            if (!wasError) {
+                window.open(this.props.downloadPath, "_blank");
+            }
         });
 
-        window.open(this.props.downloadPath, "_blank");
-        return true;
+        return !wasError;
     }
   
     render() {  
@@ -166,9 +177,10 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
                         <ModalConfirm
                             idToBeConfirmed={this.props.id}
                             buttonLabel="Delete"
-                            buttonClassName="quick-view-button" 
+                            buttonClassName="" 
                             modalTitle="Delete Dataset"
-                            modalBody="You have requested to delete the following dataset: <titlu>"
+                            modalBody="You have requested to delete the following dataset:"
+                            modalSubtitle={this.props.dataset_title}
                             handleConfirm={this.props.handleDelete}
                             />
                     </Col>
