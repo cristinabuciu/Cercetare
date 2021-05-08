@@ -44,11 +44,15 @@ johnAccount = {'id': 2, 'username': 'john', 'password': '1234', 'country': 'Japa
 dorianAccount = {'id': 3, 'username': 'Dorian', 'password': '1234', 'country': 'Germany', 'email': 'Dorian@Dorian.com', 'hasPhoto': False}
 spAccount = {'id': 4, 'username': 'SpiderParker', 'password': '1234', 'country': 'Canada', 'email': 'SpiderParker@SpiderParker.com', 'hasPhoto': False}
 putinAccount = {'id': 5, 'username': 'Putin', 'password': '1234', 'country': 'Russia', 'email': 'Putin@Putin.com', 'hasPhoto': False}
+sergiuAccount = {'id': 6, 'username': 'Sergiu', 'password': 'admin', 'country': 'Romania', 'email': 'sergiu@upb.ro', 'hasPhoto': True}
+claudiuAccount = {'id': 7, 'username': 'Claudiu', 'password': 'admin', 'country': 'Romania', 'email': 'claudiu@upb.ro', 'hasPhoto': True}
 es.insert('logintable', '_doc', adminAccount)
 es.insert('logintable', '_doc', johnAccount)
 es.insert('logintable', '_doc', dorianAccount)
 es.insert('logintable', '_doc', spAccount)
 es.insert('logintable', '_doc', putinAccount)
+es.insert('logintable', '_doc', sergiuAccount)
+es.insert('logintable', '_doc', claudiuAccount)
 pprint.pprint(es.get_es_index('logintable'))
 
 ##########################################################

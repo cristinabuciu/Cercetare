@@ -24,8 +24,7 @@ export default class AppRoutes extends Component {
     }
 
     render() {
-        // const BrowserHistory = require('react-router/lib/BrowserHistory').default;
-        
+       
         return (
             <Switch >
                 <Route path="/test" exact render={(props) => <Home {...props} greeting={""} />}/>

@@ -233,9 +233,7 @@ export interface ICommentFormState {
       this.changeLoader(true);
       const translate = new MyTranslator("Response-codes");
       event.preventDefault();   // prevents page from reloading on submit
-      //   let author = this._author;
-      //   let body = this._body;
-      //   this.props.addComment(author.value, body.value);
+
       const token = localStorage.getItem('login_user_token');
       let errorMessage: string = "";
 
