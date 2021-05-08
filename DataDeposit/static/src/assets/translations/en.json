@@ -29,7 +29,8 @@
     "GET_DEFAULT_DATA_ERROR": "There was an unexpected error while getting default data.",
     "GET_USER_ID_ERROR": "There was an unexpected error while getting user ID.",
     "USER_NOT_FOUND": "The user was not found.",
-    "ADD_DATASET_COMMENT_SUCCESS": "Review posted successfully."
+    "ADD_DATASET_COMMENT_SUCCESS": "Review posted successfully.",
+    "LOGIN_ERROR": "There was an unexpected error while logging in the user."
   },
   
   "common": {
@@ -39,6 +40,10 @@
     "None": "None",
     "Back": "Back",
     "delete": "Delete"
+  },
+
+  "Login-Form": {
+    "login": "Login"
   },
 
   "SearchPage": {
