@@ -12,6 +12,7 @@ import CommentTabs from "./CommentTabs"
 import { faEdit, faTimesCircle, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 import { ImageTitle, Title } from '../Items/Title/Title';
+import { ResponseStatus } from '../models/ResponseStatus'
 
 import './DatasetView.scss';
 
@@ -19,10 +20,10 @@ export interface IDatasetViewLoadingProps {
     private: boolean;
     id: number;
     domain: string;
-    subdomain: Array<String> 
+    subdomain: Array<string> 
     country: string;
     data_format: string; 
-    authors: Array<String>;
+    authors: Array<string>;
     year: string;
     dataset_title: string;
     article_title: string; 
@@ -66,14 +67,26 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
     }
 
     componentDidMount(): void {
+        let responseStatus: ResponseStatus = {};
+		const translate = new MyTranslator("Response-codes");
+
         axios.get( '/user/' + this.props.owner)
           .then(response => {
-            this.setState({
-                userID: response.data
-            });
+            debugger;
+            if (response.data['statusCode'] === 200) {
+                responseStatus.wasSuccess = true;
+                this.setState({
+                    userID: response.data['data']
+                });
+            } else {
+                responseStatus.wasError = true;
+                responseStatus.responseMessage = translate.useTranslation(response.data['data']);
+            }
           })
           .catch(function (error) {
             console.log(error);
+            responseStatus.wasError = true;
+            responseStatus.responseMessage = translate.useTranslation("GET_USER_ID_ERROR");
         })
           .finally( () => {
             // always executed
@@ -97,22 +110,37 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
         window.history.back();
     }
 
-    switchPage(): void {
-        this.setState({
-            shouldDisplayAboutAt: !this.state.shouldDisplayAboutAt
-        });
+    switchPage(shouldRefresh: boolean = false): void {
+        if (shouldRefresh) {
+            window.location.reload(false);
+        } else {
+            this.setState({
+                shouldDisplayAboutAt: !this.state.shouldDisplayAboutAt
+            });
+        }
     }
 
     handleDownload(): boolean {
+        let wasError: boolean = false;
         axios.put( '/dataset/' + this.props.id + '/downloads')
-        .then(response => {})
+        .then(response => {
+            if (response.data['statusCode'] === 200) {
+                wasError = false;
+            } else {
+                wasError = true;
+            }
+        })
         .catch(function (error) {
             console.log(error);
-            return false;
+            wasError = true;
+        })
+        .finally( () => {
+            if (!wasError) {
+                window.open(this.props.downloadPath, "_blank");
+            }
         });
 
-        window.open(this.props.downloadPath, "_blank");
-        return true;
+        return !wasError;
     }
 
     render() {  
@@ -141,8 +169,8 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                             <Col md="3" className="text-align-right"> 
                                 {this.state.hasEditPerm ?
                                 <>
-                                    {this.state.shouldDisplayAboutAt ? <FontAwesomeIcon className="about-edit-button edit-button" icon={faEdit} onClick={this.switchPage}/> :
-                                    <FontAwesomeIcon className="about-edit-button edit-button" icon={faTimesCircle} onClick={this.switchPage}/>  }
+                                    {this.state.shouldDisplayAboutAt ? <FontAwesomeIcon className="about-edit-button edit-button" icon={faEdit} onClick={() => this.switchPage()}/> :
+                                    <FontAwesomeIcon className="about-edit-button edit-button" icon={faTimesCircle} onClick={() => this.switchPage(true)}/>  }
                                 </>
                                 : <></>
                                 }
@@ -151,47 +179,47 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                     </CardTitle>
                     {this.state.shouldDisplayAboutAt ?
                     <AboutBody 
-                            domain={this.props.domain}
-                            subdomain={this.props.subdomain} 
-                            country={this.props.country}
-                            data_format={this.props.data_format}
-                            authors={this.props.authors}
-                            year={this.props.year}
-                            dataset_title={this.props.dataset_title}
-                            article_title={this.props.article_title}
-                            short_desc={this.props.short_desc}
-                            avg_rating={this.props.avg_rating}
-                            gitlink={this.props.gitlink}
-                            owner={this.props.owner}
-                            dataIntegrity={this.props.dataIntegrity}
-                            continuityAccess={this.props.continuityAccess}
-                            dataReuse={this.props.dataReuse}
-                            handleDownload={this.handleDownload}
-                        
-                            downloadPath={this.props.downloadPath}
-                            shouldHaveDownloadButton={this.props.shouldHaveDownloadButton}
-                            shouldHaveDownloadLink={this.props.shouldHaveDownloadLink}
+                        domain={this.props.domain}
+                        subdomain={this.props.subdomain} 
+                        country={this.props.country}
+                        data_format={this.props.data_format}
+                        authors={this.props.authors}
+                        year={this.props.year}
+                        dataset_title={this.props.dataset_title}
+                        article_title={this.props.article_title}
+                        short_desc={this.props.short_desc}
+                        avg_rating={this.props.avg_rating}
+                        gitlink={this.props.gitlink}
+                        owner={this.props.owner}
+                        dataIntegrity={this.props.dataIntegrity}
+                        continuityAccess={this.props.continuityAccess}
+                        dataReuse={this.props.dataReuse}
+                        handleDownload={this.handleDownload}
+                    
+                        downloadPath={this.props.downloadPath}
+                        shouldHaveDownloadButton={this.props.shouldHaveDownloadButton}
+                        shouldHaveDownloadLink={this.props.shouldHaveDownloadLink}
                     />
-                        :
-                        <DatasetUpdate 
-                            private={this.props.private}
-                            id={this.props.id}
-                            domain={this.props.domain}
-                            subdomain={this.props.subdomain} 
-                            country={this.props.country}
-                            data_format={this.props.data_format}
-                            authors={this.props.authors}
-                            year={this.props.year}
-                            dataset_title={this.props.dataset_title}
-                            article_title={this.props.article_title}
-                            short_desc={this.props.short_desc}
-                            avg_rating={this.props.avg_rating}
-                            gitlink={this.props.gitlink}
-                            dataIntegrity={this.props.dataIntegrity}
-                            continuityAccess={this.props.continuityAccess}
-                            dataReuse={this.props.dataReuse}
-                            switchPage={this.switchPage}
-                            handleDownload={this.handleDownload} />
+                    :
+                    <DatasetUpdate 
+                        private={this.props.private}
+                        id={this.props.id}
+                        domain={this.props.domain}
+                        subdomain={this.props.subdomain} 
+                        country={this.props.country}
+                        data_format={this.props.data_format}
+                        authors={this.props.authors}
+                        year={this.props.year}
+                        dataset_title={this.props.dataset_title}
+                        article_title={this.props.article_title}
+                        short_desc={this.props.short_desc}
+                        avg_rating={this.props.avg_rating}
+                        gitlink={this.props.gitlink}
+                        dataIntegrity={this.props.dataIntegrity}
+                        continuityAccess={this.props.continuityAccess}
+                        dataReuse={this.props.dataReuse}
+                        switchPage={this.switchPage}
+                        handleDownload={this.handleDownload} />
                     }
                     
                 </Card>

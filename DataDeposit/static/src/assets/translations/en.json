@@ -1,7 +1,7 @@
 {
   "None": {},
 
-  "Error-codes": {
+  "Response-codes": {
     "FILE_NOT_ALLOWED": "File is missing or the file format is not supported.",
     "FILE_SIZE_EXCEEDED": "The size of the selected file exceeds the limit.",
     "SKIP_UPLOAD_FILES_WRONG_PACKAGE_ID": "File can not be attached to the desired package.",
@@ -11,7 +11,25 @@
     "ADD_DATASET_COMMENT_ERROR_MISSING_RATING": "Comments without rating are not allowed.",
     "ADD_DATASET_COMMENT_ERROR_MISSING_TITLE_OR_COMMENT": "Comment can not be submitted. Both title and comment should be filled in.",
     "DELETE_DATASET_ERROR": "There was an unexpected error while deleting your dataset.",
-    "DELETE_DATASET_COMMENT_ERROR": "There was an unexpected error while deleting your comment."
+    "DELETE_DATASET_COMMENT_ERROR": "There was an unexpected error while deleting your comment.",
+    "DELETE_DATASET_SUCCESS": "Your dataset has been deleted successfully.",
+    "DELETE_DATASET_COMMENT_SUCCESS": "Your comment has been deleted successfully.",
+    "UPDATE_DATASET_ERROR": "There was an unexpected error while updating the dataset.",
+    "SKIP_UPDATE_DATASET_WRONG_USER": "Dataset could not be updated. You are not its owner.",
+    "UPDATE_DATASET_SUCCESS": "Dataset has been updated successfully !",
+    "UPDATE_DATASET_FILES_SUCCESS": "Your files have been updated successfully.",
+    "UPDATE_DATASET_FILES_ERROR": "There was an unexpected error while updating your files.",
+    "GET_USER_INFO_ERROR": "There was an unexpected error while getting user info.",
+    "ITEMS_NOT_FOUND": "No items found.",
+    "GET_DATASETS_ERROR": "There was an unexpected error while searching for datasets.",
+    "GET_DATASET_ERROR": "There was an unexpected error while getting the dataset.",
+    "GET_RESOURCE_INFO_ERROR": "There was an error while fetching the existing resource. Update can not be performed.",
+    "GET_DATASET_COMMENTS_ERROR": "There was an error when getting the comments.",
+    "NO_REVIEWS": "No reviews posted yet.",
+    "GET_DEFAULT_DATA_ERROR": "There was an unexpected error while getting default data.",
+    "GET_USER_ID_ERROR": "There was an unexpected error while getting user ID.",
+    "USER_NOT_FOUND": "The user was not found.",
+    "ADD_DATASET_COMMENT_SUCCESS": "Review posted successfully."
   },
   
   "common": {
@@ -24,7 +42,6 @@
   },
 
   "SearchPage": {
-      "items-not-found": "No items found !",
       "items-error": "There was an error at search !" 
   },
 
@@ -85,9 +102,7 @@
 
   "Comment": {
     "all-comments": "All comments",
-    "add-comment": "Add comment",
-    "no-reviews": "No reviews posted yet !",
-    "error-reviews": "There was an error when getting the reviews !"
+    "add-comment": "Add comment"
   },
 
   "View": {

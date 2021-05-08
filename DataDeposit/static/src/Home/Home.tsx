@@ -2,7 +2,6 @@ import * as React from 'react';
 import MyTranslator from '../assets/MyTranslator'
 
 import './Home.scss';
-import 'semantic-ui-css/semantic.min.css'
 import LeftBar from "../LeftBar/LeftBar";
 import { Row, Col, Alert } from 'reactstrap';
 import { Container } from 'semantic-ui-react';

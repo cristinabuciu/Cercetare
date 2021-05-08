@@ -13,6 +13,7 @@ import "../../style_home.scss";
 
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ResponseStatus } from '../../models/ResponseStatus'
 
 export interface ICardProps {
     setItemsForShow: Function;
@@ -43,6 +44,8 @@ export interface ICardState {
     authors: string | null;
     resultsSearchArray: Array<SearchCardItems[]>;
     resultsSearchArrayLen: number;
+
+	responseStatus: ResponseStatus;
 }
 
 export default class Search extends React.Component<ICardProps, ICardState> {
@@ -71,7 +74,13 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         dataset_title: '',
         authors: '',
         resultsSearchArray: [],
-        resultsSearchArrayLen: 0
+        resultsSearchArrayLen: 0,
+        responseStatus: {
+			wasError: false,
+			wasSuccess: false,
+            wasInfo: false,
+			responseMessage: ""
+		}
     }
     
     handleChange = date => {
@@ -80,30 +89,43 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         });
     };
 
-    componentDidMount() {
+    componentDidMount(): void {
+        let responseGetStatus: ResponseStatus = {};
+		const translate = new MyTranslator("Response-codes");
+
         // Domains, Tags, Countries
         axios.get( '/getDefaultData')
-          .then(response => {
-            this.state.searchInputOptions.domain = ['All domains  '].concat(response.data[0])
+        .then(response => {
+            if (response.data['statusCode'] === 200) {
+                responseGetStatus.wasSuccess = true;
+                this.state.searchInputOptions.domain = ['All domains  '].concat(response.data['data'][0])
             
-            for(var domain in response.data[1]) {
-                if(domain in this.state.searchInputOptions.subdomainList) {
-                    this.state.searchInputOptions.subdomainList[domain].concat(response.data[1][domain]);
-                } else {
-                    this.state.searchInputOptions.subdomainList[domain] = response.data[1][domain];
+                for(var domain in response.data['data'][1]) {
+                    if(domain in this.state.searchInputOptions.subdomainList) {
+                        this.state.searchInputOptions.subdomainList[domain].concat(response.data['data'][1][domain]);
+                    } else {
+                        this.state.searchInputOptions.subdomainList[domain] = response.data['data'][1][domain];
+                    }
                 }
+                this.state.searchInputOptions.country = ['All countries  '].concat(response.data['data'][2]);
+            } else {
+                responseGetStatus.wasError = true;
+                responseGetStatus.responseMessage = translate.useTranslation(response.data['data']);
             }
-            this.state.searchInputOptions.country = ['All countries  '].concat(response.data[2]);
-          })
-          .catch(function (error) {
+        })
+        .catch(function (error) {
             console.log(error);
-          })
-          .finally( () => {
+            responseGetStatus.wasError = true;
+            responseGetStatus.responseMessage = translate.useTranslation("GET_DEFAULT_DATA_ERROR");
+        })
+        .finally( () => {
             // always executed
             this.forceUpdate();
-          });
+        });
 
-
+        ///////////////// FUNCTIONS /////////////////
+        this.searchData = this.searchData.bind(this);
+        this.changeValue = this.changeValue.bind(this);
         this.searchData(true);
     }
 
@@ -113,7 +135,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         }
     }
 
-    changeValue = (e, comboBoxTitle, shouldUpdateNumber) => {
+    changeValue(e, comboBoxTitle, shouldUpdateNumber): void {
         console.log("CODRIN");
         console.log(e);
         if(comboBoxTitle === 'domain') {
@@ -139,14 +161,16 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         return n[0];
     }
 
-    searchData = (shouldCount, searchWasPressed = false) => {
+    searchData(shouldCount: boolean, searchWasPressed: boolean = false): void {
         console.log("AEROSMITH");
         console.log(this.props.currentPage);
-        console.log("sdl;jfmsuidc");
+        let responseStatus: ResponseStatus = {};
+		const translate = new MyTranslator("Response-codes");
         
         if (shouldCount == false) {
             this.props.handleLoaderChange(true);
         }
+        debugger;
         axios.get( '/datasets', {
             params: {
                 allFilters: {
@@ -161,7 +185,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     },
                     arrayParams: {
                         tags: this.state.subdomain, //=== 'All subdomains  ' ? '' : this.state.subdomain,
-                        author: this.state.authors
+                        author: this.state.authors.split(",")
                     },
                     sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSort(this.state.sortBy),
                     sortByField: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSortName(this.state.sortBy),
@@ -171,32 +195,49 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 }
             }
         })
-          .then(response => {
+        .then(response => {
             console.log("///////////");
             console.log(response.data);
             console.log("///////////");
             if (shouldCount == false) {
-                this.setState({
-                    resultsSearchArray:response.data
-                }, () => {
-                    this.props.handleLoaderChange(false);
-                    this.props.setItemsForShow(this.state.resultsSearchArrayLen, this.state.resultsPerPage, this.state.resultsSearchArray, searchWasPressed, false, this.state.resultsSearchArrayLen == 0);
-                });
-            } else {
-                this.setState({
-                    resultsSearchArrayLen:response.data
-                });
-            }
-    
+                if (response.data['statusCode'] === 200) {
+                    responseStatus.wasSuccess = true;
 
-          })
-          .catch( error => {
+                    this.setState({
+                        resultsSearchArray:response.data['data']
+                    }, () => {
+                        this.props.handleLoaderChange(false);
+                        responseStatus.wasInfo = this.state.resultsSearchArrayLen == 0;
+                        responseStatus.responseMessage = translate.useTranslation("ITEMS_NOT_FOUND");
+                        this.props.setItemsForShow(this.state.resultsSearchArrayLen, this.state.resultsPerPage, this.state.resultsSearchArray, searchWasPressed, responseStatus);
+                    });
+                } else {
+                    responseStatus.wasError = true;
+                    responseStatus.responseMessage = translate.useTranslation(response.data['data']);
+                    this.props.setItemsForShow(this.state.resultsSearchArrayLen, this.state.resultsPerPage, this.state.resultsSearchArray, searchWasPressed, responseStatus);
+                }
+            } else {
+                if (response.data['statusCode'] === 200) {
+                    responseStatus.wasSuccess = true;
+                    this.setState({
+                        resultsSearchArrayLen:response.data['data']
+                    });
+                } else {
+                    responseStatus.wasError = true;
+                    responseStatus.responseMessage = translate.useTranslation(response.data['data']);
+                }
+            }
+        })
+        .catch( error => {
             console.log(error);
-            this.props.setItemsForShow(0, 0, [], searchWasPressed, true, false);
-          })
-          .finally( () => {
+            this.props.handleLoaderChange(false);
+            responseStatus.wasError = true;
+            responseStatus.responseMessage = translate.useTranslation("GET_DATASETS_ERROR");
+            this.props.setItemsForShow(0, 0, [], searchWasPressed, responseStatus);
+        })
+        .finally( () => {
             // always executed
-          }); 
+        }); 
     }
 
     handleSelectChange = value => {
