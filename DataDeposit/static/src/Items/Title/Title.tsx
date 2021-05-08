@@ -22,7 +22,15 @@ export const Title = (props) => {
     );
 }
 
+export const HomeTitle = (props) => {
 
+  const propsClassName = props.className ? " " + props.className : "";
+  return (
+    <Col md={props.md ? props.md : 12} className="text-align-center margin-bottom-50">
+        <span className={propsClassName}>{props.titleSet}</span>
+    </Col>
+  );
+}
 
 export const ImageTitle = (props) => {
 

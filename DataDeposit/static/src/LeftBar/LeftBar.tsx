@@ -1,8 +1,6 @@
 import * as React from 'react';
 import MyTranslator from '../assets/MyTranslator'
 
-import { Grid, Menu } from 'semantic-ui-react'
-
 import { Nav } from 'react-bootstrap';
 import { NavLink } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
@@ -59,6 +57,7 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
                 <Nav defaultActiveKey="/home" className="flex-column margin-top-50">
                     <Nav.Link href="/aboutus">{translate.useTranslation("about")}</Nav.Link>
                     <Nav.Link target="_blank" href="http://localhost:5000/organization/crescdi">{translate.useTranslation("ckan")}</Nav.Link>
+                    <Nav.Link target="_blank" href="http://localhost:5601/">{translate.useTranslation("kibana")}</Nav.Link>
                     <Nav.Link eventKey="link-2">{translate.useTranslation("privacy")}</Nav.Link>
                     <Nav.Link eventKey="link-2">{translate.useTranslation("sponsors")}</Nav.Link>
                     <Nav.Link eventKey="link-2">{translate.useTranslation("developers")}</Nav.Link>
