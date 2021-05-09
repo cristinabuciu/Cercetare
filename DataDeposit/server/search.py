@@ -1,5 +1,5 @@
 # search.py
-from application_properties import INDEX_USERS, INDEX_DATASETS, INDEX_DOMAINS, INDEX_LOCATIONS, INDEX_TAGS
+from application_properties import INDEX_USERS, INDEX_DATASETS, INDEX_DOMAINS, INDEX_LOCATIONS, INDEX_TAGS, UPLOAD_FILE_ALLOWED_MIME_TYPES
 from utils import getTransaction, calculateLastUpdatedAt, createResponse
 
 from http import HTTPStatus
@@ -235,6 +235,7 @@ def getAllDefaultData():
 
         domains = [domain['_source']['domainName'] for domain in es.get_es_index(INDEX_DOMAINS)]
         countries = list(es.get_es_index(INDEX_LOCATIONS)[0]['_source'].keys())
+        allowed_data_format = list(UPLOAD_FILE_ALLOWED_MIME_TYPES.values())
 
         tags = {}
         for tag in es.get_es_index(INDEX_TAGS):
@@ -243,7 +244,7 @@ def getAllDefaultData():
             else:
                 tags[tag['_source']['domainName']] = [{"value": tag['_source']['tagName'], "label": tag['_source']['tagName']}]
 
-        return createResponse(HTTPStatus.OK, [domains, tags, countries])
+        return createResponse(HTTPStatus.OK, [domains, tags, countries, allowed_data_format])
     except Exception as e:
         print(e)
         return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "GET_DEFAULT_DATA_ERROR")
