@@ -41,6 +41,7 @@ export interface IDatasetViewLoadingProps {
     updates: number;
     downloads: number;
     hasPhoto: boolean;
+    checksum: string;
 
     downloadPath: string;
     shouldHaveDownloadButton: boolean;
@@ -195,6 +196,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                         continuityAccess={this.props.continuityAccess}
                         dataReuse={this.props.dataReuse}
                         handleDownload={this.handleDownload}
+                        checksum={this.props.checksum}
                     
                         downloadPath={this.props.downloadPath}
                         shouldHaveDownloadButton={this.props.shouldHaveDownloadButton}
@@ -207,7 +209,6 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                         domain={this.props.domain}
                         subdomain={this.props.subdomain} 
                         country={this.props.country}
-                        data_format={this.props.data_format}
                         authors={this.props.authors}
                         year={this.props.year}
                         dataset_title={this.props.dataset_title}

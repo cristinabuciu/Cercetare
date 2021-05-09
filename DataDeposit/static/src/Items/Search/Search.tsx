@@ -58,8 +58,8 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             subdomainList: {
                 'All domains  ': []
             },
-            country: ['None'],
-            dataFormat: ['All Data Formats ', 'zip', 'rar', 'tar.gz'],
+            country: ['All countries  '],
+            dataFormat: ['All Data Formats '],
             sortBy: ['Dataset_title ASC', 'Dataset_title DESC', 'Avg_Rating_Value ASC', 'Avg_Rating_Value DESC'],
             downloadFrom: ['All Downloads ', 'Download Link', 'Download File', 'No Download']
         },
@@ -108,6 +108,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     }
                 }
                 this.state.searchInputOptions.country = ['All countries  '].concat(response.data['data'][2]);
+                this.state.searchInputOptions.dataFormat = ['All Data Formats '].concat(response.data['data'][3]);
             } else {
                 responseGetStatus.wasError = true;
                 responseGetStatus.responseMessage = translate.useTranslation(response.data['data']);

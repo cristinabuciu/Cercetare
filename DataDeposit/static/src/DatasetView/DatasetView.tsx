@@ -62,7 +62,8 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
             tags: [],
             updates_number: -1,
             views: -1,
-            year: ""
+            year: "",
+            checksum: "-"
         },
         shoudLoad: true,
         responseStatus: {
@@ -168,6 +169,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                         updates={this.state.searchResult['updates_number']}
                         downloads={this.state.searchResult['downloads_number']}
                         hasPhoto={this.state.searchResult['hasPhoto']}
+                        checksum={this.state.searchResult['checksum'] ? this.state.searchResult['checksum'] : "-"}
                     />
                     }
                     </Col>

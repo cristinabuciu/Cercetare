@@ -40,7 +40,6 @@ export interface IUploadPageFormState {
     domain: string;
     otherDomain: string | null;
     subdomain: Array<String>;
-    dataFormat: string;
     country: string;
     valueSwitch: boolean;
     gitlink: string;
@@ -48,7 +47,6 @@ export interface IUploadPageFormState {
         domain: Array<String>;
         subdomain: Array<String>;
         country: Array<String>;
-        dataFormat: Array<String>;
     };
     shouldEnterNewDomain: boolean;
     uploadOption: {
@@ -87,7 +85,6 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         otherDomain: null,
         country: "Select Country  ",
         subdomain: [],
-        dataFormat: "Select Dataformat  ",
         dataReuse: '',
         contAccess: '',
         dataIntegrity: '',
@@ -105,8 +102,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                 // PHYSICS: ['PHYSICS_1', 'PHYSICS_2', 'PHYSICS_3', 'PHYSICS_4'],
                 // BUSINESS: ['BUSINESS_1', 'BUSINESS_2']
             },
-            country: [],
-            dataFormat: ['zip', 'rar', 'tar.gz']
+            country: []
         },
         shouldEnterNewDomain: false,
         uploadOption: {
@@ -228,7 +224,6 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
               	notArrayParams: {
                     domain: this.state.otherDomain ? this.state.otherDomain : this.state.domain,
                     country: this.state.country,
-                    data_format: this.state.dataFormat,
                     year: this.state.year,
                     dataset_title: this.state.dataset_title,
                     article_title: this.state.article_title,
@@ -505,13 +500,6 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         onInputChange={this.handleCreateSelectInputChange}
                                         placeholder="Select tags"
                                     />
-                                </Col>
-                            </Row>
-                        </FormGroup>
-                        <FormGroup>
-                            <Row className="padding-top-20">
-                                <Col className="text-align-left">
-                                    <InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.uploadInputOptions.dataFormat} changeValue={this.changeValue} className="button-style-upload" />
                                 </Col>
                             </Row>
                         </FormGroup>
