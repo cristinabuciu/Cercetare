@@ -20,7 +20,6 @@ def getCountryCoordinates(es, country):
 
 
 def getFileMimeType(file):
-    file.seek(0, SEEK_SET)
     return magic.Magic(mime=True).from_buffer(file.stream.read(2048))
 
 
@@ -33,12 +32,10 @@ def getFileFormat(file):
 
 
 def getFileChecksum(file):
-    file.seek(0, SEEK_SET)
     return md5(file.read()).hexdigest()
 
 
 def getFileChecksumChunks(file):
-    file.seek(0, SEEK_SET)
     file_hash = md5()
     chunk = file.read(8192)
     while chunk:

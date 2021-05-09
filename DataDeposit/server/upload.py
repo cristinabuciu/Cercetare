@@ -1,6 +1,6 @@
 # upload.py
 from application_properties import INDEX_DATASETS, INDEX_ID_GENERATOR, INDEX_DOMAINS, INDEX_TAGS, INDEX_COMMENTS, CKAN_INSTANCE_ORG_ID, UPLOAD_FILE_SIZE_MAX
-from utils import getCountryCoordinates, isFileAllowed, createResponse, getTransaction, getFileSize, getFileChecksumChunks, getFileFormat
+from utils import getCountryCoordinates, isFileAllowed, createResponse, getTransaction, getFileSize, getFileChecksum, getFileFormat
 from search import getUserIdByName
 from constants import WAIT_FOR, SUCCESS, ERROR
 
@@ -144,7 +144,7 @@ def uploadDatasetFiles(datasetId, packageId, file):
         existing['ckan_resource_id'] = resourceId
         existing['downloadPath'] = resourceUrl
         existing['data_format'] = getFileFormat(file)
-        existing['file_checksum'] = getFileChecksumChunks(file)
+        existing['file_checksum'] = getFileChecksum(file)
         es.update(INDEX_DATASETS, '_doc', esId, existing, WAIT_FOR)
 
         return createResponse(HTTPStatus.OK, {'datasetId': datasetId, 'packageId': packageId, 'resourceId': resourceId})

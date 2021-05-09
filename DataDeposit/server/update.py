@@ -1,6 +1,6 @@
 # update.py
 from application_properties import INDEX_DATASETS, INDEX_DOMAINS, INDEX_TAGS, CKAN_INSTANCE_ORG_ID, UPLOAD_FILE_SIZE_MAX
-from utils import getCountryCoordinates, isFileAllowed, createResponse, getTransaction, getFileSize, getFileChecksumChunks, getFileFormat
+from utils import getCountryCoordinates, isFileAllowed, createResponse, getTransaction, getFileSize, getFileChecksum, getFileFormat
 from search import getUserIdByName
 from constants import WAIT_FOR
 
@@ -215,7 +215,7 @@ def updateDatasetFilesToInternal(datasetId, file):
             resourceUrl = ck.updateResource(resource_data, file)
             dataset['downloadPath'] = resourceUrl
             dataset['data_format'] = getFileFormat(file)
-            dataset['file_checksum'] = getFileChecksumChunks(file)
+            dataset['file_checksum'] = getFileChecksum(file)
         else:
             # add resource
             packageId = dataset['ckan_package_id']
@@ -230,7 +230,7 @@ def updateDatasetFilesToInternal(datasetId, file):
             dataset['ckan_resource_id'] = resourceId
             dataset['downloadPath'] = resourceUrl
             dataset['data_format'] = getFileFormat(file)
-            dataset['file_checksum'] = getFileChecksumChunks(file)
+            dataset['file_checksum'] = getFileChecksum(file)
 
         dataset['updates_number'] += 1
         dataset['lastUpdatedAt'] = str(int(time()))
