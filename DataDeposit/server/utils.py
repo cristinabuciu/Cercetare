@@ -1,9 +1,11 @@
-from application_properties import DATABASE_IP, DATABASE_PORT, INDEX_LOCATIONS, UPLOAD_FILE_ALLOWED_EXTENSIONS
+from application_properties import DATABASE_IP, DATABASE_PORT, INDEX_LOCATIONS, UPLOAD_FILE_ALLOWED_MIME_TYPES
 from os import SEEK_SET, SEEK_END
 
 from time import time
+from hashlib import md5
 
 import es_connector
+import magic
 
 
 def getTransaction():
@@ -17,8 +19,32 @@ def getCountryCoordinates(es, country):
     return ", ".join(str(x) for x in locations[country])
 
 
-def isFileAllowed(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in UPLOAD_FILE_ALLOWED_EXTENSIONS
+def getFileMimeType(file):
+    file.seek(0, SEEK_SET)
+    return magic.Magic(mime=True).from_buffer(file.stream.read(2048))
+
+
+def isFileAllowed(file):
+    return getFileMimeType(file) in list(UPLOAD_FILE_ALLOWED_MIME_TYPES.keys())
+
+
+def getFileFormat(file):
+    return UPLOAD_FILE_ALLOWED_MIME_TYPES[getFileMimeType(file)]
+
+
+def getFileChecksum(file):
+    file.seek(0, SEEK_SET)
+    return md5(file.read()).hexdigest()
+
+
+def getFileChecksumChunks(file):
+    file.seek(0, SEEK_SET)
+    file_hash = md5()
+    chunk = file.read(8192)
+    while chunk:
+        file_hash.update(chunk)
+        chunk = file.read(8192)
+    return file_hash.hexdigest()
 
 
 def getFileSize(file):

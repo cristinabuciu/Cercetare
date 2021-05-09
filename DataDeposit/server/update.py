@@ -1,6 +1,6 @@
 # update.py
 from application_properties import INDEX_DATASETS, INDEX_DOMAINS, INDEX_TAGS, CKAN_INSTANCE_ORG_ID, UPLOAD_FILE_SIZE_MAX
-from utils import getCountryCoordinates, isFileAllowed, createResponse, getTransaction, getFileSize
+from utils import getCountryCoordinates, isFileAllowed, createResponse, getTransaction, getFileSize, getFileChecksumChunks, getFileFormat
 from search import getUserIdByName
 from constants import WAIT_FOR
 
@@ -50,6 +50,8 @@ def updateDataset(dataset_id, params, current_user):
         new_dataset['ckan_package_id'] = existing['ckan_package_id']
         if 'ckan_resource_id' in existing:
             new_dataset['ckan_resource_id'] = existing['ckan_resource_id']
+        if 'file_checksum' in existing:
+            new_dataset['file_checksum'] = existing['file_checksum']
 
         new_dataset['deleted'] = False
         new_dataset['deletedAt'] = -1
@@ -129,6 +131,8 @@ def updateDatasetFilesToNone(datasetId):
         # cleanup internal
         deleteCkanResourceIfNeeded(dataset)
 
+        dataset['data_format'] = ''
+        dataset['file_checksum'] = ''
         dataset['updates_number'] += 1
         dataset['lastUpdatedAt'] = str(int(time()))
         dataset['downloads_number'] = 0
@@ -156,6 +160,8 @@ def updateDatasetFilesToExternal(datasetId, downloadUrl):
         # cleanup internal
         deleteCkanResourceIfNeeded(dataset)
 
+        dataset['data_format'] = ''
+        dataset['file_checksum'] = ''
         dataset['updates_number'] += 1
         dataset['lastUpdatedAt'] = str(int(time()))
         dataset['downloads_number'] = 0
@@ -180,7 +186,7 @@ def deleteCkanResourceIfNeeded(dataset):
 
 
 def updateDatasetFilesToInternal(datasetId, file):
-    if not file or file.filename == '' or not(isFileAllowed(file.filename)):
+    if not file or file.filename == '' or not(isFileAllowed(file)):
         return createResponse(HTTPStatus.BAD_REQUEST, "FILE_NOT_ALLOWED")
 
     if getFileSize(file) > UPLOAD_FILE_SIZE_MAX:
@@ -208,6 +214,8 @@ def updateDatasetFilesToInternal(datasetId, file):
 
             resourceUrl = ck.updateResource(resource_data, file)
             dataset['downloadPath'] = resourceUrl
+            dataset['data_format'] = getFileFormat(file)
+            dataset['file_checksum'] = getFileChecksumChunks(file)
         else:
             # add resource
             packageId = dataset['ckan_package_id']
@@ -221,6 +229,8 @@ def updateDatasetFilesToInternal(datasetId, file):
             resourceId, resourceUrl = ck.addResource(resource_data, file)
             dataset['ckan_resource_id'] = resourceId
             dataset['downloadPath'] = resourceUrl
+            dataset['data_format'] = getFileFormat(file)
+            dataset['file_checksum'] = getFileChecksumChunks(file)
 
         dataset['updates_number'] += 1
         dataset['lastUpdatedAt'] = str(int(time()))
