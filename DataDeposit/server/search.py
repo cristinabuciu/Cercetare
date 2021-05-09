@@ -123,13 +123,14 @@ def getPageResult(datasets, start, end):
 
 def toPageResult(dataset):
     resourceType, downloadPath = getResourceType(dataset)
+    data_format = dataset['data_format'] if 'data_format' in dataset else ''
 
     return {
         'id': dataset['id'],
         'domain': dataset['domain'],
         'tags': dataset['tags'],
         'country': dataset['country'],
-        'data_format': dataset['data_format'],
+        'data_format': data_format,
         'authors': dataset['authors'],
         'year': dataset['year'],
         'dataset_title': dataset['dataset_title'],
