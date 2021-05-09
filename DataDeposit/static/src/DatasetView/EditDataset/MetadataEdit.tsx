@@ -15,7 +15,6 @@ export interface IMetadataEditProps {
     domain: string;
     subdomain: Array<string> 
     country: string;
-    data_format: string; 
     authors: Array<String>;
     year: string;
     dataset_title: string;
@@ -41,7 +40,6 @@ export interface IMetadataEditState {
     domain: string;
     otherDomain: string | null;
     subdomain: ICustomSelectList[];
-    dataFormat: string;
     country: string;
     valueSwitch: boolean;
     gitlink: string;
@@ -49,7 +47,6 @@ export interface IMetadataEditState {
         domain: Array<string>;
         subdomain: Array<string>;
         country: Array<string>;
-        dataFormat: Array<string>;
     };
     shouldEnterNewDomain: boolean;
     uploadOption: {
@@ -91,7 +88,6 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
         otherDomain: null,
         country: "Select Country  ",
         subdomain: [{label: "", value: ""}],
-        dataFormat: "Select Dataformat  ",
         dataReuse: '',
         contAccess: '',
         dataIntegrity: '',
@@ -101,8 +97,7 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
             domain: [],
             subdomain: [],
             subdomainList: {},
-            country: [],
-            dataFormat: ['zip', 'rar', 'tar.gz']
+            country: []
         },
         shouldEnterNewDomain: false,
         uploadOption: {
@@ -186,7 +181,6 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 				dataReuse: this.props.dataReuse,
 				country: this.props.country,
 				domain: this.props.domain,
-				dataFormat: this.props.data_format,
 				year: Number(this.props.year),
 				valueSwitch: this.props.private,
 				subdomain: currentTags,
@@ -283,7 +277,6 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
               	notArrayParams: {
                     domain: this.state.otherDomain ? this.state.otherDomain : this.state.domain,
                     country: this.state.country,
-                    data_format: this.state.dataFormat,
                     year: this.state.year,
                     dataset_title: this.state.dataset_title,
                     article_title: this.state.article_title,
@@ -452,13 +445,6 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 									onInputChange={this.handleCreateSelectInputChange}
 									placeholder={translate.useTranslation("tags")}
 								/>
-							</Col>
-						</Row>
-					</FormGroup>
-					<FormGroup>
-						<Row className="padding-top-20">
-							<Col className="text-align-left">
-								<InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.uploadInputOptions.dataFormat} changeValue={this.changeValue} className="button-style-upload" />
 							</Col>
 						</Row>
 					</FormGroup>

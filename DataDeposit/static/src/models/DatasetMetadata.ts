@@ -31,4 +31,5 @@ export interface DatasetMetadata {
 	updates_number: number;
 	views: number;
 	year: string;
+	checksum: string;
 }

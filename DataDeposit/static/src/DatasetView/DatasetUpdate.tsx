@@ -14,7 +14,6 @@ export interface IDatasetUpdateProps {
     domain: string;
     subdomain: Array<string> 
     country: string;
-    data_format: string; 
     authors: Array<string>;
     year: string;
     dataset_title: string;
@@ -92,7 +91,6 @@ export default class DatasetUpdate extends React.Component<IDatasetUpdateProps, 
 						domain={this.props.domain}
 						subdomain={this.props.subdomain} 
 						country={this.props.country}
-						data_format={this.props.data_format}
 						authors={this.props.authors}
 						year={this.props.year}
 						dataset_title={this.props.dataset_title}
