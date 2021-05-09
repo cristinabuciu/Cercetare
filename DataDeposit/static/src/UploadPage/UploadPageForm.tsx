@@ -579,8 +579,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                                     id="myFile"
                                                     value={this.state.fileToBeSentName}
                                                     onChange={this.uploadFile} />
-                                                    <FormText className="text-align-left allowed-type">*{this.state.uploadInputOptions.dataFormats}</FormText>
-                                                {/* <span className="text-align-left">dsfsdfd</span> */}
+                                                    <FormText className="text-align-left allowed-type">*{this.state.uploadInputOptions.dataFormats.join(", ")}</FormText>
                                             </Col>
                                         </FormGroup>
                                     </Card>

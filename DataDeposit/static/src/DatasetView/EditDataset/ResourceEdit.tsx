@@ -4,20 +4,20 @@ import React from 'react';
 import axios from 'axios';
 
 import { CardBody, Row, Col, CardTitle, CardSubtitle, CardText, Card,
-    Button, Input, Form, FormGroup, Alert, Label } from 'reactstrap';
+    Button, Input, Form, FormGroup, Alert, Label, FormText } from 'reactstrap';
 import {InputText, Switch, LoaderComponent } from '../../Items/Items-components'
 import { faLink, faDownload, faPortrait } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ResourceToDownload } from './Edit-components'
 import { ResponseStatus } from '../../models/ResponseStatus'
 
-export interface IMetadataEditProps {
+export interface IResourceEditProps {
 	id: number;
 	switchPage: Function;
 	handleDownload: Function;
 }
 
-export interface IMetadataEditState {
+export interface IResourceEditState {
 	fileToBeSent: string | Blob;
     currentResource: string;
 	loaderVisibility: boolean;
@@ -36,10 +36,12 @@ export interface IMetadataEditState {
 	shouldRenderForm: boolean;
 	responseStatus: ResponseStatus;
 	responseGetStatus: ResponseStatus;
+	responseGetDefaultDataStatus: ResponseStatus;
+	dataFormats: Array<string>;
 }
 
-export default class MetadataEdit extends React.Component<IMetadataEditProps, IMetadataEditState> {
-    state: IMetadataEditState = {
+export default class ResourceEdit extends React.Component<IResourceEditProps, IResourceEditState> {
+    state: IResourceEditState = {
 		fileToBeSent: '',
         currentResource: '',
 		loaderVisibility: false,
@@ -65,11 +67,18 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 			wasSuccess: false,
 			responseMessage: ""
 		},
-		shouldRenderForm: true
+		responseGetDefaultDataStatus: {
+			wasError: false,
+			wasSuccess: false,
+			responseMessage: ""
+		},
+		shouldRenderForm: true,
+		dataFormats: []
     }
 
     componentDidMount (): void {
 		let responseGetStatus: ResponseStatus = {};
+		let responseGetDefaultDataStatus: ResponseStatus = {};
 		const translate = new MyTranslator("Response-codes");
 		let currentResource = '';
 		let currentOptions = {
@@ -114,11 +123,33 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 		})
 		.finally( () => {
 			// always executed
-			this.setState({
-				currentResource: currentResource,
-				currentOptions: currentOptions,
-				shouldRenderForm: responseGetStatus.wasSuccess ? true : false,
-				loaderVisibility: false
+			let dataFormats: Array<string> = [];
+			axios.get( '/getDefaultData')
+			.then(response => {
+				if (response.data['statusCode'] === 200) {
+					responseGetDefaultDataStatus.wasSuccess = true;
+					dataFormats = response.data['data'][3];
+				} else {
+					responseGetDefaultDataStatus.wasError = true;
+					responseGetDefaultDataStatus.responseMessage = translate.useTranslation(response.data['data']);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+				responseGetDefaultDataStatus.wasError = true;
+				responseGetDefaultDataStatus.responseMessage = translate.useTranslation("GET_DEFAULT_DATA_ERROR");
+			})
+			.finally( () => {
+				// always executed
+				this.setState({
+					currentResource: currentResource,
+					currentOptions: currentOptions,
+					shouldRenderForm: responseGetStatus.wasSuccess && responseGetDefaultDataStatus.wasSuccess ? true : false,
+					loaderVisibility: false,
+					dataFormats: dataFormats,
+					responseGetStatus: responseGetStatus,
+					responseGetDefaultDataStatus: responseGetDefaultDataStatus
+				});
 			});
 		});
 
@@ -316,6 +347,7 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 											name="myFile" 
 											id="myFile" 
 											onChange={this.uploadFile} />
+										<FormText className="text-align-left allowed-type">*{this.state.dataFormats.join(", ")}</FormText>
 									</Col>
 								</FormGroup>
 							</Card>
@@ -361,6 +393,14 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 					<Col>
 						<Alert color="danger" className="text-align-center">
 							{this.state.responseGetStatus.responseMessage}
+						</Alert>
+					</Col>
+				</Row>
+
+				<Row className={this.state.responseGetDefaultDataStatus.wasError ? "" : "display-none"}>
+					<Col>
+						<Alert color="danger" className="text-align-center">
+							{this.state.responseGetDefaultDataStatus.responseMessage}
 						</Alert>
 					</Col>
 				</Row>
