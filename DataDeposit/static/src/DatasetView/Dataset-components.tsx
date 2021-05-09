@@ -1,7 +1,7 @@
 import './DatasetView.scss';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink, faStar, faPortrait, faCalendar, faUser, faFile, faFileDownload, faGlobe, faDatabase, faEye, faTags, faFemale, faFlag } from "@fortawesome/free-solid-svg-icons";
+import { faLink, faStar, faPortrait, faCalendar, faUser, faFile, faFileDownload, faGlobe, faDatabase, faLock, faTags, faFemale, faFlag } from "@fortawesome/free-solid-svg-icons";
 
 import { CardBody, Row, Col, Button } from 'reactstrap';
 
@@ -12,14 +12,14 @@ export const AboutBody = props => (
                 <div className="column-section">
                     <div className="overflow-hidden">
                     <span className="column-item">
-                        <span className="column-data">
+                        <span className="column-data bold">
                         <FontAwesomeIcon icon={faCalendar}/> Domain:
                         </span>
                         {props.domain ? props.domain : "-"}
                     </span>
 
                     <span className="column-item">
-                        <span className="column-data">
+                        <span className="column-data bold">
                         <FontAwesomeIcon icon={faTags}/> Tags:
                         </span>
                         <div className="overflow-hidden">
@@ -28,7 +28,7 @@ export const AboutBody = props => (
                     </span>
 
                     <span className="column-item">
-                        <span className="column-data">
+                        <span className="column-data bold">
                         <FontAwesomeIcon icon={faPortrait}/> Authors:
                         </span>
                         <div className="overflow-hidden">
@@ -37,21 +37,21 @@ export const AboutBody = props => (
                     </span>
 
                     <span className="column-item">
-                        <span className="column-data">
+                        <span className="column-data bold">
                         <FontAwesomeIcon icon={faPortrait}/> Article title:
                         </span>
                         {props.article_title ? props.article_title : "-"}
                     </span>
 
                     <span className="column-item">
-                        <span className="column-data">
+                        <span className="column-data bold">
                         <FontAwesomeIcon icon={faGlobe}/> Country:
                         </span>
                         {props.country ? props.country : "-"}
                     </span>
                     
                     <span className="column-item">
-                        <span className="column-data">
+                        <span className="column-data bold">
                         <FontAwesomeIcon icon={faCalendar}/> Created:
                         </span>
                         {props.year ? props.year : "-"}
@@ -61,19 +61,19 @@ export const AboutBody = props => (
 
                     <div className="overflow-hidden">
                         <span className="column-item">
-                            <span className="column-data">
+                            <span className="column-data bold">
                             <FontAwesomeIcon icon={faStar}/> Rating:
                             </span>
                             {props.avg_rating ? props.avg_rating : "0"}
                         </span>
                         <span className="column-item">
-                            <span className="column-data">
+                            <span className="column-data bold">
                             <FontAwesomeIcon icon={faFile}/> Data format:
                             </span>
                             {props.data_format ? props.data_format : "-"}
                         </span>
                         <span className="column-item">
-                            <span className="column-data">
+                            <span className="column-data bold">
                             <FontAwesomeIcon icon={faFileDownload}/> Resource Type:
                             </span>
                             {props.shouldHaveDownloadButton ? 
@@ -87,15 +87,23 @@ export const AboutBody = props => (
                                 <>None</>
                                 }
                         </span>
+                        {props.shouldHaveDownloadButton && !props.shouldHaveDownloadLink ? 
                         <span className="column-item">
-                            <span className="column-data">
+                            <span className="column-data bold">
+                            <FontAwesomeIcon icon={faLock}/> Resource checksum:
+                            </span>
+                            {props.checksum}
+                        </span> : <></>
+                        }
+                        <span className="column-item">
+                            <span className="column-data bold">
                             <FontAwesomeIcon icon={faGlobe}/> Gitlink:
                             </span>
                             {props.gitlink ? props.gitlink : "-"}
                         </span>
 
                         <span className="column-item">
-                            <span className="column-data">
+                            <span className="column-data bold">
                             <FontAwesomeIcon icon={faUser}/> Uploaded by:
                             </span>
                             {props.owner ? props.owner : "-"}

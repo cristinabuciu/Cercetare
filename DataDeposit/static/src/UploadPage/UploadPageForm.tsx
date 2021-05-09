@@ -40,7 +40,6 @@ export interface IUploadPageFormState {
     domain: string;
     otherDomain: string | null;
     subdomain: Array<String>;
-    dataFormat: string;
     country: string;
     valueSwitch: boolean;
     gitlink: string;
@@ -48,7 +47,6 @@ export interface IUploadPageFormState {
         domain: Array<String>;
         subdomain: Array<String>;
         country: Array<String>;
-        dataFormat: Array<String>;
     };
     shouldEnterNewDomain: boolean;
     uploadOption: {
@@ -87,7 +85,6 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         otherDomain: null,
         country: "Select Country  ",
         subdomain: [],
-        dataFormat: "Select Dataformat  ",
         dataReuse: '',
         contAccess: '',
         dataIntegrity: '',
@@ -106,7 +103,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                 // BUSINESS: ['BUSINESS_1', 'BUSINESS_2']
             },
             country: [],
-            dataFormat: ['zip', 'rar', 'tar.gz']
+            dataFormats: []
         },
         shouldEnterNewDomain: false,
         uploadOption: {
@@ -151,6 +148,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                     }
                 }
                 this.state.uploadInputOptions.country = response.data['data'][2];
+                this.state.uploadInputOptions.dataFormats = response.data['data'][3];
             } else {
                 responseGetStatus.wasError = true;
                 responseGetStatus.responseMessage = translate.useTranslation(response.data['data']);
@@ -228,7 +226,6 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
               	notArrayParams: {
                     domain: this.state.otherDomain ? this.state.otherDomain : this.state.domain,
                     country: this.state.country,
-                    data_format: this.state.dataFormat,
                     year: this.state.year,
                     dataset_title: this.state.dataset_title,
                     article_title: this.state.article_title,
@@ -510,13 +507,6 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                         </FormGroup>
                         <FormGroup>
                             <Row className="padding-top-20">
-                                <Col className="text-align-left">
-                                    <InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.uploadInputOptions.dataFormat} changeValue={this.changeValue} className="button-style-upload" />
-                                </Col>
-                            </Row>
-                        </FormGroup>
-                        <FormGroup>
-                            <Row className="padding-top-20">
                                 <Col>
                                     <Input 
                                         type="textarea" 
@@ -542,73 +532,59 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                         </FormGroup>
                         <FormGroup>
                             <Row className="padding-top-20">
-                                    {/* <Col sm="4">
-                                        <Card body className={this.state.uploadOption.private ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
-                                            <FormGroup check className="margin-top-5">
-                                                <Label check>
+                                <Col sm="6">
+                                    <Card body className={this.state.uploadOption.link ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
+                                        <FormGroup check className="margin-top-5">
+                                            <Label check>
+                                            <Input 
+                                                id="EXTERNAL"
+                                                checked={this.state.uploadOption.link}
+                                                onClick={this.radioHit}
+                                                type="checkbox" 
+                                                name="radio2" 
+                                                className="margin-top-5" />{' '}
+                                            Download link 
+                                            </Label>
+                                            <>  </><FontAwesomeIcon icon={faLink} />
+                                            <Input
+                                                type="url"
+                                                name="url"
+                                                id="downloadURL"
+                                                disabled={!this.state.uploadOption.link}
+                                                placeholder="Download Link..."
+                                                onChange={e => this.changeValue(e.target.value, 'downloadPath')}
+                                            />
+                                        </FormGroup>
+                                    </Card>
+                                    </Col>
+                                    <Col sm="6">
+                                    <Card body className={this.state.uploadOption.upload ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
+                                        <FormGroup check disabled className="margin-top-5">
+                                            <Label check>
+                                            <Input
+                                                id="INTERNAL"
+                                                checked={this.state.uploadOption.upload}
+                                                onClick={this.radioHit}
+                                                type="checkbox" 
+                                                name="radio2" 
+                                                className="margin-top-5" />{' '}
+                                            Upload dataset
+                                            </Label>
+                                            <>  </><FontAwesomeIcon icon={faDownload} />
+                                            <Col >
                                                 <Input 
-                                                    id="private"
-                                                    type="radio" 
-                                                    name="radio2" 
-                                                    onClick={this.radioHit}
-                                                    className="margin-top-5" />{' '}
-                                                Private contact
-                                                </Label>
-                                                <>  </><FontAwesomeIcon icon={faPortrait} />
-                                            </FormGroup>
-                                        </Card>
-                                        </Col> */}
-                                        <Col sm="6">
-                                        <Card body className={this.state.uploadOption.link ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
-                                            <FormGroup check className="margin-top-5">
-                                                <Label check>
-                                                <Input 
-                                                    id="EXTERNAL"
-                                                    checked={this.state.uploadOption.link}
-                                                    onClick={this.radioHit}
-                                                    type="checkbox" 
-                                                    name="radio2" 
-                                                    className="margin-top-5" />{' '}
-                                                Download link 
-                                                </Label>
-                                                <>  </><FontAwesomeIcon icon={faLink} />
-                                                <Input
-                                                    type="url"
-                                                    name="url"
-                                                    id="downloadURL"
-                                                    disabled={!this.state.uploadOption.link}
-                                                    placeholder="Download Link..."
-                                                    onChange={e => this.changeValue(e.target.value, 'downloadPath')}
-                                                />
-                                            </FormGroup>
-                                        </Card>
-                                        </Col>
-                                        <Col sm="6">
-                                        <Card body className={this.state.uploadOption.upload ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
-                                            <FormGroup check disabled className="margin-top-5">
-                                                <Label check>
-                                                <Input
-                                                    id="INTERNAL"
-                                                    checked={this.state.uploadOption.upload}
-                                                    onClick={this.radioHit}
-                                                    type="checkbox" 
-                                                    name="radio2" 
-                                                    className="margin-top-5" />{' '}
-                                                Upload dataset
-                                                </Label>
-                                                <>  </><FontAwesomeIcon icon={faDownload} />
-                                                <Col >
-                                                    <Input 
-                                                        type="file" 
-                                                        disabled={!this.state.uploadOption.upload}
-                                                        name="myFile" 
-                                                        id="myFile"
-                                                        value={this.state.fileToBeSentName}
-                                                        onChange={this.uploadFile} />
-                                                </Col>
-                                            </FormGroup>
-                                        </Card>
-                                        </Col>
+                                                    type="file" 
+                                                    disabled={!this.state.uploadOption.upload}
+                                                    name="myFile" 
+                                                    id="myFile"
+                                                    value={this.state.fileToBeSentName}
+                                                    onChange={this.uploadFile} />
+                                                    <FormText className="text-align-left allowed-type">*{this.state.uploadInputOptions.dataFormats}</FormText>
+                                                {/* <span className="text-align-left">dsfsdfd</span> */}
+                                            </Col>
+                                        </FormGroup>
+                                    </Card>
+                                </Col>
                             </Row>
                         </FormGroup>
                         <FormGroup>
