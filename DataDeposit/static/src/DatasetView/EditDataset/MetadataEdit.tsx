@@ -4,10 +4,13 @@ import React from 'react';
 import axios from 'axios';
 
 import { CardBody, Row, Col, CardTitle, CardSubtitle, CardText, Card,
-    Button, Input, Form, FormGroup, FormText, Alert } from 'reactstrap';
-import {InputText, Switch, LoaderComponent, TooltipButton, CustomCreatableSelect} from '../../Items/Items-components'
+    Button, Label, FormGroup, FormText, Alert } from 'reactstrap';
+import {Switch, LoaderComponent, TooltipButton, CustomCreatableSelect} from '../../Items/Items-components'
 import { ResponseStatus } from '../../models/ResponseStatus'
 import { ICustomSelectList } from '../../models/ICustomSelectList'
+
+import { AvField, AvForm, AvGroup, AvInput } from 'availity-reactstrap-validation';
+import { DatasetMetadataForPost, SelectList, UploadInputOptions } from '../../models/FormItems'
 
 export interface IMetadataEditProps {
 	private: boolean;
@@ -29,92 +32,43 @@ export interface IMetadataEditProps {
 }
 
 export interface IMetadataEditState {
-    fileToBeSent: string | Blob;
-    buttonDropDownStatus: boolean;
-    startDate: Date;
-    dataset_title: string;
-    article_title: string;
-    short_desc: string;
-    dataset_authors: string;
-    year: number;
-    domain: string;
-    otherDomain: string | null;
-    subdomain: ICustomSelectList[];
-    country: string;
-    valueSwitch: boolean;
-    gitlink: string;
-    uploadInputOptions: {
-        domain: Array<string>;
-        subdomain: Array<string>;
-        country: Array<string>;
-    };
-    shouldEnterNewDomain: boolean;
-    uploadOption: {
-        private: boolean;
-        link: boolean;
-        upload: boolean;
-    };
-    validInputs: {
-        dataset_title: boolean;
-        dataset_authors: boolean;
-        year: boolean;
-        short_desc: boolean;
-    }
-    buttonUpload: boolean;
-    loaderVisibility: boolean;
-    dataReuse: string;
-    contAccess: string;
-    dataIntegrity: string;
-    downloadPath: string;
+    datasetMetadata: DatasetMetadataForPost;
+    uploadInputOptions: UploadInputOptions;
 
+    shouldEnterNewDomain: boolean;
+
+    loaderVisibility: boolean;
 	shouldRenderForm: boolean;
 	responseStatus: ResponseStatus;
 	responseGetStatus: ResponseStatus;
 }
 
 export default class MetadataEdit extends React.Component<IMetadataEditProps, IMetadataEditState> {
-    state = {
-        fileToBeSent: '',
-        buttonDropDownStatus: true,
-        startDate: new Date(),
-        dataset_title: '',
-        article_title: '',
-        dataset_authors: '',
-        short_desc: '',
-        gitlink: '',
-        year: 0,
-        valueSwitch: false,
-        domain: "Select Domain  ",
-        otherDomain: null,
-        country: "Select Country  ",
-        subdomain: [{label: "", value: ""}],
-        dataReuse: '',
-        contAccess: '',
-        dataIntegrity: '',
-        downloadPath: '',
-
+    state: IMetadataEditState = {
+		datasetMetadata: {
+            dataset_title: '',
+            article_title: '',
+            short_desc: '',
+            dataset_authors: '',
+            year: 0,
+            domain: '',
+            otherDomain: null,
+            tags: [],
+            country: '',
+            valueSwitch: false,
+            gitlink: '',
+            downloadPath: '',
+            dataReuse: '',
+            contAccess: '',
+            dataIntegrity: ''
+        },
         uploadInputOptions: {
             domain: [],
-            subdomain: [],
-            subdomainList: {},
-            country: []
+            tags: [],
+            tagList: {},
+            country: [],
+            dataFormats: []
         },
-        shouldEnterNewDomain: false,
-        uploadOption: {
-            private: false,
-            link: false,
-            upload: false
-        },
-
-        validInputs: {
-            dataset_title: false,
-            dataset_authors: false,
-            year: false,
-            short_desc: false
-        },
-        buttonUpload: false,
-        loaderVisibility: true,
-
 		responseStatus: {
 			wasError: false,
 			wasSuccess: false,
@@ -125,7 +79,9 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 			wasSuccess: false,
 			responseMessage: ""
 		},
-		shouldRenderForm: true
+		shouldRenderForm: true,
+		shouldEnterNewDomain: false,
+        loaderVisibility: true
     }
 
     componentDidMount (): void {
@@ -146,10 +102,10 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 				this.state.uploadInputOptions.domain = domains;
 	
 				for(var domain in response.data['data'][1]) {
-					if(domain in this.state.uploadInputOptions.subdomainList) {
-						this.state.uploadInputOptions.subdomainList[domain].concat(response.data['data'][1][domain]);
+					if(domain in this.state.uploadInputOptions.tagList) {
+						this.state.uploadInputOptions.tagList[domain].concat(response.data['data'][1][domain]);
 					} else {
-						this.state.uploadInputOptions.subdomainList[domain] = response.data['data'][1][domain];
+						this.state.uploadInputOptions.tagList[domain] = response.data['data'][1][domain];
 					}
 				}
 				this.state.uploadInputOptions.country = response.data['data'][2];
@@ -166,89 +122,97 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 		.finally( () => {
 			// always executed
 			let currentTags: ICustomSelectList[] = [];
-			debugger;
 			this.props.subdomain.forEach(function(part, index) {
 				currentTags.push({label: part, value: part});
 			});
+			let currentDatasetMetadata: DatasetMetadataForPost = this.state.datasetMetadata;
+			let currentUploadInputOptions: UploadInputOptions = this.state.uploadInputOptions;
+
+			currentUploadInputOptions.tags = this.state.uploadInputOptions.tagList[this.props.domain];
+			currentDatasetMetadata.dataset_title = this.props.dataset_title;
+			currentDatasetMetadata.article_title = this.props.article_title;
+			currentDatasetMetadata.dataset_authors = this.props.authors.map((value) => `${value}`).join(';');
+			currentDatasetMetadata.short_desc = this.props.short_desc;
+			currentDatasetMetadata.gitlink = this.props.gitlink;
+			currentDatasetMetadata.dataIntegrity = this.props.dataIntegrity;
+			currentDatasetMetadata.contAccess = this.props.continuityAccess;
+			currentDatasetMetadata.dataReuse = this.props.dataReuse;
+			currentDatasetMetadata.country = this.props.country;
+			currentDatasetMetadata.domain = this.props.domain;
+			currentDatasetMetadata.year = Number(this.props.year);
+			currentDatasetMetadata.valueSwitch = this.props.private;
+			currentDatasetMetadata.tags = currentTags;
+			currentDatasetMetadata.otherDomain = null;
+
 			this.setState({
-				dataset_title: this.props.dataset_title,
-				article_title: this.props.article_title,
-				dataset_authors: this.props.authors.map((value) => `${value}`).join(';'),
-				short_desc: this.props.short_desc,
-				gitlink: this.props.gitlink,
-				dataIntegrity: this.props.dataIntegrity,
-				contAccess: this.props.continuityAccess,
-				dataReuse: this.props.dataReuse,
-				country: this.props.country,
-				domain: this.props.domain,
-				year: Number(this.props.year),
-				valueSwitch: this.props.private,
-				subdomain: currentTags,
+				datasetMetadata: currentDatasetMetadata,
+				uploadInputOptions: currentUploadInputOptions,
 				shouldEnterNewDomain: false,
-				otherDomain: null,
 				loaderVisibility: false,
 				shouldRenderForm: responseGetStatus.wasSuccess ? true : false,
 				responseGetStatus: responseGetStatus
 			});
-
-			this.state.uploadInputOptions.subdomain = this.state.uploadInputOptions.subdomainList[this.props.domain];
-
-			this.forceUpdate();
 		});
 
 		///////////// FUNCTIONS ////////////////
 		this.changeValue = this.changeValue.bind(this);
-		this.checkForIntegrityOfFields = this.checkForIntegrityOfFields.bind(this);
+		this.changeAValue = this.changeAValue.bind(this);
 		this.handleCreateSelectChange = this.handleCreateSelectChange.bind(this);
 		this.handleCreateSelectInputChange = this.handleCreateSelectInputChange.bind(this);
 		this.switchPageBack = this.switchPageBack.bind(this);
 	}
 	
-	changeValue (e: any, comboBoxTitle: string, shouldUpdate: boolean = false): void {
-        if(comboBoxTitle === 'domain') {
-            this.state.uploadInputOptions.subdomain = [];
-            if (e === 'Other') {
-                this.setState({
-                    subdomain: [],
+	changeAValue (event: any, value: string): void {
+		if(event.target.name === 'domain') {
+            let currentUploadInputOptions: UploadInputOptions = this.state.uploadInputOptions;
+            let currentDatasetMetadata: DatasetMetadataForPost = this.state.datasetMetadata;
+            currentUploadInputOptions.tags = [];
+            currentDatasetMetadata.tags = [];
+
+            if (value === 'Other') {
+                this.setState({ 
                     shouldEnterNewDomain: true
                 });
             }
             else {
-                this.state.uploadInputOptions.subdomain = this.state.uploadInputOptions.subdomainList[e];
-                this.setState({
-                    subdomain: [],
-                    shouldEnterNewDomain: false,
-                    otherDomain: null
+                currentUploadInputOptions.tags = this.state.uploadInputOptions.tagList[value] ? this.state.uploadInputOptions.tagList[value] : [];
+                currentDatasetMetadata.otherDomain = null;
+                this.setState({ 
+                    shouldEnterNewDomain: false
                 });
             }
+
+            this.setState({
+                datasetMetadata: currentDatasetMetadata,
+                uploadInputOptions: currentUploadInputOptions
+            });
         }
-        this.state[comboBoxTitle] = e;
-        
-        this.forceUpdate();
+
+        console.log("Genesis");
+        console.log(this.state);
     }
 
-    checkForIntegrityOfFields(value: string, field: string): void {
-        if (value !== '') {
-            this.state['validInputs'][field] = false;
-            console.log("Codrin");
-        }
-        else {
-            this.state['validInputs'][field] = true;
-            this.state['buttonUpload'] = false;
-            console.log("Jafescu");
-        }
-        this.forceUpdate();
-        this.state['buttonUpload'] = !Object.keys(this.state['validInputs']).every(k => !this.state['validInputs'][k]);
-	}
+	changeValue = (e: boolean) => {
+        let currentDatasetMetadata: DatasetMetadataForPost = this.state.datasetMetadata;
+        currentDatasetMetadata.valueSwitch = e;
+        this.setState({
+            datasetMetadata: currentDatasetMetadata
+        });
+        
+        console.log("Land of Confusion");
+        console.log(this.state);
+    }
 
-	handleCreateSelectChange(newValue: any, actionMeta: any): void {
+	handleCreateSelectChange(newValue: Array<SelectList>, actionMeta: any): void {
         console.group('Value Changed');
         console.log(newValue);
         console.log(`action: ${actionMeta.action}`);
 		console.groupEnd();
 
+        let currentDatasetMetadata: DatasetMetadataForPost = this.state.datasetMetadata;
+        currentDatasetMetadata.tags = newValue;
         this.setState({
-            subdomain: newValue
+            datasetMetadata: currentDatasetMetadata
         });
     };
 
@@ -263,7 +227,11 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 		this.props.switchPage();
 	}
 	
-	handleSubmit(): void {
+	handleSubmit = (event, errors: Array<any>, values) => {
+		if (errors.length > 0) {
+            return;
+        }
+
 		let responseStatus: ResponseStatus = {};
 		const translate = new MyTranslator("Response-codes");
 
@@ -273,27 +241,26 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
         });
         
         axios.put( '/dataset/' + this.props.id, {
-            params: {
-              	notArrayParams: {
-                    domain: this.state.otherDomain ? this.state.otherDomain : this.state.domain,
-                    country: this.state.country,
-                    year: this.state.year,
-                    dataset_title: this.state.dataset_title,
-                    article_title: this.state.article_title,
-                    short_desc: this.state.short_desc,
-                    gitlink: this.state.gitlink,
-                    full_desc: '...',
-                    dataReuse: this.state.dataReuse,
-                    dataIntegrity: this.state.dataIntegrity,
-                    continuityAccess: this.state.contAccess,
-                    downloadPath: this.state.downloadPath,
-                },
-                arrayParams: {
-					tags: this.state.subdomain,
-					authors: this.state.dataset_authors.split(", ")
-                },
-                private: this.state.valueSwitch
-            }
+			params: {
+				notArrayParams: {
+					domain: this.state.datasetMetadata.otherDomain ? values.newDomain : values.domain,
+					country: values.country,
+					year: values.year,
+					dataset_title: values['dataset-title'],
+					article_title: values['article-title'],
+					short_desc: values.text,
+					gitlink: values.gitlink,
+					full_desc: '...',
+					dataReuse: values['data-reuse'],
+					dataIntegrity: values['Data-integ'],
+					continuityAccess: values['Cont-access']
+			  },
+			  arrayParams: {
+					tags: this.state.datasetMetadata.tags,
+					authors: values['dataset-authors'].split(", ")
+			  },
+			  private: this.state.datasetMetadata.valueSwitch
+		  }
         })
 		.then(response => {
 			if (response.data['statusCode'] === 200) {
@@ -328,227 +295,290 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 				<CardTitle></CardTitle>
 				<CardSubtitle></CardSubtitle>
 				<CardText>
-				<Form>
-					<FormGroup>
-						<Row>
-							<Col className="display-flex"><span className="padding-right-16">Private</span>
-							<Switch
-								isOn={this.state.valueSwitch}
-								onColor="#00FF00"
-								handleToggle={() => this.changeValue(!this.state.valueSwitch, 'valueSwitch')}
-							/>
-							</Col>
-						</Row>
-					</FormGroup>
-					<FormGroup>
-						<Row className="padding-top-20">
-							<Col >
-								<Input 
-									type="text"
-									invalid={this.state.validInputs.dataset_title}
-									name="dataset-title" 
-									id="Dataset-title" 
-									placeholder={translate.useTranslation("dataset_title")}
-									value={this.state.dataset_title}
-									onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
-									onChange={e => this.changeValue(e.target.value, 'dataset_title')}/>
-							</Col>
-							
-						</Row>
-					</FormGroup>
-					<FormGroup>
-						<Row className="padding-top-20">
-							<Col >
-								<Input 
-									type="text" 
-									name="dataset-authors"
-									id="Dataset-authors" 
-									placeholder={translate.useTranslation("dataset_authors")}
-									value={this.state.dataset_authors}
-									invalid={this.state.validInputs.dataset_authors}
-									onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_authors')}
-									onChange={e => this.changeValue(e.target.value, 'dataset_authors')}/>
-								<TooltipButton 
-									className="padding-top-10"
-									ButtonName="Show more info" 
-									body={''}/>
-							</Col>
-							
-						</Row>
-					</FormGroup>
-					<FormGroup>
-						<Row>
-							<Col >
-								<Input 
-									type="text" 
-									name="article-title" 
-									id="Article-title" 
-									placeholder={translate.useTranslation("article_title")}
-									value={this.state.article_title}
-									// invalid={this.state.validInputs.article_title}
-									// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'article_title')}
-									onChange={e => this.changeValue(e.target.value, 'article_title')}/>
-									<FormText>{translate.useTranslation("optional")}</FormText>
-							</Col>
-							
-						</Row>
-					</FormGroup>
-					<FormGroup>
-						<Row className="padding-top-20">
-							<Col md={{ size: 3, offset: 0 }}>
-								<Input 
-									type="number" 
-									name="year" 
-									id="year" 
-									placeholder={translate.useTranslation("year")}
-									invalid={this.state.validInputs.year}
-									value={this.state.year}
-									onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'year')}
-									onChange={e => this.changeValue(e.target.value, 'year')}/>
-							</Col>
-							<Col></Col>
-							
-						</Row>
-					</FormGroup>
-					<FormGroup>
-						<Row className="padding-top-20">
-							<Col className="text-align-left">
-								<InputText 
-									nameOfDropdown="country" 
-									titleDropdown={this.state.country} 
-									listOfItems={this.state.uploadInputOptions.country} 
-									changeValue={this.changeValue} 
-									className="button-style-upload" />
-							</Col>
-						</Row>
-					</FormGroup>
-					<FormGroup>
-						<Row className="padding-top-20">
-							<Col className="text-align-left" md="3">
-								<InputText nameOfDropdown="domain" titleDropdown={this.state.domain} listOfItems={this.state.uploadInputOptions.domain} changeValue={this.changeValue} className="button-style-upload" />
-							</Col>
-							<Col className="text-align-left">
-								{this.state.shouldEnterNewDomain ? 
-								<Input type="text" name="newDomain" id="newDomain" placeholder="Enter new domain" 
-								onChange={e => this.changeValue(e.target.value.toUpperCase(), 'otherDomain')}
-								/> : <></>}
-							</Col>
-						</Row>
-					</FormGroup>
-					<FormGroup>
-						<Row className="padding-top-20">
-							<Col>
-								<CustomCreatableSelect 
-									options={this.state.uploadInputOptions.subdomain}
-									value={this.state.subdomain}
-									handleChange={this.handleCreateSelectChange}
-									onInputChange={this.handleCreateSelectInputChange}
-									placeholder={translate.useTranslation("tags")}
-								/>
-							</Col>
-						</Row>
-					</FormGroup>
-					<FormGroup>
-						<Row className="padding-top-20">
-							<Col>
-								<Input 
-									type="textarea" 
-									name="text" 
-									maxLength="1000"  
-									id="description" 
-									placeholder={translate.useTranslation("description")}
-									className="margin-top-10" 
-									value={this.state.short_desc}
-									invalid={this.state.validInputs.short_desc}
-									onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'short_desc')}
-									onChange={e => this.changeValue(e.target.value, 'short_desc')}/>
-							</Col>
-						</Row>
-					</FormGroup>
-					<FormGroup>
-						<Row className="padding-top-20">
-							<Col >
-								<Input type="text" name="gitlink" id="gitlink" placeholder="GitHub link" value={this.state.gitlink}
-									onChange={e => this.changeValue(e.target.value, 'gitlink')}/>
-								<FormText>{translate.useTranslation("optional")}</FormText>
-							</Col>
-						</Row>
-					</FormGroup>
-					<FormGroup>
-						<Row className="padding-top-20">
-							<Col >
-								<Input 
-									type="text"
-									// invalid={this.state.validInputs.dataset_title}
-									name="Data-integ" 
-									id="Data-integ" 
-									placeholder={translate.useTranslation("data_integrity")}
-									value={this.state.dataIntegrity}
-									// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
-									onChange={e => this.changeValue(e.target.value, 'dataIntegrity')}
-									/>
-									<TooltipButton 
-										body={'a'}
-										className="padding-top-10"
-										ButtonName="Show more info" />
-							</Col>
-						</Row>
-						<Row className="padding-top-10">
-							<Col >
-							<Input 
-									type="text"
-									// invalid={this.state.validInputs.dataset_title}
-									name="Cont-access"
-									id="Cont-access" 
-									placeholder={translate.useTranslation("access")}
-									value={this.state.contAccess}
-									// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
-									onChange={e => this.changeValue(e.target.value, 'contAccess') }
-									/>
-								<TooltipButton 
-									body={translate.useTranslation("access-info")}
-									className="padding-top-10"
-									ButtonName="Show more info" />
-								
-							</Col>                                
-						</Row>
-						<Row className="padding-top-10">
-							<Col >
-							<Input 
-									type="text"
-									// invalid={this.state.validInputs.dataset_title}
-									name="data-reuse"
-									id="data-reuse" 
-									placeholder={translate.useTranslation("reuse")}
-									value={this.state.dataReuse}
-									// onBlur={e => this.checkForIntegrityOfFields(e.target.value, 'dataset_title')}
-									onChange={e => this.changeValue(e.target.value, 'dataReuse')}
-									/>
-								<TooltipButton 
-									body={this.props.dataReuse}
-									className="padding-top-10"
-									ButtonName="Show more info" />
-								
-							</Col>                                
-						</Row>
-					</FormGroup>
-		
-					<FormGroup>
+				<AvForm onSubmit={this.handleSubmit}>
+                        <FormGroup>
+                            <Row>
+                                <Col className="display-flex"><span className="padding-right-16">Private</span>
+                                <Switch
+                                    isOn={this.state.datasetMetadata.valueSwitch}
+                                    onColor="#00FF00"
+                                    handleToggle={() => this.changeValue(!this.state.datasetMetadata.valueSwitch)}
+                                />
+                                </Col>
+                            </Row>
+                        </FormGroup>
+                        <AvGroup>
+                            <Row className="padding-top-20">
+                                <Col >
+                                    <AvField 
+                                        type="text"
+                                        name="dataset-title" 
+                                        label="Dataset title:" 
+                                        placeholder="Dataset title"
+										value={this.state.datasetMetadata.dataset_title}
+                                        validate={{
+                                            required: {value: true, errorMessage: 'Please enter a name for the dataset'},
+                                            pattern: {value: '^[A-Za-z0-9 ]+$', errorMessage: 'Your name must be composed only with letter and numbers'},
+                                            minLength: {value: 5, errorMessage: 'Your name must be between 5 and 50 characters'},
+                                            maxLength: {value: 50, errorMessage: 'Your name must be between 5 and 5. characters'}
+                                          }}
+                                        />
+                                </Col>
+                                
+                            </Row>
+                        </AvGroup>
+                         <AvGroup>
+                            <Row className="padding-top-20">
+                                <Col >
+                                    <AvField 
+                                        type="text" 
+                                        name="dataset-authors"
+                                        label="Authors:" 
+                                        placeholder="Dataset authors" 
+										value={this.state.datasetMetadata.dataset_authors}
+                                        validate={{
+                                            required: {value: true, errorMessage: 'Please enter an author for the dataset'},
+                                            pattern: {value: '^[A-Za-z0-9; ]+$', errorMessage: 'Your name must be composed only with letter, numbers and ;'},
+                                            minLength: {value: 5, errorMessage: 'This field must have at least 5 characters'},
+                                        }}
+                                        />
+                                    <TooltipButton 
+                                        className="padding-top-10"
+                                        ButtonName="Show more info" 
+                                        body={''}/>
+                                </Col>
+                                
+                            </Row>
+                        </AvGroup>
+                       <AvGroup>
+                            <Row>
+                                <Col >
+                                    <Label for="article-title">Article title:</Label>
+                                    <AvInput 
+                                        type="text" 
+                                        id="article-title"
+                                        name="article-title" 
+                                        label="Article title:" 
+                                        placeholder="Article title"
+										value={this.state.datasetMetadata.article_title}
+                                    />
+                                    <FormText>This field is optional</FormText>
+                                </Col>
+                                
+                            </Row>
+                        </AvGroup>
+                         <AvGroup>
+                            <Row className="padding-top-20">
+                                <Col md={{ size: 3, offset: 0 }}>
+                                    <AvField 
+                                        type="number" 
+                                        name="year" 
+                                        label="Year:" 
+                                        placeholder="Year of the publication" 
+										value={this.state.datasetMetadata.year}
+                                        validate={{
+                                            required: {value: true, errorMessage: 'Please enter a year for the dataset'},
+                                            date: {format: 'YYYY', errorMessage: 'Please enter a valid year for the dataset'}
+                                        }} 
+                                        title="Use YYYY"
+                                    />
+                                </Col>
+                                <Col></Col>
+                                
+                            </Row>
+                        </AvGroup>
+                        <AvGroup>
+                            <Row className="padding-top-20">
+                                <Col className="text-align-left" md="3">
+                                    <AvField
+                                        type="select" 
+                                        name="country" 
+                                        label="Select a country" 
+										value={this.state.datasetMetadata.country}
+                                        validate={{
+                                            required: {value: true, errorMessage: 'Please select a country'},
+                                        }}>
+                                        <option value="">Select Country</option>
+                                        {
+                                            this.state.uploadInputOptions.country.map((item: string) => {
+                                                return (<option value={item}>{item}</option>)
+                                            })
+                                        }
+                                    </AvField>
+
+                                </Col>
+                                <Col ></Col>
+                            </Row>
+                        </AvGroup>
+                        <AvGroup>
+                            <Row className="padding-top-20 align-start">
+                                <Col className="text-align-left" md="3">
+                                    <AvField
+                                        type="select" 
+                                        name="domain" 
+                                        label="Select a Domain" 
+                                        onChange={this.changeAValue}
+										value={this.state.datasetMetadata.domain}
+                                        validate={{
+                                            required: {value: true, errorMessage: 'Please select a domain for the dataset'},
+                                        }}>
+                                        <option value="">Select Domain</option>
+                                        {
+                                            this.state.uploadInputOptions.domain.map((item: string) => {
+                                                return (<option value={item}>{item}</option>)
+                                            })
+                                        }
+                                    </AvField>
+                                </Col>
+                                <Col className="text-align-left">
+                                    {this.state.shouldEnterNewDomain ? 
+                                    <AvField 
+                                        type="text" 
+                                        name="newDomain" 
+                                        id="newDomain" 
+                                        label="Enter new domain:" 
+                                        placeholder="Enter new domain"
+                                        validate={{
+                                            required: {value: this.state.shouldEnterNewDomain, errorMessage: 'Please enter a new domain for the dataset'},
+                                            pattern: {value: '^[A-Za-z0-9 ]+$', errorMessage: 'Your name must be composed only with letter and numbers'},
+                                            minLength: {value: 5, errorMessage: 'Your name must be between 5 and 50 characters'},
+                                            maxLength: {value: 50, errorMessage: 'Your name must be between 5 and 5. characters'}
+                                        }}
+                                    /> : <></>}
+                                </Col>
+                            </Row>
+                        </AvGroup>
+                        <FormGroup>
+                            <Row className="padding-top-20">
+                                <Col>
+                                    <Label for="tags">Select tags:</Label>
+                                    <CustomCreatableSelect 
+                                        id="tags"
+                                        options={this.state.uploadInputOptions.tags}
+                                        value={this.state.datasetMetadata.tags}
+                                        handleChange={this.handleCreateSelectChange}
+                                        onInputChange={this.handleCreateSelectInputChange}
+                                        placeholder="Select tags"
+                                    />
+                                </Col>
+                            </Row>
+                        </FormGroup>
+                        <AvGroup>
+                            <Row className="padding-top-20">
+                                <Col className="margin-top-10" >
+                                    <AvField 
+                                        type="textarea" 
+                                        name="text" 
+                                        maxLength="1000"  
+                                        label="Short Description:"
+                                        id="description" 
+                                        placeholder="Please enter a short description..."
+										value={this.state.datasetMetadata.short_desc}
+                                        validate={{
+                                            required: {value: true, errorMessage: 'Please enter a short description'},
+                                            minLength: {value:10, errorMessage: 'Your name must be between 10 and 1000 characters'},
+                                            maxLength: {value: 1000, errorMessage: 'Your name must be between 10 and 1000. characters'}
+                                        }}
+                                    />
+                                </Col>
+                            </Row>
+                        </AvGroup>
+                        <AvGroup>
+                            <Row className="padding-top-20">
+                                <Col >
+                                    <Label for="gitlink">GitHub link:</Label>
+                                    <AvInput 
+                                        type="text" 
+                                        id="gitlink"
+                                        name="gitlink" 
+                                        label="GitHub link:" 
+                                        placeholder="GitHub link"
+										value={this.state.datasetMetadata.gitlink}
+                                    />
+                                    <FormText>This field is optional</FormText>
+                                </Col>
+                            </Row>
+                        </AvGroup>
+                        <Row className="padding-top-20">
+                            <Col >
+                                <AvField 
+                                    type="text"
+                                    name="Data-integ" 
+                                    id="Data-integ" 
+                                    placeholder="Data integrity and authenticity" 
+                                    label="Data integrity and authenticity:" 
+									value={this.state.datasetMetadata.dataIntegrity}
+                                    validate={{
+                                        required: {value: true, errorMessage: 'Please enter information about data integrity and authenticity'},
+                                        minLength: {value: 5, errorMessage: 'Your name must be between 5 and 500 characters'},
+                                        maxLength: {value: 500, errorMessage: 'Your name must be between 5 and 500. characters'}
+                                    }}
+                                    />
+                                    <TooltipButton 
+                                        body={'cc'}
+                                        className="padding-top-10"
+                                        ButtonName="Show more info" />
+                            </Col>
+                        </Row>
+                        <Row className="padding-top-10">
+                            <Col >
+                            <AvField 
+                                type="text"
+                                label="Continuity of access:" 
+                                name="Cont-access"
+                                id="Cont-access" 
+                                placeholder="Continuity of access" 
+								value={this.state.datasetMetadata.contAccess}
+                                validate={{
+                                    required: {value: true, errorMessage: 'Please enter information about continuity of access'},
+                                    minLength: {value: 5, errorMessage: 'Your name must be between 5 and 500 characters'},
+                                    maxLength: {value: 500, errorMessage: 'Your name must be between 5 and 500. characters'}
+                                }}
+                                />
+                            <TooltipButton 
+                                body={'aa'}
+                                className="padding-top-10"
+                                ButtonName="Show more info" />
+                                
+                            </Col>                                
+                        </Row>
+                        <Row className="padding-top-10">
+                            <Col >
+                            <AvField 
+                                type="text"
+                                label="Data Reuse:"
+                                name="data-reuse"
+                                id="data-reuse" 
+                                placeholder="Data Reuse" 
+								value={this.state.datasetMetadata.dataReuse}
+                                validate={{
+                                    required: {value: true, errorMessage: 'Please enter information about data Reuse'},
+                                    minLength: {value: 5, errorMessage: 'Your name must be between 5 and 500 characters'},
+                                    maxLength: {value: 500, errorMessage: 'Your name must be between 5 and 500. characters'}
+                                }}
+                                />
+                            <TooltipButton 
+                                body={'bb'}
+                                className="padding-top-10"
+                                ButtonName="Show more info" />
+                                
+                            </Col>                                
+                        </Row>
+
+                        <AvGroup>
 						<Row className="padding-top-20">
 							<Col md="3"></Col>
 							<Col md="6" className="text-align-center">                                
 								<Button 
 									color="primary" 
-									outline className="upload-button-size" 
-									disabled={this.state.buttonUpload}
-									onClick={() => this.handleSubmit()}>{translate.useTranslation("edit")}</Button>
+									outline className="upload-button-size">{translate.useTranslation("edit")}</Button>
 							</Col>
 							<Col md="3" className="text-align-right">
 								{/* <a onClick={this.switchPageBack}>{translate.useTranslation("cancel")}</a> */}
 							</Col>
 						</Row>
-					</FormGroup>
-					</Form>
+                        </AvGroup>
+                    </AvForm>
 				</CardText>
 			{/* END FORM */}
 			</> : 
