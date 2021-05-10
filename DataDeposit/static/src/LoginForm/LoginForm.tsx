@@ -40,9 +40,6 @@ export default class LoginForm extends React.Component<ILoginFormProps, ILoginFo
     handleSubmit(event, errors, { username, password, rememberMe = false }): void {
         let responseStatus: ResponseStatus = {};
 		const translate = new MyTranslator("Response-codes");
-        this.setState({
-            loaderVisibility: true
-        });
 
         axios.post( '/login', {
             username: username,
@@ -52,14 +49,14 @@ export default class LoginForm extends React.Component<ILoginFormProps, ILoginFo
         .then(response => {
             console.log(response);
             if(response.data.isAuthenticated) {
-                if (response.data['statusCode'] === 200) {
+                if (response.data['statusCode'] && response.data['statusCode'] === 500) {
+                    responseStatus.wasError = true;
+                    responseStatus.responseMessage = translate.useTranslation(response.data['data']);
+                } else {
                     responseStatus.wasSuccess = true;                
                     localStorage.setItem('login_user_token', response.data.username);
                     localStorage.setItem('login_user_token_id', response.data.userId);
                     window.location.href = '/';
-                } else {
-                    responseStatus.wasError = true;
-                    responseStatus.responseMessage = translate.useTranslation(response.data['data']);
                 }
             } else {
                 console.log(response.data.errorMessage);
@@ -75,8 +72,7 @@ export default class LoginForm extends React.Component<ILoginFormProps, ILoginFo
         .finally(() => {
             // always executed
             this.setState({
-                responseStatus: responseStatus,
-                loaderVisibility: false
+                responseStatus: responseStatus
             });
         }); 
       };
@@ -122,8 +118,8 @@ export default class LoginForm extends React.Component<ILoginFormProps, ILoginFo
                     </Row>
                     <div className="mt-1">&nbsp;</div>
                     <div style={{ textAlign: 'center' }}>
-                        <Button disabled={this.state.loaderVisibility} color="primary" type="submit">
-                            {translate.useTranslation("login-form")}
+                        <Button color="primary" type="submit">
+                            {translate.useTranslation("login")}
                         </Button>
                     </div>
                     </AvForm>

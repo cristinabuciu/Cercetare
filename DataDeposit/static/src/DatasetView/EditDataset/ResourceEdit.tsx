@@ -4,12 +4,14 @@ import React from 'react';
 import axios from 'axios';
 
 import { CardBody, Row, Col, CardTitle, CardSubtitle, CardText, Card,
-    Button, Input, Form, FormGroup, Alert, Label, FormText } from 'reactstrap';
-import {InputText, Switch, LoaderComponent } from '../../Items/Items-components'
+    Button, Input, FormGroup, Alert, Label, FormText } from 'reactstrap';
+import { LoaderComponent } from '../../Items/Items-components'
 import { faLink, faDownload, faPortrait } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ResourceToDownload } from './Edit-components'
 import { ResponseStatus } from '../../models/ResponseStatus'
+import { AvField, AvForm } from 'availity-reactstrap-validation';
+import { UploadOption } from '../../models/FormItems'
 
 export interface IResourceEditProps {
 	id: number;
@@ -21,17 +23,12 @@ export interface IResourceEditState {
 	fileToBeSent: string | Blob;
     currentResource: string;
 	loaderVisibility: boolean;
-	uploadOption: {
-        private: boolean;
-        link: boolean;
-        upload: boolean;
-    };
+	uploadOption: UploadOption;
 	currentOptions: {
         None: boolean;
         External: boolean;
         Internal: boolean;
     };
-	newDownloadPath: string;
 
 	shouldRenderForm: boolean;
 	responseStatus: ResponseStatus;
@@ -46,7 +43,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
         currentResource: '',
 		loaderVisibility: false,
 		uploadOption: {
-            private: false,
+            none: false,
             link: false,
             upload: false
         },
@@ -55,7 +52,6 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 			External: false,
 			Internal: false
 		},
-		newDownloadPath: '',
 
 		responseStatus: {
 			wasError: false,
@@ -179,21 +175,24 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 		this.props.switchPage();
 	}
 	
-	handleSubmit(): void {
+	handleSubmit = (event, errors: Array<any>, values) => {
+		if (errors.length > 0) {
+			return;
+		}
 		let responseStatus: ResponseStatus = {};
-		const translate = new MyTranslator("Response-codes");
+		const translate: MyTranslator = new MyTranslator("Response-codes");
 
         this.setState({
             loaderVisibility: true,
 			shouldRenderForm: false
         });
-		const formData = new FormData();
+		const formData: FormData = new FormData();
 		
-		if (this.state.uploadOption.private) {
+		if (this.state.uploadOption.none) {
 			formData.append("newResourceType", 'NONE');
 		} else if (this.state.uploadOption.link) {
 			formData.append("newResourceType", 'EXTERNAL');
-			formData.append("downloadUrl", this.state.newDownloadPath);
+			formData.append("downloadUrl", values.url);
 		} else if (this.state.uploadOption.upload) {
 			let file = this.state.fileToBeSent;
 			formData.append("newResourceType", 'INTERNAL');
@@ -224,8 +223,8 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
     }
 
 	updateUploadOptions(privateMode : boolean, linkMode : boolean, uploadMode : boolean): void {
-        const newUploadOptions = { 
-            private: privateMode,
+        const newUploadOptions: UploadOption = { 
+            none: privateMode,
             link: linkMode,
             upload: uploadMode
         };
@@ -236,11 +235,11 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
     }
 
     radioHit(e): void {
-		const currentUploadOptions = this.state.uploadOption;
+		const currentUploadOptions: UploadOption = this.state.uploadOption;
 
         switch(e.target.id) {
         case 'NONE':
-            this.updateUploadOptions(!currentUploadOptions.private, false, false);
+            this.updateUploadOptions(!currentUploadOptions.none, false, false);
             break;
         case 'EXTERNAL':
             this.updateUploadOptions(false, !currentUploadOptions.link, false);
@@ -281,16 +280,16 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 						</div>
 					</Col>
 				</Row>
-				<Form>
+				<AvForm onSubmit={this.handleSubmit}>
 				<FormGroup>
 						<Row className="padding-top-20">
 							<Col sm="4">
-								<Card body className={this.state.uploadOption.private ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
+								<Card body className={this.state.uploadOption.none ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
 									<FormGroup check className="margin-top-5">
 										<Label check>
 										<Input 
 											id="NONE"
-											checked={this.state.uploadOption.private}
+											checked={this.state.uploadOption.none}
 											type="checkbox"
 											name="radio2" 
 											onClick={this.radioHit}
@@ -315,13 +314,15 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 										Add External link
 										</Label>
 										<>  </><FontAwesomeIcon icon={faLink} />
-										<Input
+										<AvField
 											type="url"
 											name="url"
 											id="downloadURL"
 											disabled={!this.state.uploadOption.link}
 											placeholder="Download Link..."
-											onChange={e => this.setState({newDownloadPath: e.target.value})}
+											validate={{
+												required: {value: this.state.uploadOption.link, errorMessage: 'Please enter an external url'},
+											}}
 										/>
 									</FormGroup>
 								</Card>
@@ -364,8 +365,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 								:                                
 								<Button 
 								color="primary" 
-								outline className="upload-button-size" 
-								onClick={() => this.handleSubmit()}>
+								outline className="upload-button-size">
 									{translate.useTranslation("edit")}
 								</Button>
 								}
@@ -376,7 +376,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 							</Col>
 						</Row>
 					</FormGroup>
-					</Form>
+					</AvForm>
 				</CardText>
 			</> : 
 			<>

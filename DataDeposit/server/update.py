@@ -46,6 +46,7 @@ def updateDataset(dataset_id, params, current_user):
         new_dataset['date'] = existing['date']
         new_dataset['lastUpdatedAt'] = str(int(time()))
         new_dataset['downloadPath'] = existing['downloadPath']
+        new_dataset['data_format'] = existing['data_format']
 
         new_dataset['ckan_package_id'] = existing['ckan_package_id']
         if 'ckan_resource_id' in existing:
@@ -131,7 +132,7 @@ def updateDatasetFilesToNone(datasetId):
         # cleanup internal
         deleteCkanResourceIfNeeded(dataset)
 
-        dataset['data_format'] = ''
+        dataset['data_format'] = 'None'
         dataset['file_checksum'] = ''
         dataset['updates_number'] += 1
         dataset['lastUpdatedAt'] = str(int(time()))
@@ -160,7 +161,7 @@ def updateDatasetFilesToExternal(datasetId, downloadUrl):
         # cleanup internal
         deleteCkanResourceIfNeeded(dataset)
 
-        dataset['data_format'] = ''
+        dataset['data_format'] = 'None'
         dataset['file_checksum'] = ''
         dataset['updates_number'] += 1
         dataset['lastUpdatedAt'] = str(int(time()))

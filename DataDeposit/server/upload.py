@@ -41,6 +41,7 @@ def uploadDataset(params, current_user):
         dataset_json['geo_coord'] = getCountryCoordinates(es, params['notArrayParams']['country'])
         dataset_json['date'] = (datetime.now() - timedelta(hours=3)).strftime('%Y-%m-%dT%H:%M:%S+0000')
         dataset_json['lastUpdatedAt'] = str(int(time()))
+        dataset_json['data_format'] = "None"
 
         dataset_json['deleted'] = False
         dataset_json['deletedAt'] = -1

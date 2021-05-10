@@ -136,7 +136,7 @@ export default class UploadPage extends React.Component<IUploadPageProps, IUploa
             <UploadPageForm 
                 color={this.props.color}
                 changeToSuccess={this.changeToSuccess}
-                authorsTooltip="If there are multi authors you need to use ; for them to be separati"
+                authorsTooltip="If there are multi authors you need to use , for them to be separati"
                 contAccess={contAccess}
                 dataInteg={dataInteg}
                 dataReuse={dataReuse}

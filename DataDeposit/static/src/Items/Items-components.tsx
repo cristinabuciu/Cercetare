@@ -47,13 +47,13 @@ export const LoaderComponent = (props) => {
 
 export const CustomSelect = (props) => {
 
-  const animatedComponents = makeAnimated();
+  const animatedComponents: any = makeAnimated();
 
   return (
     <Select
         closeMenuOnSelect={false}
         components={animatedComponents}
-        defaultValue={[props.options[4], props.options[5]]}
+        defaultValue={[props.options[4] ? props.options[4] : "NULL", props.options[5] ? props.options[5] : "NONE"]}
         onChange={props.handleChange}
         isMulti
         value={props.value}

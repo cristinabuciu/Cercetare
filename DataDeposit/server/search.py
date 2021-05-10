@@ -123,7 +123,7 @@ def getPageResult(datasets, start, end):
 
 def toPageResult(dataset):
     resourceType, downloadPath = getResourceType(dataset)
-    data_format = dataset['data_format'] if 'data_format' in dataset else ''
+    data_format = dataset['data_format'] if 'data_format' in dataset and dataset['data_format'] != 'None' else '-'
 
     return {
         'id': dataset['id'],
@@ -174,6 +174,8 @@ def findDataset(datasetId):
         dataset['resourceType'] = resourceType
         dataset['downloadPath'] = downloadPath
         dataset['elapsedTime'] = calculateLastUpdatedAt(int(dataset['lastUpdatedAt']))
+        if dataset['data_format'] == 'None':
+            dataset['data_format'] = '-'
 
         userInfo = es.get_es_data_by_id(INDEX_USERS, int(dataset['ownerId']))[0]['_source']
         dataset['hasPhoto'] = userInfo['hasPhoto'] if 'hasPhoto' in userInfo else False
