@@ -166,7 +166,7 @@ export const Profile = props => (
 export const Home = props => (
   <NavItem>
     <span className="tooltiptext">
-      <Translate contentKey="global.menu.account.login" />Mata
+      <Translate contentKey="global.menu.account.login" />
     </span>
     <NavLink
       tag={Link}

@@ -382,8 +382,8 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         validate={{
                                             required: {value: true, errorMessage: 'Please enter a name for the dataset'},
                                             pattern: {value: '^[A-Za-z0-9 ]+$', errorMessage: 'Your name must be composed only with letter and numbers'},
-                                            minLength: {value: 5, errorMessage: 'Your name must be between 5 and 50 characters'},
-                                            maxLength: {value: 50, errorMessage: 'Your name must be between 5 and 5. characters'}
+                                            minLength: {value: 5, errorMessage: 'Your name must be between 5 and 500 characters'},
+                                            maxLength: {value: 500, errorMessage: 'Your name must be between 5 and 500. characters'}
                                           }}
                                         />
                                 </Col>

@@ -211,7 +211,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 		})
 		.catch(err => {
 			console.warn(err);
-			responseStatus.wasSuccess = true;
+			responseStatus.wasError = true;
 			responseStatus.responseMessage = translate.useTranslation("UPDATE_DATASET_FILES_ERROR");
 		})
 		.finally(() => {
