@@ -1,0 +1,247 @@
+{
+  "GB": {
+    "None": {},
+
+    "Response-codes": {
+      "FILE_NOT_ALLOWED": "File is missing or the file format is not supported.",
+      "FILE_SIZE_EXCEEDED": "The size of the selected file exceeds the limit.",
+      "SKIP_UPLOAD_FILES_WRONG_PACKAGE_ID": "File can not be attached to the desired package.",
+      "UPLOAD_DATASET_FILES_ERROR": "There was an unexpected error while uploading your files.",
+      "UPLOAD_DATASET_ERROR": "There was an unexpected error while adding the dataset.",
+      "ADD_DATASET_COMMENT_ERROR": "There was an unexpected error while adding your comment.",
+      "ADD_DATASET_COMMENT_ERROR_MISSING_RATING": "Comments without rating are not allowed.",
+      "ADD_DATASET_COMMENT_ERROR_MISSING_TITLE_OR_COMMENT": "Comment can not be submitted. Both title and comment should be filled in.",
+      "DELETE_DATASET_ERROR": "There was an unexpected error while deleting your dataset.",
+      "DELETE_DATASET_COMMENT_ERROR": "There was an unexpected error while deleting your comment.",
+      "DELETE_DATASET_SUCCESS": "Your dataset has been deleted successfully.",
+      "DELETE_DATASET_COMMENT_SUCCESS": "Your comment has been deleted successfully.",
+      "UPDATE_DATASET_ERROR": "There was an unexpected error while updating the dataset.",
+      "SKIP_UPDATE_DATASET_WRONG_USER": "Dataset could not be updated. You are not its owner.",
+      "UPDATE_DATASET_SUCCESS": "Dataset has been updated successfully !",
+      "UPDATE_DATASET_FILES_SUCCESS": "Your files have been updated successfully.",
+      "UPDATE_DATASET_FILES_ERROR": "There was an unexpected error while updating your files.",
+      "GET_USER_INFO_ERROR": "There was an unexpected error while getting user info.",
+      "ITEMS_NOT_FOUND": "No items found.",
+      "GET_DATASETS_ERROR": "There was an unexpected error while searching for datasets.",
+      "GET_DATASET_ERROR": "There was an unexpected error while getting the dataset.",
+      "GET_RESOURCE_INFO_ERROR": "There was an error while fetching the existing resource. Update can not be performed.",
+      "GET_DATASET_COMMENTS_ERROR": "There was an error when getting the comments.",
+      "NO_REVIEWS": "No reviews posted yet.",
+      "GET_DEFAULT_DATA_ERROR": "There was an unexpected error while getting default data.",
+      "GET_USER_ID_ERROR": "There was an unexpected error while getting user ID.",
+      "USER_NOT_FOUND": "The user was not found.",
+      "ADD_DATASET_COMMENT_SUCCESS": "Review posted successfully.",
+      "LOGIN_ERROR": "There was an unexpected error while logging in the user."
+    },
+
+    "common": {
+      "yes": "Yes",
+      "no": "No",
+      "cancel": "Cancel",
+      "None": "None",
+      "Back": "Back",
+      "delete": "Delete"
+    },
+
+    "Login-Form": {
+      "login": "Login"
+    },
+
+    "SearchPage": {
+      "items-not-found": "No dataset found!",
+      "items-error": "There was a search error!"
+    },
+
+    "UserPage": {
+
+    },
+
+    "ModalConfirm": {
+      "message-body": "Are you sure you want to delete this?"
+    },
+
+    "Search": {
+      "search": "Search",
+      "author": "Author",
+      "year": "Year",
+      "dataset-title": "Dataset title"
+    },
+
+    "LeftBar": {
+      "upload": "Upload dataset",
+      "search": "Search datasets",
+      "about": "About project",
+      "contact": "Contact us",
+      "privacy": "Privacy Policy",
+      "sponsors": "Sponsors",
+      "developers": "Developers",
+      "ckan": "CKAN Instance",
+      "kibana": "Dashboard"
+    },
+
+    "Header": {
+      "brand": "University Politehnica of Bucharest",
+      "login": "Login",
+      "logout": "Logout"
+    },
+
+    "Footer": {
+      "upload": "Upload dataset",
+      "search": "Search datasets",
+      "support": "Support"
+    },
+
+    "Upload": {
+      "dataset_title": "Dataset title",
+      "dataset_authors": "Dataset authors",
+      "article_title": "Article title",
+      "year": "Year of the publication",
+      "optional": "This field is optional",
+      "tags": "Select tags",
+      "description": "Short Description",
+      "data_integrity": "Data integrity and authenticity",
+      "access": "Continuity of access",
+      "reuse": "Data Reuse",
+      "edit": "Apply changes",
+      "access-info": "<div> <b>The repository has a continuity plan to ensure ongoing access to and preservation of its holdings.</b><br/><br/> Guidance:<br/> This Requirement covers the governance related to continued operation of the repository over time and during disasters, as well as evidence in relation to succession planning; namely, the measures in place to ensure access to and availability of data holdings, both currently and in the future. Reviewers are seeking evidence that preparations are in place to address the risks inherent in changing circumstances, including in mission and/or scope.<br/><br/> For this Requirement, please describe: <br/><br/> <ul> <li>The level of responsibility undertaken for data holdings, including any guaranteed preservation periods.<br/><br/></li><li>The medium-term (three- to five-year) and long-term (> five years) plans in place to ensure the continued availability and accessibility of the data. In particular, both the response to rapid changes of circumstance and long-term planning should be described, indicating options for relocation or transition of the activity to another body or return of the data holdings to their owners (i.e., data producers). For example, what will happen in the case of cessation of funding, which could be through an unexpected withdrawal of funding, a planned ending of funding for a time-limited project repository, or a shift of host institution interests? Evidence for this Requirement should relate specifically to governance. The technical aspects of business continuity, and disaster and succession planning should be covered in R15 (Technical infrastructure).</li></ul></div>",
+      "metadata-edit": "Edit Metadata",
+      "resource-edit": "Edit Resource"
+    },
+
+    "Comment": {
+      "all-comments": "All comments",
+      "add-comment": "Add comment"
+    },
+
+    "View": {
+      "about": "About",
+      "edit": "Update"
+    },
+
+    "Home": {
+      "home-title": "Welcome to University Politehnica of Bucharest!"
+    }
+  },
+  "RO": {
+    "None": {},
+
+    "Response-codes": {
+      "FILE_NOT_ALLOWED": "Fișierul lipsește sau formatul fișierului nu este suportat.",
+      "FILE_SIZE_EXCEEDED": "Dimensiunea fișierului selectat depășește limita.",
+      "SKIP_UPLOAD_FILES_WRONG_PACKAGE_ID": "Fișierul nu poate fi atașat la pachetul dorit.",
+      "UPLOAD_DATASET_FILES_ERROR": "S-a produs o eroare la încărcarea fișierului.",
+      "UPLOAD_DATASET_ERROR": "S-a produs o eroare la adăugarea setului de date.",
+      "ADD_DATASET_COMMENT_ERROR": "S-a produs o eroare la adăugarea comentariului.",
+      "ADD_DATASET_COMMENT_ERROR_MISSING_RATING": "Comentariile fără rating nu sunt permise.",
+      "ADD_DATASET_COMMENT_ERROR_MISSING_TITLE_OR_COMMENT": "Comentariul nu poate fi adăugat. Titlul sau comentariul nu este completat.",
+      "DELETE_DATASET_ERROR": "S-a produs o eroare la ștergerea setului de date.",
+      "DELETE_DATASET_COMMENT_ERROR": "S-a produs o eroare la ștergerea comentariului.",
+      "DELETE_DATASET_SUCCESS": "Setul de date a fost șters cu succes.",
+      "DELETE_DATASET_COMMENT_SUCCESS": "Comentariul a fost șters cu succes.",
+      "UPDATE_DATASET_ERROR": "S-a produs o eroare la actualizarea setului de date.",
+      "SKIP_UPDATE_DATASET_WRONG_USER": "Setul de date nu a putut fi actualizat. Nu sunteți posesorul său.",
+      "UPDATE_DATASET_SUCCESS": "Setul de date a fost acualizat cu succes.",
+      "UPDATE_DATASET_FILES_SUCCESS": "Fișierul a fost acualizat cu succes.",
+      "UPDATE_DATASET_FILES_ERROR": "S-a produs o eroare la actualizarea fișierului.",
+      "GET_USER_INFO_ERROR": "S-a produs o eroare la obținerea informațiilor despre utilizator.",
+      "ITEMS_NOT_FOUND": "Niciun rezultat.",
+      "GET_DATASETS_ERROR": "S-a produs o eroare la căutarea seturilor de date.",
+      "GET_DATASET_ERROR": "S-a produs o eroare la căutarea setului de date.",
+      "GET_RESOURCE_INFO_ERROR": "S-a produs o eroare la obținerea resursei existente. Actualizarea nu se poate efectua.",
+      "GET_DATASET_COMMENTS_ERROR": "S-a produs o eroare la obținerea comentariilor.",
+      "NO_REVIEWS": "Nu sunt review-uri acordate.",
+      "GET_DEFAULT_DATA_ERROR": "S-a produs o eroare la obținerea datelor de bază.",
+      "GET_USER_ID_ERROR": "S-a produs o eroare la obținerea ID-ului utilizatorului.",
+      "USER_NOT_FOUND": "Utilizatorul nu a fost găsit.",
+      "ADD_DATASET_COMMENT_SUCCESS": "Review-ul a fost adăugat cu succes.",
+      "LOGIN_ERROR": "S-a produs o eroare la autentificarea utilizatorului."
+    },
+
+    "common": {
+      "yes": "Da",
+      "no": "Nu",
+      "cancel": "Anulează",
+      "None": "Null",
+      "Back": "Înapoi",
+      "delete": "Șterge"
+    },
+
+    "Login-Form": {
+      "login": "Autentificare"
+    },
+
+    "SearchPage": {
+      "items-error": "Eroare la căutare!"
+    },
+
+    "UserPage": {
+
+    },
+
+    "ModalConfirm": {
+      "message-body": "Confirmați ștergerea acestui set de date?"
+    },
+
+    "Search": {
+      "search": "Caută",
+      "author": "Autor",
+      "year": "An",
+      "dataset-title": "Titlu set de date"
+    },
+
+    "LeftBar": {
+      "upload": "Încărcare set de date",
+      "search": "Căutare set de date",
+      "about": "Despre proiect",
+      "contact": "Contactează-ne",
+      "privacy": "Politica de confidențialitate",
+      "sponsors": "Sponsori",
+      "developers": "Dezvoltatori",
+      "ckan": "Insțanta CKAN",
+      "kibana": "Dashboard"
+    },
+
+    "Header": {
+      "brand": "Universitatea Politehnica din București",
+      "login": "Autentificare",
+      "logout": "Ieșire"
+    },
+
+    "Footer": {
+      "upload": "Încărcare set de date",
+      "search": "Căutare set de date",
+      "support": "Suport"
+    },
+
+    "Upload": {
+      "dataset_title": "Titlu set de date",
+      "dataset_authors": "Autori set de date",
+      "article_title": "Titlu articol",
+      "year": "Anul publicării",
+      "optional": "Acest câmp este opțional",
+      "tags": "Selectează tag-uri",
+      "description": "Scurtă descriere",
+      "data_integrity": "Integritatea și autenticitatea datelor",
+      "access": "Continuitatea accesului",
+      "reuse": "Reutilizarea datelor",
+      "edit": "Aplică schimbările",
+      "access-info": "<div> <b>The repository has a continuity plan to ensure ongoing access to and preservation of its holdings.</b><br/><br/> Guidance:<br/> This Requirement covers the governance related to continued operation of the repository over time and during disasters, as well as evidence in relation to succession planning; namely, the measures in place to ensure access to and availability of data holdings, both currently and in the future. Reviewers are seeking evidence that preparations are in place to address the risks inherent in changing circumstances, including in mission and/or scope.<br/><br/> For this Requirement, please describe: <br/><br/> <ul> <li>The level of responsibility undertaken for data holdings, including any guaranteed preservation periods.<br/><br/></li><li>The medium-term (three- to five-year) and long-term (> five years) plans in place to ensure the continued availability and accessibility of the data. In particular, both the response to rapid changes of circumstance and long-term planning should be described, indicating options for relocation or transition of the activity to another body or return of the data holdings to their owners (i.e., data producers). For example, what will happen in the case of cessation of funding, which could be through an unexpected withdrawal of funding, a planned ending of funding for a time-limited project repository, or a shift of host institution interests? Evidence for this Requirement should relate specifically to governance. The technical aspects of business continuity, and disaster and succession planning should be covered in R15 (Technical infrastructure).</li></ul></div>",
+      "metadata-edit": "Editează metadatele",
+      "resource-edit": "Editează resursa"
+    },
+
+    "Comment": {
+      "all-comments": "Toate comentariile",
+      "add-comment": "Adaugă comentariu"
+    },
+
+    "View": {
+      "about": "Despre",
+      "edit": "Actualizează"
+    },
+
+    "Home": {
+      "home-title": "Bun venit la Universitatea Politehnica din București!"
+    }
+  }
+}

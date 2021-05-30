@@ -1,5 +1,5 @@
 # search.py
-from application_properties import INDEX_USERS, INDEX_DATASETS, INDEX_DOMAINS, INDEX_LOCATIONS, INDEX_TAGS, UPLOAD_FILE_ALLOWED_MIME_TYPES
+from application_properties import INDEX_USERS, INDEX_DATASETS, INDEX_DOMAINS, INDEX_LOCATIONS, INDEX_TAGS, UPLOAD_FILE_ALLOWED_MIME_TYPES, SUPPORTED_LANGUAGES
 from utils import getTransaction, calculateLastUpdatedAt, createResponse
 
 from http import HTTPStatus
@@ -7,6 +7,7 @@ from operator import itemgetter
 
 import re
 import ckan_connector as ck
+import json
 
 
 def getUserInfoById(userId):
@@ -250,3 +251,11 @@ def getAllDefaultData():
     except Exception as e:
         print(e)
         return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "GET_DEFAULT_DATA_ERROR")
+
+
+def findLanguage(language):
+    if language not in SUPPORTED_LANGUAGES:
+        return createResponse(HTTPStatus.NOT_FOUND, "LANGUAGE_NOT_SUPPORTED")
+
+    with open("languages.json", 'r') as f:
+        return createResponse(HTTPStatus.OK, json.load(f)[language])

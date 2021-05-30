@@ -2,13 +2,14 @@
 from application_properties import FLASK_STATIC_FOLDER, FLASK_TEMPLATE_FOLDER, UPLOAD_FOLDER_PATH, FLASK_SECRET_KEY, INDEX_USERS, SOFT_DELETE, CLEANUP_DATASETS_ENABLED
 from utils import getTransaction, createResponse
 
-from search import searchDatasets, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById, getDatasetFilesInfo
+from search import searchDatasets, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById, getDatasetFilesInfo, findLanguage
 from upload import uploadDataset, uploadDatasetFiles, addComment, updateNumberOfViews
 from update import updateDataset, increaseDownloadsNumber, updateDatasetFilesToNone, updateDatasetFilesToExternal, updateDatasetFilesToInternal
 from delete import hardDeleteDataset, softDeleteDataset, hardDeleteComment
 
 ############################### FLASK CONFIG ################################
 from flask import Flask, render_template, request, json, redirect, url_for, flash, session, make_response, jsonify
+from flask_cors import CORS
 from http import HTTPStatus
 
 import subprocess
@@ -19,13 +20,9 @@ UPLOAD_FOLDER = UPLOAD_FOLDER_PATH
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 160 * 1024 * 1024
 app.secret_key = FLASK_SECRET_KEY
+CORS(app)
 
 current_user = 'admin'
-
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
 
 
 @app.route("/")
@@ -181,9 +178,13 @@ def getDefaultData():
     return getAllDefaultData()
 
 
+@app.route('/language/<language>', methods=['GET'])
+def getLanguage(language):
+    return findLanguage(language)
+
+
 if __name__ == "__main__":
     if CLEANUP_DATASETS_ENABLED:
         subprocess.Popen(['python3', 'DataDeposit/server/datasetsCleanupJob.py'])
     
     app.run(debug=True, use_reloader=False, host='0.0.0.0', port=41338)
-
