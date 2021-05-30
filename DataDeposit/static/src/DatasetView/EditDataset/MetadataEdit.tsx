@@ -93,7 +93,7 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 			shouldRenderForm: false
         });
 
-		axios.get( '/getDefaultData')
+		axios.get( 'http://localhost:41338/getDefaultData')
 		.then(response => {
 			if (response.data['statusCode'] === 200) {
                 responseGetStatus.wasSuccess = true;
@@ -240,7 +240,7 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 			shouldRenderForm: false
         });
         
-        axios.put( '/dataset/' + this.props.id, {
+        axios.put( 'http://localhost:41338/dataset/' + this.props.id, {
 			params: {
 				notArrayParams: {
 					domain: this.state.datasetMetadata.otherDomain ? values.newDomain : values.domain,

@@ -94,8 +94,9 @@ export default class Search extends React.Component<ICardProps, ICardState> {
 		const translate = new MyTranslator("Response-codes");
 
         // Domains, Tags, Countries
-        axios.get( '/getDefaultData')
+        axios.get('http://localhost:41338/getDefaultData')
         .then(response => {
+            debugger;
             if (response.data['statusCode'] === 200) {
                 responseGetStatus.wasSuccess = true;
                 this.state.searchInputOptions.domain = ['All domains  '].concat(response.data['data'][0])
@@ -115,6 +116,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             }
         })
         .catch(function (error) {
+            debugger;
             console.log(error);
             responseGetStatus.wasError = true;
             responseGetStatus.responseMessage = translate.useTranslation("GET_DEFAULT_DATA_ERROR");
@@ -172,7 +174,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             this.props.handleLoaderChange(true);
         }
         debugger;
-        axios.get( '/datasets', {
+        axios.get('http://localhost:41338/datasets', {
             params: {
                 allFilters: {
                     notArrayParams: {

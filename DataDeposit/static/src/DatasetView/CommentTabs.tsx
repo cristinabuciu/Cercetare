@@ -85,7 +85,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
 
         this.setLoader();
         this.setPagination(false);
-        axios.get( '/dataset/' + this.props.id + '/comments', {
+        axios.get( 'http://localhost:41338/dataset/' + this.props.id + '/comments', {
             params: {
                 currentPage: this.state.currentPage,
                 resultsPerPage: this.state.resultsPerPage

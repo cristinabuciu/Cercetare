@@ -17,6 +17,12 @@ Pentru Area -> Metrics & Axes -> Chart Type -> Line
             -> Data -> Date Histogram; Interval -> Pe OX folosesc Custom -> 1d
 
 -------------------------------
+LINUX Watch system pentru noua chestie cu erori:
+
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p.
+sudo sysctl --system
+
+-------------------------------
 ELASTIC SEARCH
 sudo pip3 install elasticsearch==7.0.2
 

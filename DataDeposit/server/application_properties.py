@@ -1,8 +1,8 @@
 FLASK_SECRET_KEY = 'development'
-FLASK_STATIC_FOLDER = "../static"
-FLASK_TEMPLATE_FOLDER = "../static/dist"  # images
+FLASK_STATIC_FOLDER = "./static"
+FLASK_TEMPLATE_FOLDER = "./static/dist"  # images
 
-DATABASE_IP = '172.18.0.2'
+DATABASE_IP = '172.26.0.2'
 DATABASE_PORT = 9200
 INDEX_USERS = 'logintable'
 INDEX_LOCATIONS = 'locations'

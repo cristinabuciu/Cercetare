@@ -38,6 +38,7 @@ export interface IUploadPageFormState {
     shouldRenderForm: boolean;
     
     responseGetStatus: ResponseStatus;
+    formStatus: ResponseStatus;
 }
 
 export default class UploadPageForm extends React.Component<IUploadPageFormProps, IUploadPageFormState> {
@@ -82,7 +83,11 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
 			wasError: false,
 			wasSuccess: false,
 			responseMessage: ""
-		}
+		},
+        formStatus: {
+            wasError: false,
+			responseMessage: ""
+        }
     }
 
     componentDidMount(): void {
@@ -90,7 +95,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
 		const translate: MyTranslator = new MyTranslator("Response-codes");
 
         // Domains, Tags, Countries
-        axios.get( '/getDefaultData')
+        axios.get( 'http://localhost:41338/getDefaultData')
         .then(response => {
             if (response.data['statusCode'] === 200) {
                 responseGetStatus.wasSuccess = true;
@@ -171,14 +176,26 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         console.log(this.state);
     }
 
-    handleSubmit = (event, erros: Array<any>, values) => {
-        if (erros.length > 0) {
-            return;
-        }
-
+    onInvalidSubmit = (event, errors, values) => {
         const translate: MyTranslator = new MyTranslator("Response-codes");
+        debugger;
         this.setState({
-            loaderVisibility: true
+            formStatus: {
+                wasError: errors.length > 0,
+                responseMessage: errors.length + " " + translate.useTranslation("UPLOAD_FORM_ERROR")
+            }
+        });
+    }
+
+    handleSubmit = (event, values) => {
+        const translate: MyTranslator = new MyTranslator("Response-codes");
+
+        this.setState({
+            loaderVisibility: true,
+            formStatus: {
+                wasError: false,
+                responseMessage: ""
+            }
         });
 
         let hasErrorOnMetadata: boolean = false;
@@ -187,7 +204,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         let datasetId: number = -1;
         const formData: FormData = new FormData();
 
-        axios.post( '/datasets', {
+        axios.post( 'http://localhost:41338/datasets', {
             params: {
               	notArrayParams: {
                     domain: this.state.datasetMetadata.otherDomain ? values.newDomain : values.domain,
@@ -232,8 +249,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                 let file = this.state.fileToBeSent;
                 formData.append("file", file);
 
-                axios
-                .post("/dataset/" + datasetId + '/files', formData)
+                axios.post("http://localhost:41338/dataset/" + datasetId + '/files', formData)
                 .then(res => {
                     if (res.data['statusCode'] === 200) {
                         hasErrorOnFiles = false;
@@ -359,7 +375,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                     <CardSubtitle></CardSubtitle>
                     <CardText>
                     {this.state.shouldRenderForm ? 
-                    <AvForm onSubmit={this.handleSubmit}>
+                    <AvForm onValidSubmit={this.handleSubmit} onInvalidSubmit={this.onInvalidSubmit}>
                         <FormGroup>
                             <Row>
                                 <Col className="display-flex"><span className="padding-right-16">Private</span>
@@ -692,6 +708,13 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                     </Button>
                                     }
                                 
+                                </Col>
+                            </Row>
+                            <Row className={this.state.formStatus.wasError ? "margin-top-20" : "display-none"}>
+                                <Col>
+                                    <Alert color="danger" className="text-align-center">
+                                        {this.state.formStatus.responseMessage}
+                                    </Alert>
                                 </Col>
                             </Row>
                         </AvGroup>

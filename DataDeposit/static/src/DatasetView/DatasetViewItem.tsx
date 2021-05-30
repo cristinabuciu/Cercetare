@@ -71,7 +71,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
         let responseStatus: ResponseStatus = {};
 		const translate = new MyTranslator("Response-codes");
 
-        axios.get( '/user/' + this.props.owner)
+        axios.get( 'http://localhost:41338/user/' + this.props.owner)
           .then(response => {
             debugger;
             if (response.data['statusCode'] === 200) {
@@ -123,7 +123,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
 
     handleDownload(): boolean {
         let wasError: boolean = false;
-        axios.put( '/dataset/' + this.props.id + '/downloads')
+        axios.put( 'http://localhost:41338/dataset/' + this.props.id + '/downloads')
         .then(response => {
             if (response.data['statusCode'] === 200) {
                 wasError = false;

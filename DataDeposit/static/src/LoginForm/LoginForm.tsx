@@ -40,8 +40,7 @@ export default class LoginForm extends React.Component<ILoginFormProps, ILoginFo
     handleSubmit(event, errors, { username, password, rememberMe = false }): void {
         let responseStatus: ResponseStatus = {};
 		const translate = new MyTranslator("Response-codes");
-
-        axios.post( '/login', {
+        axios.post( 'http://localhost:41338/login', {
             username: username,
             password: password,
             rememberMe: rememberMe
@@ -85,7 +84,7 @@ export default class LoginForm extends React.Component<ILoginFormProps, ILoginFo
             <Col xs={{ size: 12 }} sm={{ size: 12 }} md={{ size: 8 }} lg={{ size: 4 }} xl={{ size: 4 }}>
             <div className="login-form-container">
                 <div className="login-form-logo">
-                    <img src={'static/dist/content/images/logo-normal.png'} alt="Logo" />
+                    <img src={'/content/images/logo-normal.png'} alt="Logo" />
                     </div>
                     <AvForm onSubmit={this.handleSubmit}>
                     <Row>

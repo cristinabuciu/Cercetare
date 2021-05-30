@@ -88,7 +88,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 			shouldRenderForm: false
         });
 
-		axios.get( '/dataset/' + this.props.id + '/files')
+		axios.get( 'http://localhost:41338/dataset/' + this.props.id + '/files')
 		.then(response => {
 			if (response.data['statusCode'] === 200) {
                 responseGetStatus.wasSuccess = true;
@@ -120,7 +120,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 		.finally( () => {
 			// always executed
 			let dataFormats: Array<string> = [];
-			axios.get( '/getDefaultData')
+			axios.get( 'http://localhost:41338/getDefaultData')
 			.then(response => {
 				if (response.data['statusCode'] === 200) {
 					responseGetDefaultDataStatus.wasSuccess = true;
@@ -199,7 +199,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 			formData.append("file", file);
 		}
 
-		axios.put("/dataset/" + this.props.id + '/files', formData)
+		axios.put("http://localhost:41338/dataset/" + this.props.id + '/files', formData)
 		.then(response => {
 			if (response.data['statusCode'] === 200) {
                 responseStatus.wasSuccess = true;

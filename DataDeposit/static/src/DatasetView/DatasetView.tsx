@@ -80,7 +80,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
         let responseStatus: ResponseStatus = {};
 		const translate = new MyTranslator("Response-codes");
 
-        axios.get( '/dataset/' + profileID)
+        axios.get( 'http://localhost:41338/dataset/' + profileID)
         .then(response => {
             console.log("AVA MAX");
             console.log(response.data);

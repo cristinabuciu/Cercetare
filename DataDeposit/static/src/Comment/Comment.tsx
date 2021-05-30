@@ -58,7 +58,7 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
             disabledDeleteButton: true
         });
 
-        await axios.delete( '/dataset/' + this.props.datasetID + '/comment/' + this.props.id)
+        await axios.delete( 'http://localhost:41338/dataset/' + this.props.datasetID + '/comment/' + this.props.id)
         .then(response => {
             console.log("Carolina ");
             console.log(response.data);

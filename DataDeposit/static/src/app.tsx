@@ -15,8 +15,16 @@ import 'antd/dist/antd.css';
 
 import AppRoutes from './appRoutes';
 
-export class App extends React.Component<{greeting: string}, {count:number}> {
-  state = {count: 0};
+export interface IAppProps {}
+
+export interface IAppState {
+  count: number;
+}
+
+export class App extends React.Component<IAppProps, IAppState> {
+  state: IAppState = {
+    count: 0
+  };
 
   render() {
     const paddingTop = '60px';
@@ -60,6 +68,6 @@ export class App extends React.Component<{greeting: string}, {count:number}> {
 
 
 ReactDOM.render(
-  <App greeting="Hello, world!"/>,
-  document.getElementById('app')
+  <App />,
+  document.getElementById('root')
 );

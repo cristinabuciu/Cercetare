@@ -16,8 +16,6 @@ import { NavLink } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import "./items.scss"
 import ModalConfirm from '../common/ModalConfirm'
- 
-import { translate, Translate } from 'react-jhipster';
 
 export interface ISearchCardProps {
     id: number;
@@ -42,10 +40,8 @@ export interface ISearchCardProps {
     handleDelete?: Function;
 }
 
-
 export interface ISearchCardState {
     ratingAvgValue: number;
-
     deleteButtonText: string;
 }
 
@@ -53,7 +49,6 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
 
     state: ISearchCardState = {
         ratingAvgValue: 4.58,
-
         deleteButtonText: "Delete"
     }
 
@@ -65,7 +60,7 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
 
     handleDownload(): boolean {
         let wasError: boolean = false;
-        axios.put( '/dataset/' + this.props.id + '/downloads')
+        axios.put( 'http://localhost:41338/dataset/' + this.props.id + '/downloads')
         .then(response => {
             if (response.data['statusCode'] === 200) {
                 wasError = false;

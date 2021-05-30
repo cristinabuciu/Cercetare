@@ -243,7 +243,7 @@ export interface ICommentFormState {
 
       if (rating > 0) {
         if ((title === '' && comment === '') || (title !== '' && comment !== '')) {
-          axios.post( '/dataset/' + this.props.id + '/comments', {
+          axios.post( 'http://localhost:41338/dataset/' + this.props.id + '/comments', {
             comment: {
                 username: token,
                 rating: this.props.rating,

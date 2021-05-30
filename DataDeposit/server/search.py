@@ -257,5 +257,5 @@ def findLanguage(language):
     if language not in SUPPORTED_LANGUAGES:
         return createResponse(HTTPStatus.NOT_FOUND, "LANGUAGE_NOT_SUPPORTED")
 
-    with open("languages.json", 'r') as f:
+    with open("DataDeposit/server/languages.json", 'r') as f:
         return createResponse(HTTPStatus.OK, json.load(f)[language])

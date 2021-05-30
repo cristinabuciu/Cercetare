@@ -1,10 +1,5 @@
 @import '../variables';
-
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+@import '../style_home.scss';
 
 .login-form-container {
   border: 2px solid #3c87be;

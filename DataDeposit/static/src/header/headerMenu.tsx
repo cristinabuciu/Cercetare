@@ -77,8 +77,26 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
       MyTranslator.staticProperty = currentLanguage;
     }
     else {
+      currentLanguage = "GB"
       localStorage.setItem("language", "GB");
     }
+
+    localStorage.setItem("languageJson", "");
+
+    axios.get( 'http://localhost:41338/language/' + currentLanguage, {})
+    .then(response => {
+      debugger;
+      if (response.data['statusCode'] === 200) {
+        localStorage.setItem("languageJson", response.data['data']);
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    .finally(function () {
+      // always executed
+    }); 
+    
 
     ////////////////// FUNCTIONS /////////////////////
     this.setSelected = this.setSelected.bind(this);
@@ -90,7 +108,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
   };
 
   handleLogout(): void {
-    axios.post( '/logout', {})
+    axios.post( 'http://localhost:41338/logout', {})
       .then(response => {
         console.log(response);
           localStorage.removeItem('login_user_token');

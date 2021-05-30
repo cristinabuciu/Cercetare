@@ -38,7 +38,7 @@ export const ImageTitle = (props) => {
   const profileID = props.profileID ? props.profileID : "1";
   const listaMea= ['IT_domain.jpg', 'MEDICINE_domain.jpg', 'BIOLOGY_domain.jpg', 'CHEMISTRY_domain.jpg', 'ARCHITECTURE_domain.jpg', 'PHYSICS_domain.jpg', 'BUSINESS_domain.jpg']
 
-  let src = listaMea.includes(props.image) ? `static/dist/content/images/${props.image}` : 'static/dist/content/images/0_domain.jpg';
+  let src = listaMea.includes(props.image) ? `/content/images/${props.image}` : '/content/images/0_domain.jpg';
 
     return (
       <Col md={{ size: 12, offset: 0 }} className="text-align-center pageHeader-Title">
@@ -52,8 +52,8 @@ export const ImageTitle = (props) => {
             <div className="image-box">
               <div className="ala-de-sus-din-dr text-align-left">
               {props.hasProfilePhoto 
-                  ? <img src={'static/dist/content/images/profilePicture/' + profileID + "_avatar.jpg"} />
-                  : <img src={'static/dist/content/images/profilePicture/default.png'} />}
+                  ? <img src={'/content/images/profilePicture/' + profileID + "_avatar.jpg"} />
+                  : <img src={'/content/images/profilePicture/default.png'} />}
               </div>
               <div className="title-box">
               <div className="ala-de-sus text-align-left">
