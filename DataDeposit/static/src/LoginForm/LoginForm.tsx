@@ -40,7 +40,6 @@ export default class LoginForm extends React.Component<ILoginFormProps, ILoginFo
     handleSubmit(event, errors, { username, password, rememberMe = false }): void {
         let responseStatus: ResponseStatus = {};
 		const translate = new MyTranslator("Response-codes");
-
         axios.post( '/login', {
             username: username,
             password: password,

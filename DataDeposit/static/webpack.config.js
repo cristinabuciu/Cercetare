@@ -38,6 +38,14 @@ module.exports = {
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.json'],
       modules: ['node_modules'] // facut de Sergiu
-    }
+    },
+    plugins: [
+      // new webpack.DefinePlugin({ // <-- key to reducing React's size
+      //   'process.env': {
+      //     'NODE_ENV': JSON.stringify('production')
+      //   }
+      // }),
+      // new webpack.optimize.AggressiveMergingPlugin()//Merge chunks 
+    ],
   };
   

@@ -77,8 +77,26 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
       MyTranslator.staticProperty = currentLanguage;
     }
     else {
+      currentLanguage = "GB"
       localStorage.setItem("language", "GB");
     }
+
+    localStorage.setItem("languageJson", "");
+
+    axios.get( '/language/' + currentLanguage, {})
+    .then(response => {
+      debugger;
+      if (response.data['statusCode'] === 200) {
+        localStorage.setItem("languageJson", response.data['data']);
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    .finally(function () {
+      // always executed
+    }); 
+    
 
     ////////////////// FUNCTIONS /////////////////////
     this.setSelected = this.setSelected.bind(this);

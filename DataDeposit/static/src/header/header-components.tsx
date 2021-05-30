@@ -170,7 +170,7 @@ export const Home = props => (
     </span>
     <NavLink
       tag={Link}
-      to="/LoginForm"
+      to="/loginForm"
       className="d-flex align-items-center"
       onClick={() => props.toggleMenu()}
       style={{ color: 'white', textDecoration: 'none' }}

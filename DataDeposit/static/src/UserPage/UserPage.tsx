@@ -1,11 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 
-import {
-    Card, Label, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Input, Row, Col, Tooltip, Alert
-} from 'reactstrap';
-import LeftBar from "../LeftBar/LeftBar";
+import { Row, Col, Alert } from 'reactstrap';
 import { Container } from 'semantic-ui-react';
 import { RouteComponentProps } from 'react-router';
 
@@ -294,7 +290,7 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
                         <Col className="profile-picture text-align-left" md={{ size: 2, offset: 0 }}>
                             {this.state.userInfo.hasPhoto 
                             ? <img src={'static/dist/content/images/profilePicture/' + this.props.userId + "_avatar.jpg"} />
-                            : <img src={'static/dist/content/images/profilePicture/default.png'} />}
+                            : <img src={'/content/images/profilePicture/default.png'} />}
                             
                             <Row className="user-info text-align-center padding-top-20">
                                 <Col className="text-align-left"><h3>Username:</h3></Col>
