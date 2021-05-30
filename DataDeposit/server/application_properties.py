@@ -15,6 +15,8 @@ INDEX_ID_GENERATOR = 'id_generator'
 UPLOAD_FOLDER_PATH = './uploadFiles'
 UPLOAD_FILE_SIZE_MAX = 100 * 1000 * 1000  # 100 MB
 
+SUPPORTED_LANGUAGES = ['GB', 'RO']
+
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
 UPLOAD_FILE_ALLOWED_MIME_TYPES = {
     'application/zip': 'zip',
