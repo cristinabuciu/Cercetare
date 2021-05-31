@@ -10,6 +10,7 @@ from delete import hardDeleteDataset, softDeleteDataset, hardDeleteComment
 ############################### FLASK CONFIG ################################
 from flask import Flask, render_template, request, json, redirect, url_for, flash, session, make_response, jsonify
 from http import HTTPStatus
+from flask_compress import Compress
 
 import subprocess
 
@@ -22,6 +23,7 @@ app.secret_key = FLASK_SECRET_KEY
 
 current_user = 'admin'
 
+Compress(app)
 
 @app.errorhandler(404)
 def page_not_found(e):

@@ -7,7 +7,7 @@
     "test": "echo \"Error: no tests installed\" && exit 1",
     "build": "webpack --progress --config webpack.config.js --mode=production",
     "build:dev": "webpack --progress --config webpack.config.js --mode=development",
-    "watch": "webpack --config webpack.config.js --mode=development --watch --watch-poll",
+    "watch": "webpack --config webpack.config.js --mode=development --watch",
     "start-build": "npm run build && python3 ../server/server.py",
     "start": "webpack-dev-server --open",
     "webpack:dev": "npm run webpack-dev-server -- --config webpack.config.js --inline --port=9060 --env.stats=minimal",
@@ -48,6 +48,7 @@
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
     "express": "^4.17.1",
+    "node-gzip": "^1.1.2",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-datepicker": "^2.15.0",
@@ -125,6 +126,7 @@
     "webpack-cli": "3.1.2",
     "webpack-dev-server": "^3.1.14",
     "webpack-merge": "4.1.4",
+    "webpack-node-externals": "^3.0.0",
     "webpack-notifier": "1.7.0"
   }
 }

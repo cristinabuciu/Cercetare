@@ -32,7 +32,7 @@
     "ADD_DATASET_COMMENT_SUCCESS": "Review posted successfully.",
     "LOGIN_ERROR": "There was an unexpected error while logging in the user."
   },
-  
+
   "common": {
     "yes": "Yes",
     "no": "No",
@@ -47,7 +47,8 @@
   },
 
   "SearchPage": {
-    "items-error": "There was an error at search !" 
+    "items-not-found": "No dataset found!",
+    "items-error": "There was a search error!"
   },
 
   "UserPage": {
