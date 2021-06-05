@@ -7,6 +7,124 @@ body {
 }
 
 ///////////////////////////////////////////////////////////////
+/////////////////////// MARGIN /////////////////////
+
+@mixin margin($size, $side) {
+    @if $size== '' {
+        @if $side== '' {
+            .margin {
+                margin: 10px !important;
+            }
+        } @else {
+            .margin {
+                margin-#{$side}: 10px !important;
+            }
+        }
+    } @else {
+        @if $side== '' {
+            .margin-#{$size} {
+                margin: #{$size}px !important;
+            }
+        } @else {
+            .margin-#{$side}-#{$size} {
+                margin-#{$side}: #{$size}px !important;
+            }
+        }
+    }
+}
+
+@include margin('5', 'top');
+@include margin('10', 'top');
+@include margin('20', 'top');
+@include margin('25', 'top');
+@include margin('30', 'top');
+@include margin('5', 'bottom');
+@include margin('10', 'bottom');
+@include margin('20', 'bottom');
+@include margin('25', 'bottom');
+@include margin('30', 'bottom');
+@include margin('5', 'right');
+@include margin('10', 'right');
+@include margin('20', 'right');
+@include margin('25', 'right');
+@include margin('30', 'right');
+@include margin('5', 'left');
+@include margin('10', 'left');
+@include margin('20', 'left');
+@include margin('25', 'left');
+@include margin('30', 'left');
+
+///////////////////////////////////////////////////////////////
+/////////////////////// PADDING /////////////////////
+
+@mixin padding($size, $side) {
+    @if $size== '' {
+        @if $side== '' {
+            .padding {
+                padding: 10px !important;
+            }
+        } @else {
+            .padding {
+                padding-#{$side}: 10px !important;
+            }
+        }
+    } @else {
+        @if $side== '' {
+            .padding-#{$size} {
+                padding: #{$size}px !important;
+            }
+        } @else {
+            .padding-#{$side}-#{$size} {
+                padding-#{$side}: #{$size}px !important;
+            }
+        }
+    }
+}
+
+@include padding('5', 'top');
+@include padding('10', 'top');
+@include padding('20', 'top');
+@include padding('5', 'bottom');
+@include padding('10', 'bottom');
+@include padding('20', 'bottom');
+@include padding('25', 'bottom');
+@include padding('30', 'bottom');
+@include padding('50', 'bottom');
+@include padding('5', 'right');
+@include padding('10', 'right');
+@include padding('16', 'right');
+@include padding('20', 'right');
+@include padding('30', 'right');
+@include padding('50', 'right');
+@include padding('5', 'left');
+@include padding('10', 'left');
+@include padding('16', 'left');
+@include padding('20', 'left');
+@include padding('30', 'left');
+@include padding('50', 'left');
+
+///////////////////////////////////////////////////////////////
+/////////////////////// TEXT-ALIGN /////////////////////
+
+@mixin text-align($side) {
+    @if $side== '' {
+        .text-align-#{$side} {
+            text-align: inherit;
+        }
+    } @else {
+        .text-align-#{$side} {
+            text-align: #{$side};
+        }
+    }
+}
+
+@include text-align('left');
+@include text-align('right');
+@include text-align('center');
+@include text-align('justify');
+@include text-align('initial');
+
+///////////////////////////////////////////////////////////////
 
 .bold {
     font-weight: bold;
@@ -28,96 +146,8 @@ body {
     display: flex;
 }
 
-.text-align-center {
-    text-align: center;
-}
-
-.text-align-right {
-    text-align: right;
-}
-
-.text-align-left {
-    text-align: left;
-}
-
-.padding-top-10 {
-    padding-top: 10px;
-}
-
-.padding-left-5 {
-    padding-left: 5px;
-}
-
-.padding-left-16 {
-    padding-left: 16px;
-}
-
-.padding-left-10 {
-    padding-left: 10px;
-}
-
-.padding-right-5 {
-    padding-right: 5px;
-}
-
-.padding-right-10 {
-    padding-right: 10px;
-}
-
-.padding-right-16 {
-    padding-right: 16px;
-}
-
-.padding-top-20 {
-    padding-top: 20px;
-}
-
-.no-margin-top {
-    margin-top: 0 !important;
-}
-
-.margin-right-10 {
-    margin-right: 10px;
-}
-
-.margin-right-5 {
-    margin-right: 5px;
-}
-
-.margin-top-5 {
-    margin-top: 5px;
-}
-
-.margin-bottom-5 {
-    margin-bottom: 5px;
-}
-
-.margin-bottom-20 {
-    margin-bottom: 20px;
-}
-
-.margin-bottom-50 {
-    margin-bottom: 50px;
-}
-
-.margin-top-20 {
-    margin-top: 20px;
-}
-
-.margin-top-50 {
-    margin-top: 50px;
-}
-
-.margin-top-10 {
-    margin-top: 10px;
-}
-
-.margin-bottom-10p {
-    margin-bottom: 10%;
-}
-
-.padding-top-5 {
-    padding-top: 5px;
+.display-none {
+    display: none;
 }
 
 .width-numeric-input {
@@ -193,7 +223,6 @@ textarea[disabled=""] {
     padding: 3px 50px;
 }
 ///////////////////////////////////////////////////////////////////
-
 ///////////////////////// COMMON ITEMS ////////////////////////////
 .search-button-size {
     font-size: 20px;
@@ -224,10 +253,6 @@ textarea[disabled=""] {
 }
 
 .z-depth-hoverable:hover {
-    // -webkit-box-shadow: none;
-    // box-shadow: none;
-    // -webkit-transition: all .55s ease-in-out;
-    // transition: all .55s ease-in-out;
     -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15) !important;
     box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15) !important;
 }

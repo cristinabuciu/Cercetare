@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "skipLibCheck": true,
     "noResolve": false,
     "outDir": "dist",
     /* Basic Options */
