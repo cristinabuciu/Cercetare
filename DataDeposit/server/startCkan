@@ -11,3 +11,28 @@ Groups: IT
 ckan -c /etc/ckan/default/ckan.ini sysadmin add admin
 
 https://blog.thenets.org/install-ckan-using-docker/
+
+/////////// HARVESTING /////////////
+https://github.com/ckan/ckanext-harvest
+
+https://github.com/datopian/ckan-ng-harvest.git -> script python pentru a face harvesting din alta sursa (se afla in /tools/)
+
+python3 import_harvest_sources.py \
+    --import_from_url https://catalog.data.gov \
+    --source_type ckan \
+    --method GET \
+    --destination_url http://localhost:5000 \
+    --destination_api_key xxxxxxxxxxxxxxxxxxxxx \
+    --method GET 
+
+/////////////// HARVESTING PE DOCKER /////////////////
+1) https://blog.thenets.org/install-ckan-using-docker/
+2) modific prin Dockerfile ckan -> localhost + adaug la ckan plugins harvest ckan_harvester
+3) modific in .env: adaug plugins harvest ckan_harvester si ckan -> localhost
+4) docker-compose build
+5) docker-compose up
+6) intram pe ckan container si rulam https://github.com/ckan/ckanext-harvest
+
+7) Creez din UI un harvest nou si ii dau restart
+8) PE CONTAINER: ckan --config=ckan.ini harvester gather-consumer
+9) PE CONTAINER: ckan --config=ckan.ini harvester fetch-consumer
