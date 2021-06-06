@@ -231,6 +231,31 @@ def getAllComments(datasetId, currentPage, resultsPerPage):
         return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "GET_DATASET_COMMENTS_ERROR")
 
 
+def calculateStatistics():
+    try:
+        es = getTransaction()
+
+        datasets = [dataset['_source'] for dataset in es.get_public_datasets()]
+
+        domains = set()
+        map(lambda dataset: domains.add(str(dataset['domain'])), datasets)
+
+        internals = 0
+        externals = 0
+
+        for dataset in datasets:
+            resource_type, _ = getResourceType(dataset)
+            if resource_type == 'INTERNAL':
+                internals += 1
+            elif resource_type == 'EXTERNAL':
+                externals += 1
+
+        return createResponse(HTTPStatus.OK, {'datasets': len(datasets), 'domains': len(domains), 'internal_resources': internals, 'external_resources': externals})
+    except Exception as e:
+        print(e)
+        return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "GET_STATISTICS_ERROR")
+
+
 def getAllDefaultData():
     try:
         es = getTransaction()
