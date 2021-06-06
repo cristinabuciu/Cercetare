@@ -7,6 +7,7 @@ import urllib3
 # connector class
 class ESClass(object):
     MATCH_ALL_QUERY = {'query': {'match_all': {}}}
+    DEFAULT_SIZE = 2000
 
     def __init__(self, server, port, use_ssl=False, user='', password=''):
         self.server = server
@@ -57,25 +58,25 @@ class ESClass(object):
 
     # get elements by index
     def get_es_index(self, index):
-        s = self.es.search(index=index, body=ESClass.MATCH_ALL_QUERY, size=2000)
+        s = self.es.search(index=index, body=ESClass.MATCH_ALL_QUERY, size=self.DEFAULT_SIZE)
         return s['hits']['hits']
     
     def get_es_data_by_id(self, index, id):
         searchJson = {"query": { "match": {"id": id } } }
 
-        s = self.es.search(index=index, body=searchJson, size=2000)
+        s = self.es.search(index=index, body=searchJson, size=self.DEFAULT_SIZE)
         return s['hits']['hits']
     
     def get_domain_by_name(self, domainName):
         searchJson = {"query": { "match": {"domainName": domainName } } }
 
-        s = self.es.search(index=INDEX_DOMAINS, body=searchJson, size=2000)
+        s = self.es.search(index=INDEX_DOMAINS, body=searchJson, size=self.DEFAULT_SIZE)
         return s['hits']['hits']
     
     def get_dataset_comments(self, datasetId):
         searchJson = {"query": { "match": {"datasetID": datasetId } } }
 
-        s = self.es.search(index=INDEX_COMMENTS, body=searchJson, size=2000)
+        s = self.es.search(index=INDEX_COMMENTS, body=searchJson, size=self.DEFAULT_SIZE)
         return s['hits']['hits']
     
     def get_tag_of_domain(self, domainName, tagName):
@@ -84,17 +85,17 @@ class ESClass(object):
             {"match": {"tagName": tagName}}
             ]}}}
 
-        s = self.es.search(index=INDEX_TAGS, body=searchJson, size=2000)
+        s = self.es.search(index=INDEX_TAGS, body=searchJson, size=self.DEFAULT_SIZE)
         return s['hits']['hits']
     
     def get_user_by_name(self, username):
         searchJson = {"query": { "match": {"username": username } } }
 
-        s = self.es.search(index=INDEX_USERS, body=searchJson, size=2000)
+        s = self.es.search(index=INDEX_USERS, body=searchJson, size=self.DEFAULT_SIZE)
         return s['hits']['hits']
 
     def get_filtered_datasets(self, domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
-        s = self.es.search(index=INDEX_DATASETS, body=self.match_dataset(domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate), size=2000)
+        s = self.es.search(index=INDEX_DATASETS, body=self.match_dataset(domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate), size=self.DEFAULT_SIZE)
         return s['hits']['hits']
 
     @staticmethod
@@ -127,6 +128,11 @@ class ESClass(object):
         else:
             searchJson["sort"] = sortList
             return searchJson
+
+    def get_public_datasets(self):
+        body = {"query": { "bool": {"must": [ {"match": {"private": False}} ] } } }
+        s = self.es.search(index=INDEX_DATASETS, body=body, size=self.DEFAULT_SIZE)
+        return s['hits']['hits']
 
     def count_datasets_by_ownerId(self, ownerId, isPrivate):
         body = {"query": { "bool": {"must": [{ "match": {"ownerId": int(ownerId) } }, { "match": {"private": isPrivate } }]}}}

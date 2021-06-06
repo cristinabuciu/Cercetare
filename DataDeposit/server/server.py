@@ -2,7 +2,7 @@
 from application_properties import FLASK_STATIC_FOLDER, FLASK_TEMPLATE_FOLDER, UPLOAD_FOLDER_PATH, FLASK_SECRET_KEY, INDEX_USERS, SOFT_DELETE, CLEANUP_DATASETS_ENABLED
 from utils import getTransaction, createResponse
 
-from search import searchDatasets, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById, getDatasetFilesInfo
+from search import searchDatasets, findDataset, getAllDefaultData, findUserID, getAllComments, getUserInfoById, getDatasetFilesInfo, calculateStatistics
 from upload import uploadDataset, uploadDatasetFiles, addComment, updateNumberOfViews
 from update import updateDataset, increaseDownloadsNumber, updateDatasetFilesToNone, updateDatasetFilesToExternal, updateDatasetFilesToInternal
 from delete import hardDeleteDataset, softDeleteDataset, hardDeleteComment
@@ -177,6 +177,11 @@ def getUserDetails(user_info):
         return findUserID(_username)
 
 
+@app.route('/statistics', methods=['GET'])
+def getStatistics():
+    return calculateStatistics()
+
+
 # Domains, Tags, Country
 @app.route('/getDefaultData', methods=['GET'])
 def getDefaultData():
@@ -188,4 +193,3 @@ if __name__ == "__main__":
         subprocess.Popen(['python3', 'DataDeposit/server/datasetsCleanupJob.py'])
     
     app.run(debug=True, use_reloader=False, host='0.0.0.0', port=41338)
-

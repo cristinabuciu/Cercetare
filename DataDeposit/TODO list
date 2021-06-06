@@ -1,6 +1,6 @@
-2) Trebuie adaugate extensiile acceptate in cardul de Choose File din Upload/Update
-3) Refresh dupa ce sterg un dataset
-4) Repara search
+1) Tooltip pt extensii la UPLOAD/UPDATE
+2) Refresh dupa ce sterg un dataset
+3) Repara search
 
 
 7) // Dupa ce se apasa pe Delete -> apare response de succes -> cautarea veche dispare -> apare loading bar -> se face apel pentru o noua cautare -> afisez noul rezultat
