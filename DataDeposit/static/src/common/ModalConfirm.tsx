@@ -1,13 +1,8 @@
 import React from 'react';
-import { Button, DropdownToggle, DropdownMenu, DropdownItem, Collapse, Card, CardBody,
-  ModalHeader, ModalBody, ModalFooter, Row, Col, Input, Alert,
-  TabContent, TabPane, Nav, NavItem, CardTitle, CardText, Modal } from 'reactstrap';
-import { NavLink } from 'reactstrap';
-import { NavLink as Link } from 'react-router-dom';
+import { Button, ModalHeader, ModalBody, ModalFooter, Row, Col, Alert, Modal } from 'reactstrap';
 import "./commonElems.scss";
 import MyTranslator from '../assets/MyTranslator'
 import { DeleteMessageItem } from '../models/DeleteMessageItem'
-import { LoaderComponent } from '../Items/Items-components'
 
 export interface IModalConfirmProps {
 	idToBeConfirmed: number;
@@ -20,7 +15,6 @@ export interface IModalConfirmProps {
 
 	successCallback?: Function;
 }
-
 
 export interface IModalConfirmState {
 	disabledDeleteButton: boolean;
@@ -142,3 +136,4 @@ export default class ModalConfirm extends React.Component<IModalConfirmProps, IM
 		</div>
 	);}
   }
+  

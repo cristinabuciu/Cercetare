@@ -47,8 +47,8 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
                     {this.state.isAuthenticated ? 
                     <>
                     {this.props.modeSearch ? 
-                        <NavLink tag={Link} to="/uploadPage"><Button outline size='lg' className="button-color">{translate.useTranslation("upload")}</Button>{' '}</NavLink>
-                        : <NavLink tag={Link} to="/search"><Button outline size='lg' className="button-color">{translate.useTranslation("search")}</Button>{' '}</NavLink>}</>
+                        <NavLink tag={Link} className="margin-bottom-30" to="/uploadPage"><Button outline size='lg' className="button-color">{translate.useTranslation("upload")}</Button>{' '}</NavLink>
+                        : <NavLink tag={Link} className="margin-bottom-30" to="/search"><Button outline size='lg' className="button-color">{translate.useTranslation("search")}</Button>{' '}</NavLink>}</>
                         : <></>
                     }
                     
@@ -57,7 +57,7 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
                 <Nav defaultActiveKey="/home" className="flex-column margin-top-50">
                     <Nav.Link href="/aboutus">{translate.useTranslation("about")}</Nav.Link>
                     <Nav.Link target="_blank" href="http://localhost:5000/organization/crescdi">{translate.useTranslation("ckan")}</Nav.Link>
-                    <Nav.Link target="_blank" href="http://localhost:5601/">{translate.useTranslation("kibana")}</Nav.Link>
+                    <Nav.Link target="_blank" href="http://localhost:5601/app/kibana#/dashboard/e6d030c0-c6c6-11eb-ac1c-bde289732919/">{translate.useTranslation("kibana")}</Nav.Link>
                     <Nav.Link eventKey="link-2">{translate.useTranslation("privacy")}</Nav.Link>
                     <Nav.Link eventKey="link-2">{translate.useTranslation("sponsors")}</Nav.Link>
                     <Nav.Link eventKey="link-2">{translate.useTranslation("developers")}</Nav.Link>

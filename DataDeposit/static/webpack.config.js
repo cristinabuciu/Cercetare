@@ -7,8 +7,6 @@ module.exports = {
       path: __dirname+'/dist',
       filename: 'app.bundle.js'
     },
-    target: 'node',
-    externals: [nodeExternals()],
     module: {
       rules: [
         { test: /\.(ts|tsx)$/, loader: 'awesome-typescript-loader' },

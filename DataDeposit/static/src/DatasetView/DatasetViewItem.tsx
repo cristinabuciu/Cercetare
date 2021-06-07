@@ -4,12 +4,12 @@ import MyTranslator from '../assets/MyTranslator'
 
 import { Card, CardTitle, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { LoaderComponent, HorizontalList } from '../Items/Items-components'
+import { HorizontalList } from '../Items/Items-components'
 import { AboutBody } from './Dataset-components'
 import DatasetUpdate from './DatasetUpdate'
 import CommentTabs from "./CommentTabs"
 
-import { faEdit, faTimesCircle, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 import { ImageTitle, Title } from '../Items/Title/Title';
 import { ResponseStatus } from '../models/ResponseStatus'

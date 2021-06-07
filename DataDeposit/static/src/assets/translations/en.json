@@ -7,6 +7,8 @@
     "SKIP_UPLOAD_FILES_WRONG_PACKAGE_ID": "File can not be attached to the desired package.",
     "UPLOAD_DATASET_FILES_ERROR": "There was an unexpected error while uploading your files.",
     "UPLOAD_DATASET_ERROR": "There was an unexpected error while adding the dataset.",
+    "UPLOAD_DATASET_WARNING": "If this didn't happened before please try again.",
+    "UPLOAD_DATASET_SUCCESS": "Dataset has been uploaded successfully !",
     "ADD_DATASET_COMMENT_ERROR": "There was an unexpected error while adding your comment.",
     "ADD_DATASET_COMMENT_ERROR_MISSING_RATING": "Comments without rating are not allowed.",
     "ADD_DATASET_COMMENT_ERROR_MISSING_TITLE_OR_COMMENT": "Comment can not be submitted. Both title and comment should be filled in.",
@@ -30,7 +32,9 @@
     "GET_USER_ID_ERROR": "There was an unexpected error while getting user ID.",
     "USER_NOT_FOUND": "The user was not found.",
     "ADD_DATASET_COMMENT_SUCCESS": "Review posted successfully.",
-    "LOGIN_ERROR": "There was an unexpected error while logging in the user."
+    "LOGIN_ERROR": "There was an unexpected error while logging in the user.",
+    "GET_STATISTICS_ERROR": "There was an unexpected error while getting the statistics.",
+    "UPLOAD_FORM_ERROR": " fields have errors."
   },
 
   "common": {
@@ -39,7 +43,9 @@
     "cancel": "Cancel",
     "None": "None",
     "Back": "Back",
-    "delete": "Delete"
+    "delete": "Delete",
+    "go-to-button": "Go to your dataset",
+    "upload-another-button": "Upload another dataset"
   },
 
   "Login-Form": {
@@ -91,10 +97,78 @@
   },
 
   "Upload": {
-    "dataset_title": "Dataset title",
+    "private": "Private",
+
+    "dataset-title-label": "Dataset title:",
+    "dataset-title-placeholder": "Dataset title",
+    "dataset-title-error-req": "Please enter a name for the dataset",
+    "dataset-title-error-pattern": "Your name must be composed only with letter and numbers",
+    "dataset-title-error-len": "Your name must be between 5 and 500 characters",
+
+    "dataset-author-label": "Authors:",
+    "dataset-author-placeholder": "Dataset authors",
+    "dataset-author-error-req": "Please enter an author for the dataset",
+    "dataset-author-error-pattern": "Your name must be composed only with letter, numbers and ;",
+    "dataset-author-error-len": "This field must have at least 5 characters",
+
+    "articol-title-label": "Article title:",
+    "articol-title-placeholder": "Article title",
+
+    "year-label": "Year of the publication:",
+    "year-placeholder": "Year of the publication" ,
+    "year-error-req": "Please enter a year for the dataset",
+    "year-error-pattern": "Please enter a valid year for the dataset",
+
+    "country-label": "Select a country:",
+    "country-placeholder": "Select a country",
+    "country-error-req": "Please select a country",
+
+    "domain-label": "Select a Domain:",
+    "domain-placeholder": "Select a domain",
+    "domain-error-req": "Please select a domain for the dataset",
+
+    "newdomain-label": "Enter new domain:",
+    "newdomain-placeholder": "Enter new domain",
+    "newdomain-error-req": "Please enter a new domain for the dataset",
+    "newdomain-error-pattern": "Your name must be composed only with letter and numbers",
+    "newdomain-error-len": "Your name must be between 2 and 50 characters",
+
+    "tags-label": "Select tags:",
+    "tags-placeholder": "Select tags",
+
+    "sdesc-label": "Short Description:",
+    "sdesc-placeholder": "Please enter a short description...",
+    "sdesc-error-req": "Please enter a short description",
+    "sdesc-error-len": "Your name must be between 10 and 1000 characters",
+
+    "git-label": "GitHub link:",
+    "git-placeholder": "GitHub link",
+
+    "download-link-label": "Download link ",
+    "download-link-placeholder": "Download Link...",
+    "download-link-error-req": "Please enter an external url",
+
+    "upload-internal-label": "Upload dataset",
+
+    "data-integrity-label": "Data integrity and authenticity:",
+    "data-integrity-placeholder": "Data integrity and authenticity",
+    "data-integrity-error-req": "Please enter information about data integrity and authenticity",
+    "data-integrity-error-len": "Your input must be between 5 and 500 characters",
+
+    "cont-label": "Continuity of access:",
+    "cont-placeholder": "Continuity of access",
+    "cont-error-req": "Please enter information about continuity of access",
+    "cont-error-len": "Your input must be between 5 and 500 characters",
+
+    "data-reuse-label": "Data Reuse:",
+    "data-reuse-placeholder": "Data Reuse",
+    "data-reuse-error-req": "Please enter information about Data Reuse",
+    "data-reuse-error-len": "Your input must be between 5 and 500 characters'",
+
+    "show-more-info": "Show more info",
+
     "dataset_authors": "Dataset authors",
     "article_title": "Article title",
-    "year": "Year of the publication",
     "optional": "This field is optional",
     "tags": "Select tags",
     "description": "Short Description",
@@ -102,6 +176,7 @@
     "access": "Continuity of access",
     "reuse": "Data Reuse",
     "edit": "Apply changes",
+    "upload-button": "Upload dataset",
     "access-info": "<div> <b>The repository has a continuity plan to ensure ongoing access to and preservation of its holdings.</b><br/><br/> Guidance:<br/> This Requirement covers the governance related to continued operation of the repository over time and during disasters, as well as evidence in relation to succession planning; namely, the measures in place to ensure access to and availability of data holdings, both currently and in the future. Reviewers are seeking evidence that preparations are in place to address the risks inherent in changing circumstances, including in mission and/or scope.<br/><br/> For this Requirement, please describe: <br/><br/> <ul> <li>The level of responsibility undertaken for data holdings, including any guaranteed preservation periods.<br/><br/></li><li>The medium-term (three- to five-year) and long-term (> five years) plans in place to ensure the continued availability and accessibility of the data. In particular, both the response to rapid changes of circumstance and long-term planning should be described, indicating options for relocation or transition of the activity to another body or return of the data holdings to their owners (i.e., data producers). For example, what will happen in the case of cessation of funding, which could be through an unexpected withdrawal of funding, a planned ending of funding for a time-limited project repository, or a shift of host institution interests? Evidence for this Requirement should relate specifically to governance. The technical aspects of business continuity, and disaster and succession planning should be covered in R15 (Technical infrastructure).</li></ul></div>",
     "metadata-edit": "Edit Metadata",
     "resource-edit": "Edit Resource"
@@ -118,6 +193,10 @@
   },
 
   "Home": {
-    "home-title": "Welcome to University Politehnica of Bucharest!"
+    "home-title": "Welcome to University Politehnica of Bucharest!",
+    "datasets": "Public datasets uploaded",
+    "domains": "Different domains",
+    "internals": "Internal resources",
+    "externals": "External resources"
   }
 }

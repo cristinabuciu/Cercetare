@@ -3,17 +3,13 @@ import './header.scss';
 import axios from 'axios';
 import React from 'react';
 import MyTranslator from '../assets/MyTranslator'
-import { Storage, translate } from 'react-jhipster';
-import { Collapse, Nav, Navbar, NavbarToggler, NavItem, NavLink } from 'reactstrap';
-import LoadingBar from 'react-redux-loading-bar';
+import { Collapse, Nav, Navbar, NavbarToggler } from 'reactstrap';
 // import { getSession } from 'app/shared/reducers/authentication';
 import { Brand, Logo, Home, Logout, Profile } from './header-components';
-import { connect } from 'react-redux';
 // import { IRootState } from 'app/shared/reducers';
 // import { AccountMenu, LocaleMenu } from 'app/shared/layout/header/menus';
 // import { setActiveEntry } from 'app/shared/reducers/profile/profile.reducer';
 // import { withRouter } from 'react-router';
-import { triggerAsyncId } from 'async_hooks';
 // import { AppNotificationActions } from 'app/shared/ui/AppNotificationsContext/NotificationsActions';
 import ReactFlagsSelect from 'react-flags-select';
 

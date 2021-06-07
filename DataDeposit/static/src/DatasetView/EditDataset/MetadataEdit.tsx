@@ -3,8 +3,7 @@ import MyTranslator from '../../assets/MyTranslator'
 import React from 'react';
 import axios from 'axios';
 
-import { CardBody, Row, Col, CardTitle, CardSubtitle, CardText, Card,
-    Button, Label, FormGroup, FormText, Alert } from 'reactstrap';
+import { CardBody, Row, Col, CardTitle, CardSubtitle, CardText, Button, Label, FormGroup, FormText, Alert } from 'reactstrap';
 import {Switch, LoaderComponent, TooltipButton, CustomCreatableSelect} from '../../Items/Items-components'
 import { ResponseStatus } from '../../models/ResponseStatus'
 import { ICustomSelectList } from '../../models/ICustomSelectList'

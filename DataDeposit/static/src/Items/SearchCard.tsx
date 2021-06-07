@@ -2,22 +2,17 @@ import * as React from 'react';
 import axios from 'axios';
 
 import {
-    Card, Label, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Input, Row, Col, Tooltip
-  } from 'reactstrap';
-import { faLink, faDownload, faPortrait, faCalendar, faUser, faFile, faNewspaper, faGlobe, faDatabase, faEye } from "@fortawesome/free-solid-svg-icons";
+    Card, Label, Row, Col } from 'reactstrap';
+import { faLink, faCalendar, faUser, faFile, faNewspaper, faGlobe, faDatabase } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import {ModalQuickView} from './Items-components'
 import "../style_home.scss";
 import StarRatings from 'react-star-ratings';
-import { Nav } from 'react-bootstrap';
 import { NavLink } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import "./items.scss"
 import ModalConfirm from '../common/ModalConfirm'
- 
-import { translate, Translate } from 'react-jhipster';
 
 export interface ISearchCardProps {
     id: number;

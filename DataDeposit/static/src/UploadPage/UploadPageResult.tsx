@@ -10,6 +10,7 @@ import LeftBar from "../LeftBar/LeftBar";
 import { Container } from 'semantic-ui-react';
 import { NavLink } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
+import MyTranslator from '../assets/MyTranslator'
  
 
 
@@ -30,7 +31,7 @@ export default class UploadPageResult extends React.Component<IUploadPageResultP
     componentDidMount(): void {}
   
     render() {
-
+        const translate: MyTranslator = new MyTranslator("Response-codes");
       return (
         <Container className="themed-container" fluid={true}>
             <Row lg="12">
@@ -48,38 +49,38 @@ export default class UploadPageResult extends React.Component<IUploadPageResultP
                     <CardTitle className="UploadResultPage">
                         {this.props.wasSuccess ? 
                         <Alert color="success">
-                            Dataset has been uploaded successfully !
+                            {translate.useTranslation("UPLOAD_DATASET_SUCCESS")}
                         </Alert>
                         :
                         <><Alert color="danger">
                             {this.props.errorCode}
                         </Alert>
                         <Alert color="warning">
-                            If this didn't happened before please try again
+                            {translate.useTranslation("UPLOAD_DATASET_WARNING")}
                         </Alert></>
                         }
                         
                     </CardTitle>
                     <CardSubtitle></CardSubtitle>
                     <CardText>
-                        <Row>
-                        <Col className="text-align-center">
+                        <Row><Col className="text-align-center">
                             {this.props.wasSuccess ? 
-                            <NavLink tag={Link} to={'/datasetView/' + this.props.newDatasetId}><Button 
+                            <NavLink tag={Link} className="dataset-padding" to={'/datasetView/' + this.props.newDatasetId}>
+                                <Button 
                                 color="primary" 
-                                outline className="upload-button-size">
-                                    Go to your dataset
+                                outline className="upload-button-size finish-button">
+                                    {translate.useTranslation("go-to-button")}
                                 </Button></NavLink>
                              : <></>}
+                        </Col></Row>
+                        <Row><Col className="text-align-center">
                             <Button 
                                 color="primary" 
-                                outline className="upload-button-size" 
+                                outline className="upload-button-size finish-button" 
                                 onClick={() => this.props.handleRepairUpload()}>
-                                    Upload another dataset
-                                </Button>
-                            </Col>
-                                
-                        </Row>
+                                    {translate.useTranslation("upload-another-button")}
+                            </Button>
+                        </Col></Row>
                     </CardText>
                     
                     </CardBody>
