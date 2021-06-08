@@ -1,14 +1,9 @@
 import React from 'react';
-import { Translate, translate } from 'react-jhipster';
 import { NavLink as Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileAlt } from '@fortawesome/free-regular-svg-icons/faFileAlt';
-import { faUserCog } from '@fortawesome/free-solid-svg-icons/faUserCog';
 import { DropdownMenu, DropdownToggle, NavbarBrand, NavItem, NavLink, UncontrolledDropdown } from 'reactstrap';
-import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons';
 // import styles from './header-component.module.scss';
-import ReactTooltip from 'react-tooltip';
-import { Badge } from 'antd';
+// import ReactTooltip from 'react-tooltip';
 
 export const NavDropdown = props => (
   <UncontrolledDropdown nav inNavbar id={props.id}>
@@ -129,7 +124,7 @@ export const Logo = props => (
 export const Logout = props => (
   <NavItem>
     <span className="tooltiptext">
-      <Translate contentKey="global.menu.account.logout" />
+      {/* <Translate contentKey="global.menu.account.logout" /> */}
     </span>
     <NavLink
       tag={Link}
@@ -147,7 +142,7 @@ export const Logout = props => (
 export const Profile = props => (
   <NavItem>
     <span className="tooltiptext">
-      <Translate contentKey="global.menu.account.logout" />
+      {/* <Translate contentKey="global.menu.account.logout" /> */}
     </span>
     <NavLink
       tag={Link}
@@ -166,7 +161,7 @@ export const Profile = props => (
 export const Home = props => (
   <NavItem>
     <span className="tooltiptext">
-      <Translate contentKey="global.menu.account.login" />
+      {/* <Translate contentKey="global.menu.account.login" /> */}
     </span>
     <NavLink
       tag={Link}

@@ -1,17 +1,21 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import { Switch, Route, Redirect, Router } from 'react-router-dom';
 
-import LoginForm from "./LoginForm/LoginForm";
-import Home from "./Home/Home";
-import SearchPage from "./SearchPage/SearchPage";
-import UploadPage from "./UploadPage/UploadPage"
-import DatasetView from "./DatasetView/DatasetView"
-import UserPage from "./UserPage/UserPage"
-import NotFoundPage from "./error/NotFoundPage"
-// import Contact from "./Contact/Contact";
-// import Products from "./Product/Products";
+const LoginForm = React.lazy(() => import("./LoginForm/LoginForm"));
+const Home = React.lazy(() => import("./Home/Home"));
+const SearchPage = React.lazy(() => import("./SearchPage/SearchPage"));
+const UploadPage = React.lazy(() => import("./UploadPage/UploadPage"));
+const DatasetView = React.lazy(() => import("./DatasetView/DatasetView"));
+const UserPage = React.lazy(() => import("./UserPage/UserPage"));
+import NotFoundPage from "./error/NotFoundPage";
 
-export default class AppRoutes extends Component {
+export interface IRoutesProps {}
+
+export interface IRoutesState {
+    displayedPage: string;
+}
+
+export default class AppRoutes extends Component<IRoutesProps, IRoutesState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -27,17 +31,14 @@ export default class AppRoutes extends Component {
        
         return (
             <Switch >
-                <Route path="/" exact render={(props) => <Home {...props} greeting={""} />}/>
-                {/* <Route path="/" exact render={(props) => <SearchPage {...props} greeting={""} />}/> */}
-                <Route path="/LoginForm" exact render={(props) => <LoginForm {...props} color={"black"} />} />
-                <Route path="/search" exact render={(props) => <SearchPage {...props} greeting={""} />}/>
-                <Route path="/uploadPage" exact render={(props) => <UploadPage {...props} color={"UPLOAD "} />} />
-                <Route path="/datasetView/:id" exact render={(props) => <DatasetView {...props} color={"VIEW"} id={props.match.params['id']} />} />
-                <Route path="/userpage/:userId" exact render={(props) => <UserPage {...props} color={"USERPAGE"} userId={props.match.params['userId']} />} />
+                <Route path="/" exact render={(props) => <Suspense fallback="Loading"><Home {...props} greeting={""} /></Suspense>}/>
+                <Route path="/loginForm" exact render={(props) => <Suspense fallback="Loading"><LoginForm {...props} color={"black"} /></Suspense>} />
+                <Route path="/search" exact render={(props) => <Suspense fallback="Loading"><SearchPage {...props} greeting={""} /> </Suspense>}/>
+                <Route path="/uploadPage" exact render={(props) => <Suspense fallback="Loading"><UploadPage {...props} color={"UPLOAD "} /></Suspense>} />
+                <Route path="/datasetView/:id" exact render={(props) => <Suspense fallback="Loading"><DatasetView {...props} color={"VIEW"} id={props.match.params['id']} /></Suspense>} />
+                <Route path="/userpage/:userId" exact render={(props) => <Suspense fallback="Loading"><UserPage {...props} color={"USERPAGE"} userId={props.match.params['userId']} /></Suspense>} />
                 <Route path="/404" component={NotFoundPage} />
                 <Redirect to="/404" />
-                {/* <Route path="/Contact" component={Contact} />
-                <Route path="/Products" component={Products} /> */}
             </Switch>
         )
     }

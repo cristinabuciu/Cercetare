@@ -238,12 +238,12 @@ def calculateStatistics():
         datasets = [dataset['_source'] for dataset in es.get_public_datasets()]
 
         domains = set()
-        map(lambda dataset: domains.add(str(dataset['domain'])), datasets)
-
         internals = 0
         externals = 0
 
         for dataset in datasets:
+            domains.add(str(dataset['domain']))
+
             resource_type, _ = getResourceType(dataset)
             if resource_type == 'INTERNAL':
                 internals += 1

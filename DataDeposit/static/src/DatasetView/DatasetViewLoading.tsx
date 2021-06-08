@@ -1,9 +1,6 @@
 import * as React from 'react';
 
-import {
-    Card, Label, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Input, Row, Col, Tooltip
-  } from 'reactstrap';
+import { Col } from 'reactstrap';
 
 import { Title } from '../Items/Title/Title';
 import {LoaderComponent} from '../Items/Items-components'

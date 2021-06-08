@@ -117,6 +117,10 @@
   },
 
   "Home": {
-    "home-title": "Bun venit la Universitatea Politehnica din București!"
+    "home-title": "Bun venit la Universitatea Politehnica din București!",
+    "datasets": "Seturi de date publice încărcate",
+    "domains": "Domenii diferite",
+    "internals": "Resurse interne",
+    "externals": "Resurse externe"
   }
 }

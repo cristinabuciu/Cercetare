@@ -7,7 +7,7 @@ import AddComment from "../Comment/AddComment";
 import Comment from "../Comment/Comment";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Row, Col, TabContent, TabPane, Nav, NavItem, Button, CardBody, Card, NavLink, Alert } from 'reactstrap';
+import { Row, Col, TabContent, TabPane, Nav, NavItem, Button, Card, NavLink, Alert } from 'reactstrap';
 import NumericInput from 'react-numeric-input';
 import {InputText, LoaderComponent} from '../Items/Items-components'
 import { CommentItem } from '../models/CommentItem'

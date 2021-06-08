@@ -1,5 +1,6 @@
 DataDeposit/static/node_modules/
 DataDeposit/static/dist/app.bundle.js
+DataDeposit/static/dist/*.js
 .vscode/launch.json
 DataDeposit/static/src1/
 DataDeposit/server/__pycache__/

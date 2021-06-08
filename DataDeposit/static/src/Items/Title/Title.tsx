@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { Col, Button } from 'reactstrap';
+import { Col } from 'reactstrap';
 
 import './title.scss';
-
 
 export interface ITitleProps {
     titleSet: string;

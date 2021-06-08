@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, Collapse, Card, CardBody,
-  Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Input, Alert,
-  TabContent, TabPane, Nav, NavItem, CardTitle, CardText } from 'reactstrap';
+  Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Input, Alert } from 'reactstrap';
 import { NavLink } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import "./items.scss";
 import Loader from 'react-loader-spinner';
-import { faStarHalf, faStar, faPortrait, faCalendar, faUser, faFile, faFileDownload, faGlobe, faDatabase, faEye, faTags, faFemale, faFlag } from "@fortawesome/free-solid-svg-icons";
+import { faStar, faPortrait, faCalendar, faUser, faFile, faFileDownload, faGlobe, faEye, faTags, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Select from 'react-select'

@@ -49,3 +49,36 @@ $grid-line-color: rgb(187, 228, 240);
   font-size: 2.5em;
   width: 100%;
 }
+
+//////////////// STATS ////////////////////
+.statistics-card {
+  mix-blend-mode: unset !important;
+  float: left;
+  min-height: 1px;
+}
+
+.statistics-card-item {
+  opacity: 1;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-duration: .2s;
+  animation-duration: .2s;
+  width: auto;
+  transition: opacity 1s;
+  -webkit-transition: opacity 1s;
+  -moz-transition: opacity 1s;
+  margin: 0 auto 30px;
+  word-wrap: break-word;
+}
+
+.statistics-card-details {
+  font-size: 24px !important;
+  font-style: italic;
+  font-weight: 900;
+}
+
+.statistics-card-title {
+  line-height: 72px;
+  font-weight: 500;
+  font-size: 100px !important;
+}

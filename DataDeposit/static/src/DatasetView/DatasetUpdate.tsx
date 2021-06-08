@@ -1,7 +1,6 @@
 import './DatasetView.scss';
 import MyTranslator from '../assets/MyTranslator'
 import React from 'react';
-import axios from 'axios';
 import classnames from 'classnames';
 
 import { TabContent, TabPane, NavLink, Nav, NavItem } from 'reactstrap';
