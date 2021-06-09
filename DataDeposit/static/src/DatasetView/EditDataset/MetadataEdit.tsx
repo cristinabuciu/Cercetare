@@ -297,7 +297,7 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 				<AvForm onSubmit={this.handleSubmit}>
                         <FormGroup>
                             <Row>
-                                <Col className="display-flex"><span className="padding-right-16">Private</span>
+                                <Col className="display-flex"><span className="padding-right-16">{translate.useTranslation("private")}</span>
                                 <Switch
                                     isOn={this.state.datasetMetadata.valueSwitch}
                                     onColor="#00FF00"
@@ -312,14 +312,14 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                                     <AvField 
                                         type="text"
                                         name="dataset-title" 
-                                        label="Dataset title:" 
-                                        placeholder="Dataset title"
-										value={this.state.datasetMetadata.dataset_title}
+                                        label={translate.useTranslation("dataset-title-label")}
+                                        placeholder={translate.useTranslation("dataset-title-placeholder")}
+                                        value={this.state.datasetMetadata.dataset_title}
                                         validate={{
-                                            required: {value: true, errorMessage: 'Please enter a name for the dataset'},
-                                            pattern: {value: '^[A-Za-z0-9 ]+$', errorMessage: 'Your name must be composed only with letter and numbers'},
-                                            minLength: {value: 5, errorMessage: 'Your name must be between 5 and 500 characters'},
-                                            maxLength: {value: 500, errorMessage: 'Your name must be between 5 and 500. characters'}
+                                            required: {value: true, errorMessage: translate.useTranslation("dataset-title-error-req")},
+                                            pattern: {value: '^[A-Za-z0-9- ]+$', errorMessage: translate.useTranslation("dataset-title-error-pattern")},
+                                            minLength: {value: 5, errorMessage: translate.useTranslation("dataset-title-error-len")},
+                                            maxLength: {value: 500, errorMessage: translate.useTranslation("dataset-title-error-len")}
                                           }}
                                         />
                                 </Col>
@@ -332,18 +332,18 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                                     <AvField 
                                         type="text" 
                                         name="dataset-authors"
-                                        label="Authors:" 
-                                        placeholder="Dataset authors" 
-										value={this.state.datasetMetadata.dataset_authors}
+                                        label={translate.useTranslation("dataset-author-label")}
+                                        placeholder={translate.useTranslation("dataset-author-placeholder")}
+                                        value={this.state.datasetMetadata.dataset_authors}
                                         validate={{
-                                            required: {value: true, errorMessage: 'Please enter an author for the dataset'},
-                                            pattern: {value: '^[A-Za-z0-9; ]+$', errorMessage: 'Your name must be composed only with letter, numbers and ;'},
-                                            minLength: {value: 5, errorMessage: 'This field must have at least 5 characters'},
+                                            required: {value: true, errorMessage: translate.useTranslation("dataset-author-req")},
+                                            pattern: {value: '^[A-Za-z0-9; ]+$', errorMessage: translate.useTranslation("dataset-author-pattern")},
+                                            minLength: {value: 5, errorMessage: translate.useTranslation("dataset-author-len")},
                                         }}
                                         />
                                     <TooltipButton 
                                         className="padding-top-10"
-                                        ButtonName="Show more info" 
+                                        ButtonName={translate.useTranslation("show-more-info")} 
                                         body={''}/>
                                 </Col>
                                 
@@ -352,16 +352,16 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                        <AvGroup>
                             <Row>
                                 <Col >
-                                    <Label for="article-title">Article title:</Label>
+                                    <Label for="article-title">{translate.useTranslation("articol-title-label")}</Label>
                                     <AvInput 
                                         type="text" 
                                         id="article-title"
                                         name="article-title" 
-                                        label="Article title:" 
-                                        placeholder="Article title"
-										value={this.state.datasetMetadata.article_title}
+                                        label={translate.useTranslation("articol-title-label")}
+                                        placeholder={translate.useTranslation("articol-title-placeholder")}
+                                        value={this.state.datasetMetadata.article_title}
                                     />
-                                    <FormText>This field is optional</FormText>
+                                    <FormText>{translate.useTranslation("optional")}</FormText>
                                 </Col>
                                 
                             </Row>
@@ -372,12 +372,12 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                                     <AvField 
                                         type="number" 
                                         name="year" 
-                                        label="Year:" 
-                                        placeholder="Year of the publication" 
-										value={this.state.datasetMetadata.year}
+                                        label={translate.useTranslation("year-label")}
+                                        placeholder={translate.useTranslation("year-placeholder")}
+                                        value={this.state.datasetMetadata.year}
                                         validate={{
-                                            required: {value: true, errorMessage: 'Please enter a year for the dataset'},
-                                            date: {format: 'YYYY', errorMessage: 'Please enter a valid year for the dataset'}
+                                            required: {value: true, errorMessage: translate.useTranslation("year-error-req")},
+                                            date: {format: 'YYYY', errorMessage: translate.useTranslation("year-error-pattern")}
                                         }} 
                                         title="Use YYYY"
                                     />
@@ -392,12 +392,12 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                                     <AvField
                                         type="select" 
                                         name="country" 
-                                        label="Select a country" 
-										value={this.state.datasetMetadata.country}
+                                        label={translate.useTranslation("year-label")} 
+                                        value={this.state.datasetMetadata.country}
                                         validate={{
-                                            required: {value: true, errorMessage: 'Please select a country'},
+                                            required: {value: true, errorMessage: translate.useTranslation("country-error-req")},
                                         }}>
-                                        <option value="">Select Country</option>
+                                        <option value="">{translate.useTranslation("country-placeholder")}</option>
                                         {
                                             this.state.uploadInputOptions.country.map((item: string) => {
                                                 return (<option value={item}>{item}</option>)
@@ -414,14 +414,14 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                                 <Col className="text-align-left" md="3">
                                     <AvField
                                         type="select" 
-                                        name="domain" 
-                                        label="Select a Domain" 
+                                        name="domain"  
+                                        label={translate.useTranslation("domain-label")}
                                         onChange={this.changeAValue}
-										value={this.state.datasetMetadata.domain}
+                                        value={this.state.datasetMetadata.domain}
                                         validate={{
-                                            required: {value: true, errorMessage: 'Please select a domain for the dataset'},
+                                            required: {value: true, errorMessage: translate.useTranslation("domain-error-req")},
                                         }}>
-                                        <option value="">Select Domain</option>
+                                        <option value="">{translate.useTranslation("domain-placeholder")}</option>
                                         {
                                             this.state.uploadInputOptions.domain.map((item: string) => {
                                                 return (<option value={item}>{item}</option>)
@@ -435,13 +435,13 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                                         type="text" 
                                         name="newDomain" 
                                         id="newDomain" 
-                                        label="Enter new domain:" 
-                                        placeholder="Enter new domain"
+                                        label={translate.useTranslation("newdomain-label")}
+                                        placeholder={translate.useTranslation("newdomain-placeholder")}
                                         validate={{
-                                            required: {value: this.state.shouldEnterNewDomain, errorMessage: 'Please enter a new domain for the dataset'},
-                                            pattern: {value: '^[A-Za-z0-9 ]+$', errorMessage: 'Your name must be composed only with letter and numbers'},
-                                            minLength: {value: 5, errorMessage: 'Your name must be between 5 and 50 characters'},
-                                            maxLength: {value: 50, errorMessage: 'Your name must be between 5 and 5. characters'}
+                                            required: {value: this.state.shouldEnterNewDomain, errorMessage: translate.useTranslation("newdomain-error-req")},
+                                            pattern: {value: '^[A-Za-z0-9- ]+$', errorMessage: translate.useTranslation("newdomain-error-pattern")},
+                                            minLength: {value: 2, errorMessage: translate.useTranslation("newdomain-error-len")},
+                                            maxLength: {value: 50, errorMessage: translate.useTranslation("newdomain-error-len")}
                                         }}
                                     /> : <></>}
                                 </Col>
@@ -450,14 +450,14 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                         <FormGroup>
                             <Row className="padding-top-20">
                                 <Col>
-                                    <Label for="tags">Select tags:</Label>
+                                    <Label for="tags">{translate.useTranslation("tags-label")}</Label>
                                     <CustomCreatableSelect 
                                         id="tags"
                                         options={this.state.uploadInputOptions.tags}
                                         value={this.state.datasetMetadata.tags}
                                         handleChange={this.handleCreateSelectChange}
                                         onInputChange={this.handleCreateSelectInputChange}
-                                        placeholder="Select tags"
+                                        placeholder={translate.useTranslation("tags-placeholder")}
                                     />
                                 </Col>
                             </Row>
@@ -469,14 +469,14 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                                         type="textarea" 
                                         name="text" 
                                         maxLength="1000"  
-                                        label="Short Description:"
+                                        label={translate.useTranslation("sdesc-label")}
                                         id="description" 
-                                        placeholder="Please enter a short description..."
-										value={this.state.datasetMetadata.short_desc}
+                                        placeholder= {translate.useTranslation("sdesc-placeholder")}
+                                        value={this.state.datasetMetadata.short_desc}
                                         validate={{
-                                            required: {value: true, errorMessage: 'Please enter a short description'},
-                                            minLength: {value:10, errorMessage: 'Your name must be between 10 and 1000 characters'},
-                                            maxLength: {value: 1000, errorMessage: 'Your name must be between 10 and 1000. characters'}
+                                            required: {value: true, errorMessage: translate.useTranslation("sdesc-req")},
+                                            minLength: {value:10, errorMessage: translate.useTranslation("sdesc-len")},
+                                            maxLength: {value: 1000, errorMessage: translate.useTranslation("sdesc-len")}
                                         }}
                                     />
                                 </Col>
@@ -485,16 +485,16 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                         <AvGroup>
                             <Row className="padding-top-20">
                                 <Col >
-                                    <Label for="gitlink">GitHub link:</Label>
+                                    <Label for="gitlink">{translate.useTranslation("git-label")}</Label>
                                     <AvInput 
                                         type="text" 
                                         id="gitlink"
                                         name="gitlink" 
-                                        label="GitHub link:" 
-                                        placeholder="GitHub link"
-										value={this.state.datasetMetadata.gitlink}
+                                        label={translate.useTranslation("git-label")}
+                                        placeholder={translate.useTranslation("git-placeholder")}
+                                        value={this.state.datasetMetadata.gitlink}
                                     />
-                                    <FormText>This field is optional</FormText>
+                                    <FormText>{translate.useTranslation("optional")}</FormText>
                                 </Col>
                             </Row>
                         </AvGroup>
@@ -504,40 +504,40 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                                     type="text"
                                     name="Data-integ" 
                                     id="Data-integ" 
-                                    placeholder="Data integrity and authenticity" 
-                                    label="Data integrity and authenticity:" 
-									value={this.state.datasetMetadata.dataIntegrity}
+                                    placeholder= {translate.useTranslation("data-integrity-placeholder")}
+                                    label={translate.useTranslation("data-integrity-label")}
+                                    value={this.state.datasetMetadata.dataIntegrity}
                                     validate={{
-                                        required: {value: true, errorMessage: 'Please enter information about data integrity and authenticity'},
-                                        minLength: {value: 5, errorMessage: 'Your name must be between 5 and 500 characters'},
-                                        maxLength: {value: 500, errorMessage: 'Your name must be between 5 and 500. characters'}
+                                        required: {value: true, errorMessage: translate.useTranslation("data-integrity-error-req")},
+                                        minLength: {value: 5, errorMessage: translate.useTranslation("data-integrity-error-len")},
+                                        maxLength: {value: 500, errorMessage: translate.useTranslation("data-integrity-error-len")}
                                     }}
                                     />
-                                    <TooltipButton 
-                                        body={'cc'}
-                                        className="padding-top-10"
-                                        ButtonName="Show more info" />
+                                <TooltipButton 
+                                    body={'cc'}
+                                    className="padding-top-10"
+                                    ButtonName={translate.useTranslation("show-more-info")} />
                             </Col>
                         </Row>
                         <Row className="padding-top-10">
                             <Col >
-                            <AvField 
-                                type="text"
-                                label="Continuity of access:" 
-                                name="Cont-access"
-                                id="Cont-access" 
-                                placeholder="Continuity of access" 
-								value={this.state.datasetMetadata.contAccess}
-                                validate={{
-                                    required: {value: true, errorMessage: 'Please enter information about continuity of access'},
-                                    minLength: {value: 5, errorMessage: 'Your name must be between 5 and 500 characters'},
-                                    maxLength: {value: 500, errorMessage: 'Your name must be between 5 and 500. characters'}
-                                }}
-                                />
-                            <TooltipButton 
-                                body={'aa'}
-                                className="padding-top-10"
-                                ButtonName="Show more info" />
+                                <AvField 
+                                    type="text"
+                                    label={translate.useTranslation("cont-label")}
+                                    name="Cont-access"
+                                    id="Cont-access" 
+                                    placeholder={translate.useTranslation("cont-placeholder")}
+                                    value={this.state.datasetMetadata.contAccess}
+                                    validate={{
+                                        required: {value: true, errorMessage: translate.useTranslation("cont-error-req")},
+                                        minLength: {value: 5, errorMessage: translate.useTranslation("cont-error-len")},
+                                        maxLength: {value: 500, errorMessage: translate.useTranslation("cont-error-len")}
+                                    }}
+                                    />
+                                <TooltipButton 
+                                    body={'aa'}
+                                    className="padding-top-10"
+                                    ButtonName={translate.useTranslation("show-more-info")} />
                                 
                             </Col>                                
                         </Row>
@@ -545,21 +545,21 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
                             <Col >
                             <AvField 
                                 type="text"
-                                label="Data Reuse:"
+                                label={translate.useTranslation("data-reuse-label")}
                                 name="data-reuse"
                                 id="data-reuse" 
-                                placeholder="Data Reuse" 
-								value={this.state.datasetMetadata.dataReuse}
+                                placeholder={translate.useTranslation("data-reuse-placeholder")}
+                                value={this.state.datasetMetadata.dataReuse}
                                 validate={{
-                                    required: {value: true, errorMessage: 'Please enter information about data Reuse'},
-                                    minLength: {value: 5, errorMessage: 'Your name must be between 5 and 500 characters'},
-                                    maxLength: {value: 500, errorMessage: 'Your name must be between 5 and 500. characters'}
+                                    required: {value: true, errorMessage: translate.useTranslation("data-reuse-error-req")},
+                                    minLength: {value: 5, errorMessage: translate.useTranslation("data-reuse-error-len")},
+                                    maxLength: {value: 500, errorMessage: translate.useTranslation("data-reuse-error-len")}
                                 }}
                                 />
                             <TooltipButton 
                                 body={'bb'}
                                 className="padding-top-10"
-                                ButtonName="Show more info" />
+                                ButtonName={translate.useTranslation("show-more-info")} />
                                 
                             </Col>                                
                         </Row>

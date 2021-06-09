@@ -1,17 +1,15 @@
 import * as React from 'react';
 
 import axios from 'axios';
-import {
-    Card, CardText, CardBody, CardTitle, CardSubtitle, Button, Input, Row, Col, FormGroup, FormText, Label, Alert
-  } from 'reactstrap';
+import { Card, CardText, CardBody, CardTitle, CardSubtitle, Button, Input, Tooltip,
+    Row, Col, FormGroup, FormText, Label, Alert } from 'reactstrap';
 import "../style_home.scss";
 import "./upload.scss";
 import {Switch, LoaderComponent, TooltipButton, CustomCreatableSelect} from '../Items/Items-components'
 import LeftBar from "../LeftBar/LeftBar";
 import { Container } from 'semantic-ui-react';
-import { faLink, faDownload, faPortrait } from "@fortawesome/free-solid-svg-icons";
+import { faLink, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Title } from '../Items/Title/Title';
 import MyTranslator from '../assets/MyTranslator'
 import { ResponseStatus } from '../models/ResponseStatus'
 import { AvField, AvForm, AvGroup, AvInput } from 'availity-reactstrap-validation';
@@ -36,6 +34,7 @@ export interface IUploadPageFormState {
     shouldEnterNewDomain: boolean;
     loaderVisibility: boolean;
     shouldRenderForm: boolean;
+    tooltipOpen: boolean;
     
     responseGetStatus: ResponseStatus;
     formStatus: ResponseStatus;
@@ -79,6 +78,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
 
         loaderVisibility: false,
         shouldRenderForm: true,
+        tooltipOpen: false,
         responseGetStatus: {
 			wasError: false,
 			wasSuccess: false,
@@ -353,6 +353,12 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
         console.log(`action: ${actionMeta.action}`);
         console.groupEnd();
     };
+
+    toggleTooltip = () => {
+        this.setState({
+            tooltipOpen: !this.state.tooltipOpen
+        });
+    }
   
     render() {  
     const translate: MyTranslator = new MyTranslator("Upload");
@@ -361,13 +367,13 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             <Row lg="12">
                 {/* <Title titleSet={this.props.color}/> */}
             </Row>
-            <Row md="4">
+            <Row>
                 
                 <LeftBar className='resizable-1050' modeSearch={false}/>
-                <Col md={{ size: 3, offset: 0 }}>
+                <Col md={{ size: 2, offset: 0 }}>
                     .
                 </Col>
-                <Col md={{ size: 9, offset: 0 }}>
+                <Col md="10" lg="11">
                 <Card>
                     <CardBody>
                     <CardTitle></CardTitle>
@@ -564,7 +570,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         type="text" 
                                         id="gitlink"
                                         name="gitlink" 
-                                        label="GitHub link:" 
+                                        label={translate.useTranslation("git-label")}
                                         placeholder={translate.useTranslation("git-placeholder")}
                                     />
                                     <FormText>{translate.useTranslation("optional")}</FormText>
@@ -601,7 +607,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                     </Card>
                                     </Col>
                                     <Col sm="6">
-                                    <Card body className={this.state.uploadOption.upload ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
+                                    <Card body id="myFileField" className={this.state.uploadOption.upload ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
                                         <AvGroup check disabled className="margin-top-5">
                                             <Label check>
                                             <Input
@@ -622,9 +628,13 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                                     id="myFile"
                                                     value={this.state.fileToBeSentName}
                                                     onChange={this.uploadFile} />
-                                                    <FormText className="text-align-left allowed-type">*{this.state.uploadInputOptions.dataFormats.join(", ")}</FormText>
+                                                    <FormText className="text-align-left allowed-type"></FormText>
+
                                             </Col>
                                         </AvGroup>
+                                        <Tooltip placement="top" isOpen={this.state.tooltipOpen} target="myFileField" toggle={this.toggleTooltip}>
+                                            {this.state.uploadInputOptions.dataFormats.join(", ")}
+                                        </Tooltip>
                                     </Card>
                                 </Col>
                             </Row>
@@ -674,14 +684,14 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                             <Col >
                             <AvField 
                                 type="text"
-                                label={translate.useTranslation("data-integrity-label")}
+                                label={translate.useTranslation("data-reuse-label")}
                                 name="data-reuse"
                                 id="data-reuse" 
-                                placeholder={translate.useTranslation("data-integrity-placeholder")}
+                                placeholder={translate.useTranslation("data-reuse-placeholder")}
                                 validate={{
-                                    required: {value: true, errorMessage: translate.useTranslation("data-integrity-error-req")},
-                                    minLength: {value: 5, errorMessage: translate.useTranslation("data-integrity-error-len")},
-                                    maxLength: {value: 500, errorMessage: translate.useTranslation("data-integrity-error-len")}
+                                    required: {value: true, errorMessage: translate.useTranslation("data-reuse-error-req")},
+                                    minLength: {value: 5, errorMessage: translate.useTranslation("data-reuse-error-len")},
+                                    maxLength: {value: 500, errorMessage: translate.useTranslation("data-reuse-error-len")}
                                 }}
                                 />
                             <TooltipButton 

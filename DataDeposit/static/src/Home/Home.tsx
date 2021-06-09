@@ -51,7 +51,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
 		.then(response => {
 			if (response.data['statusCode'] === 200) {
                 responseGetStatus.wasSuccess = true;
-                debugger;
                 this.setState({
                     statistics: response.data['data']
                 });
