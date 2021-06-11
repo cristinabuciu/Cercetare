@@ -6,6 +6,16 @@ body {
     padding: 2rem;
 }
 
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.themed-container {
+    max-width: 90%;
+}
+
 ///////////////////////////////////////////////////////////////
 /////////////////////// MARGIN /////////////////////
 

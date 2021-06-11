@@ -127,7 +127,8 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 			let currentDatasetMetadata: DatasetMetadataForPost = this.state.datasetMetadata;
 			let currentUploadInputOptions: UploadInputOptions = this.state.uploadInputOptions;
 
-			currentUploadInputOptions.tags = this.state.uploadInputOptions.tagList[this.props.domain];
+            const domain: string = this.props.domain.toUpperCase();
+			currentUploadInputOptions.tags = this.state.uploadInputOptions.tagList[domain];
 			currentDatasetMetadata.dataset_title = this.props.dataset_title;
 			currentDatasetMetadata.article_title = this.props.article_title;
 			currentDatasetMetadata.dataset_authors = this.props.authors.map((value) => `${value}`).join(';');
@@ -142,7 +143,6 @@ export default class MetadataEdit extends React.Component<IMetadataEditProps, IM
 			currentDatasetMetadata.valueSwitch = this.props.private;
 			currentDatasetMetadata.tags = currentTags;
 			currentDatasetMetadata.otherDomain = null;
-
 			this.setState({
 				datasetMetadata: currentDatasetMetadata,
 				uploadInputOptions: currentUploadInputOptions,

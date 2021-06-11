@@ -27,7 +27,7 @@ export const InputText = (props) => {
       <DropdownMenu className="dropdown-style">
           {props.listOfItems && props.listOfItems.length ? <></> : <DropdownItem disabled>Nothing to show</DropdownItem> }
           { props.listOfItems.map(item => (
-              <DropdownItem onClick={(e) => changeValueBind(e.target.textContent, props.nameOfDropdown, true)}>{item}</DropdownItem>
+              <DropdownItem onClick={(e) => changeValueBind(item.label ? item : e.target.textContent, props.nameOfDropdown, true)}>{item.label ? item.label : item}</DropdownItem>
             )
         )}
       </DropdownMenu>
