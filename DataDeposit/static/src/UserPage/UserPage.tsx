@@ -1,11 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 
-import {
-    Card, Label, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Input, Row, Col, Tooltip, Alert
-} from 'reactstrap';
-import LeftBar from "../LeftBar/LeftBar";
+import { Row, Col, Alert } from 'reactstrap';
 import { Container } from 'semantic-ui-react';
 import { RouteComponentProps } from 'react-router';
 
@@ -139,7 +135,6 @@ export default class DatasetView extends React.Component<IDatasetViewProps, IDat
         .finally(() => {
             // always executed
         });
-        debugger;
         return returnMessage;
     }
 

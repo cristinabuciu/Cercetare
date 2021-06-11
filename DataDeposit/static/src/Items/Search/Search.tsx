@@ -171,7 +171,6 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         if (shouldCount == false) {
             this.props.handleLoaderChange(true);
         }
-        debugger;
         axios.get( '/datasets', {
             params: {
                 allFilters: {

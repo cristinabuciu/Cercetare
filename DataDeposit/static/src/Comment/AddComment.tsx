@@ -252,7 +252,6 @@ export interface ICommentFormState {
             }
         })
           .then(response => {
-            debugger;
             console.log(response.data);
             if (response.data['statusCode'] === 200) {
               errorMessage = translate.useTranslation(response.data['data']);
@@ -269,7 +268,6 @@ export interface ICommentFormState {
           })
           .finally(() => {
             // always executed
-            debugger;
             this.changeLoader(false);
             this.setState({
               noTitleAndBodyWarning: false,

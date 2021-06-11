@@ -144,11 +144,16 @@
     "git-label": "GitHub link:",
     "git-placeholder": "GitHub link",
 
+    "existing-resource": "Existing resource: ",
+    "delete-resource": "Delete Resource",
+
     "download-link-label": "Download link ",
+    "download-link-label-edit": "Add External link ",
     "download-link-placeholder": "Download Link...",
     "download-link-error-req": "Please enter an external url",
 
     "upload-internal-label": "Upload dataset",
+    "upload-internal-label-edit": "Upload another Resource",
 
     "data-integrity-label": "Data integrity and authenticity:",
     "data-integrity-placeholder": "Data integrity and authenticity",

@@ -3,8 +3,8 @@ import MyTranslator from '../../assets/MyTranslator'
 import React from 'react';
 import axios from 'axios';
 
-import { CardBody, Row, Col, CardTitle, CardSubtitle, CardText, Card,
-    Button, Input, FormGroup, Alert, Label, FormText } from 'reactstrap';
+import { CardBody, Row, Col, CardTitle, CardSubtitle, CardText, Card, Tooltip,
+    Button, Input, FormGroup, Alert, Label } from 'reactstrap';
 import { LoaderComponent } from '../../Items/Items-components'
 import { faLink, faDownload, faPortrait } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -31,6 +31,7 @@ export interface IResourceEditState {
     };
 
 	shouldRenderForm: boolean;
+	tooltipOpen: boolean;
 	responseStatus: ResponseStatus;
 	responseGetStatus: ResponseStatus;
 	responseGetDefaultDataStatus: ResponseStatus;
@@ -69,6 +70,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 			responseMessage: ""
 		},
 		shouldRenderForm: true,
+		tooltipOpen: false,
 		dataFormats: []
     }
 
@@ -259,6 +261,12 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
         });
     }
 
+	toggleTooltip = () => {
+        this.setState({
+            tooltipOpen: !this.state.tooltipOpen
+        });
+    }
+
     render() {  
         const translate = new MyTranslator("Upload");
         return (
@@ -275,7 +283,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 							{this.state.currentOptions.None ? <></> : 
 							<ResourceToDownload
 								handleDownload={this.props.handleDownload}
-								firstName={"Existing resource: "}
+								firstName={translate.useTranslation("existing-resource")}
 								name={this.state.currentResource} />}
 						</div>
 					</Col>
@@ -294,7 +302,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 											name="radio2" 
 											onClick={this.radioHit}
 											className="margin-top-5" />{' '}
-										Delete Resource
+										{translate.useTranslation("delete-resource")}
 										</Label>
 										<>  </><FontAwesomeIcon icon={faPortrait} />
 									</FormGroup>
@@ -311,7 +319,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 											type="checkbox" 
 											name="radio2" 
 											className="margin-top-5" />{' '}
-										Add External link
+										{translate.useTranslation("download-link-label-edit")}
 										</Label>
 										<>  </><FontAwesomeIcon icon={faLink} />
 										<AvField
@@ -319,16 +327,16 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 											name="url"
 											id="downloadURL"
 											disabled={!this.state.uploadOption.link}
-											placeholder="Download Link..."
+											placeholder={translate.useTranslation("download-link-placeholder")}
 											validate={{
-												required: {value: this.state.uploadOption.link, errorMessage: 'Please enter an external url'},
+												required: {value: this.state.uploadOption.link, errorMessage: translate.useTranslation("download-link-error-req")},
 											}}
 										/>
 									</FormGroup>
 								</Card>
 							</Col>
 							<Col sm="4">
-							<Card body className={this.state.uploadOption.upload ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
+							<Card body id="myFileField" className={this.state.uploadOption.upload ? "selectedUploadCard text-align-center" : "unselectedUploadCard text-align-center"}>
 								<FormGroup check disabled className="margin-top-5">
 									<Label check>
 									<Input
@@ -338,7 +346,7 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 										type="checkbox" 
 										name="radio2" 
 										className="margin-top-5" />{' '}
-									Upload another Resource
+									{translate.useTranslation("upload-internal-label-edit")}
 									</Label>
 									<>  </><FontAwesomeIcon icon={faDownload} />
 									<Col >
@@ -348,10 +356,12 @@ export default class ResourceEdit extends React.Component<IResourceEditProps, IR
 											name="myFile" 
 											id="myFile" 
 											onChange={this.uploadFile} />
-										<FormText className="text-align-left allowed-type">*{this.state.dataFormats.join(", ")}</FormText>
 									</Col>
 								</FormGroup>
 							</Card>
+							<Tooltip placement="top" isOpen={this.state.tooltipOpen} target="myFileField" toggle={this.toggleTooltip}>
+								{this.state.dataFormats.join(", ")}
+							</Tooltip>
 							</Col>
 						</Row>
 					</FormGroup>

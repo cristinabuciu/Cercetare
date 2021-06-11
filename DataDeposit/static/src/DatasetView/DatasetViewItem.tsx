@@ -73,7 +73,6 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
 
         axios.get( '/user/' + this.props.owner)
           .then(response => {
-            debugger;
             if (response.data['statusCode'] === 200) {
                 responseStatus.wasSuccess = true;
                 this.setState({

@@ -40,10 +40,10 @@ export default class UploadPageResult extends React.Component<IUploadPageResultP
             <Row md="4">
                 
                 <LeftBar className='resizable-1050' modeSearch={false}/>
-                <Col md={{ size: 3, offset: 0 }}>
+                <Col md={{ size: 2, offset: 0 }}>
                     .
                 </Col>
-                <Col md={{ size: 9, offset: 0 }}>
+                <Col md={{ size: 10, offset: 0 }}>
                 <Card>
                     <CardBody>
                     <CardTitle className="UploadResultPage">
