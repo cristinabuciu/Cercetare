@@ -6,10 +6,11 @@ import {
     Card, CardImg, CardText, CardBody,
     CardTitle, CardSubtitle, Button, Input, Row, Col, Badge
   } from 'reactstrap';
-import {InputText, LoaderComponent, CustomSelect} from '../Items-components'
+import {InputText, CustomSelect} from '../Items-components'
 import { SearchCardItems } from '../../models/SearchCardItems'
 import NumericInput from 'react-numeric-input';
 import "../../style_home.scss";
+import { SelectList } from "../../models/FormItems";
 
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -32,7 +33,9 @@ export interface ICardState {
         country: Array<String>;
         dataFormat: Array<String>;
         sortBy: Array<String>;
+        downloadFrom: Array<SelectList>;
     };
+    downloadFrom: SelectList;
     domain: string;
     subdomain: Array<String>;
     country: string;
@@ -60,14 +63,14 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             },
             country: ['All countries  '],
             dataFormat: ['All Data Formats '],
-            sortBy: ['Dataset_title ASC', 'Dataset_title DESC', 'Avg_Rating_Value ASC', 'Avg_Rating_Value DESC'],
-            downloadFrom: ['All Downloads ', 'Download Link', 'Download File', 'No Download']
+            sortBy: ['dataset_title ASC', 'dataset_title DESC', 'avg_rating_value ASC', 'avg_rating_value DESC'],
+            downloadFrom: [{label: 'All Downloads ', value: '*'}, {label: 'Download Link', value: 'EXTERNAL'}, {label: 'Download File', value: 'INTERNAL'}, {label: 'No Download', value: 'NONE'}]
         },
         domain: "All domains  ",
         subdomain: [],
         country: "All countries  ",
         dataFormat: "All Data Formats ",
-        downloadFrom: "All Downloads ",
+        downloadFrom: {label: "All Downloads ", value: "*"},
         sortBy: "Sort By  ",
         resultsPerPage: 7,
         year: '',
@@ -145,7 +148,8 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 subdomain: []
             });
         }
-        this.state[comboBoxTitle] = '' + e;
+
+        this.state[comboBoxTitle] = e;
         this.forceUpdate();
         if(shouldUpdateNumber) {
         	this.searchData(true);
@@ -179,8 +183,8 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                         country: this.state.country === 'All countries  ' ? '*' : this.state.country,
                         data_format: this.state.dataFormat === 'All Data Formats ' ? '*' : this.state.dataFormat,
                         year: this.state.year === '' ? '*' : this.state.year + '*',
-                        dataset_title: this.state.dataset_title === '' ? '*' : '*' + this.state.dataset_title + '*',
-                        downloadFrom: this.state.downloadFrom === 'All Downloads ' ? '*' : this.state.downloadFrom,
+                        dataset_title: this.state.dataset_title === '' ? '*' : this.state.dataset_title,
+                        downloadType: this.state.downloadFrom.value,
                         userId: this.props.userId
                     },
                     arrayParams: {
@@ -268,7 +272,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                     <InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.searchInputOptions.dataFormat} changeValue={this.changeValue}  />
                 </Col>
                 <Col className="text-align-right">
-                    <InputText nameOfDropdown="downloadFrom" titleDropdown={this.state.downloadFrom} listOfItems={this.state.searchInputOptions.downloadFrom} changeValue={this.changeValue}  />
+                    <InputText nameOfDropdown="downloadFrom" titleDropdown={this.state.downloadFrom.label} listOfItems={this.state.searchInputOptions.downloadFrom} changeValue={this.changeValue}  />
                 </Col>
             </Row>
             <Row className="padding-top-20">

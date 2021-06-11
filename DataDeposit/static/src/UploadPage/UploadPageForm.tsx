@@ -367,13 +367,13 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
             <Row lg="12">
                 {/* <Title titleSet={this.props.color}/> */}
             </Row>
-            <Row>
+            <Row md="4">
                 
                 <LeftBar className='resizable-1050' modeSearch={false}/>
                 <Col md={{ size: 2, offset: 0 }}>
-                    .
+                            .
                 </Col>
-                <Col md="10" lg="11">
+                <Col md={{ size: 10, offset: 0 }}>
                 <Card>
                     <CardBody>
                     <CardTitle></CardTitle>
@@ -632,7 +632,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
 
                                             </Col>
                                         </AvGroup>
-                                        <Tooltip placement="top" isOpen={this.state.tooltipOpen} target="myFileField" toggle={this.toggleTooltip}>
+                                        <Tooltip placement="top" isOpen={this.state.tooltipOpen} target="myFileField" toggle={this.toggleTooltip} autohide={false}>
                                             {this.state.uploadInputOptions.dataFormats.join(", ")}
                                         </Tooltip>
                                     </Card>
