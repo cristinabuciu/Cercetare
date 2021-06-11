@@ -71,8 +71,23 @@ def searchDatasets(jsonParams):
             userId = notArrayParams['userId']
             shouldDisplayPrivate = True
 
-        result = es.get_filtered_datasets(notArrayParams['domain'], notArrayParams['country'], notArrayParams['data_format'], notArrayParams['year'], notArrayParams['dataset_title'],
+        result = es.get_filtered_datasets(notArrayParams['domain'], notArrayParams['country'], notArrayParams['year'],
                                           jsonParams['sortBy'], jsonParams['sortByField'], userId, shouldDisplayPrivate)
+
+        # filter by download type (*, NONE, INTERNAL, EXTERNAL)
+        downloadTypeFilterValue = notArrayParams['downloadType']
+        if downloadTypeFilterValue != '*':
+            result = list(filter(lambda dataset: getResourceType(dataset['_source'])[0] == downloadTypeFilterValue, result))
+
+        # filter by data format (*, zip, pdf)
+        dataFormatFilterValue = notArrayParams['data_format']
+        if downloadTypeFilterValue in ('*', 'INTERNAL') and dataFormatFilterValue != '*':
+            result = list(filter(lambda dataset: dataset['_source']['data_format'] == dataFormatFilterValue, result))
+
+        # filter by dataset title
+        datasetTitleInputValue = notArrayParams['dataset_title']
+        if datasetTitleInputValue != '*':
+            result = list(filter(lambda dataset: filterByDatasetTitle(dataset['_source'], datasetTitleInputValue), result))
 
         # filter by tags
         if arrayParams['tags'] and len(arrayParams['tags']) > 0:
@@ -82,10 +97,14 @@ def searchDatasets(jsonParams):
         if arrayParams['author'] and len(arrayParams['author']) > 0:
             result = list(filter(lambda dataset: filterByAuthors(dataset['_source'], arrayParams['author'], 'authors'), result))
 
-        # filter by download type
-        # TODO
-
         datasets = [dataset['_source'] for dataset in result]
+
+        # sort
+        if jsonParams['sortByField'] == 'None':
+            datasets = sorted(datasets, key=lambda dataset: int(dataset['lastUpdatedAt']), reverse=True)
+        else:
+            reverseOrder = True if jsonParams['sortBy'] == 'DESC' else False
+            datasets = sorted(datasets, key=lambda dataset: dataset[jsonParams['sortByField']], reverse=reverseOrder)
 
         if jsonParams['count']:
             return createResponse(HTTPStatus.OK, len(datasets))
@@ -115,6 +134,22 @@ def filterByAuthors(dataset, tags, datasetKey):
         if not(any(item.lower() in word.lower() for word in dataset[datasetKey])):
             return False
     return True
+
+
+def filterByDatasetTitle(dataset, titleInputValue):
+    datasetTitle = dataset['dataset_title'].lower()  # ex: "fast and furious"
+    titleInputValueRegex = toRegex(titleInputValue.lower())  # ex: "*fa*and*fu*"
+
+    matchResult = re.match(r'{}'.format(titleInputValueRegex), datasetTitle)
+    if matchResult is None:
+        return False
+
+    return matchResult.group() == datasetTitle
+
+
+def toRegex(text):
+    text = text.replace(" ", '.*')
+    return '.*' + text + '.*'
 
 
 def getPageResult(datasets, start, end):
