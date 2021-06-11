@@ -142,16 +142,32 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     changeValue(e, comboBoxTitle, shouldUpdateNumber): void {
         console.log("CODRIN");
         console.log(e);
-        if(comboBoxTitle === 'domain') {
+        if (comboBoxTitle === 'domain') {
             this.state.searchInputOptions.subdomain = this.state.searchInputOptions.subdomainList[e];
             this.setState({
                 subdomain: []
             });
         }
 
+        if (comboBoxTitle === 'dataFormat') {
+            if (this.state.downloadFrom.value === 'EXTERNAL' || this.state.downloadFrom.value === 'NONE')
+            {
+                this.state.downloadFrom = {label: "All Downloads ", value: "*"}
+            }
+        }
+
+        if (comboBoxTitle === 'downloadFrom') {
+            if (e.value && (e.value === 'EXTERNAL' || e.value === 'NONE'))
+            {
+                this.setState({
+                    dataFormat: "All Data Formats "
+                });
+            }
+        }
+
         this.state[comboBoxTitle] = e;
         this.forceUpdate();
-        if(shouldUpdateNumber) {
+        if (shouldUpdateNumber) {
         	this.searchData(true);
         }
     }
