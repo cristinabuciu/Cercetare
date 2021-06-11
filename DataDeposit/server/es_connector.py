@@ -94,19 +94,17 @@ class ESClass(object):
         s = self.es.search(index=INDEX_USERS, body=searchJson, size=self.DEFAULT_SIZE)
         return s['hits']['hits']
 
-    def get_filtered_datasets(self, domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
-        s = self.es.search(index=INDEX_DATASETS, body=self.match_dataset(domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate), size=self.DEFAULT_SIZE)
+    def get_filtered_datasets(self, domain, country, year, order, orderField, userId, shouldDisplayPrivate):
+        s = self.es.search(index=INDEX_DATASETS, body=self.match_dataset(domain, country, year, order, orderField, userId, shouldDisplayPrivate), size=self.DEFAULT_SIZE)
         return s['hits']['hits']
 
     @staticmethod
-    def match_dataset(domain, country, data_format, year, dataset_title, order, orderField, userId, shouldDisplayPrivate):
+    def match_dataset(domain, country, year, order, orderField, userId, shouldDisplayPrivate):
         # Search pattern
         searchJson = {"query": { "bool": {"must": [
             {"wildcard": {"domain": {"value": domain.lower()}}},
             {"wildcard": {"country": {"value": country.lower()}}},
-            {"wildcard": {"data_format": {"value": data_format.lower()}}},
             {"wildcard": {"year": {"value": year.lower()}}},
-            {"wildcard": {"dataset_title": {"value": dataset_title.lower()}}},
             {"match": {"deleted": False}}
             ]}}}
 
