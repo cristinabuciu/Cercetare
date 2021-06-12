@@ -39,7 +39,6 @@ def index():
 
 @app.route("/login", methods=['POST'])
 def login():
-    global current_user
     receivedData = json.loads(request.data.decode('utf-8'))
     _username = receivedData.get('username')
     _password = receivedData.get('password')
@@ -55,9 +54,7 @@ def login():
 
         for entry in result:
             if entry['_source']['username'] == _username and entry['_source']['password'] == _password:
-                current_user = _username
                 isAuthenticated = True
-                session['login'] = True
                 session['username'] = _username
                 currentUser = _username
                 currentUserId = entry['_source']['id']
@@ -74,7 +71,7 @@ def login():
 
 @app.route("/logout", methods=['POST'])
 def logout():
-    session.clear()
+    session.pop('username', None)
     resp = make_response('Logout')
     resp.set_cookie('current_username', expires=0)
     return resp
@@ -97,7 +94,11 @@ def addDataset():
     receivedData = json.loads(request.data.decode('utf-8'))
     _params = receivedData.get('params')
 
-    return uploadDataset(_params, current_user)
+    current_user = request.cookies.get('current_username')
+    if current_user:
+        return uploadDataset(_params, current_user)
+    else:
+        pass
 
 
 @app.route('/dataset/<dataset_id>/files', methods=['POST'])
