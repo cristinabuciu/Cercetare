@@ -21,9 +21,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 160 * 1024 * 1024
 app.secret_key = FLASK_SECRET_KEY
 
-current_user = 'admin'
-
 Compress(app)
+
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -55,9 +54,10 @@ def login():
         for entry in result:
             if entry['_source']['username'] == _username and entry['_source']['password'] == _password:
                 isAuthenticated = True
-                session['username'] = _username
                 currentUser = _username
                 currentUserId = entry['_source']['id']
+
+                session['username'] = _username
                 resp = make_response(jsonify(isAuthenticated=isAuthenticated, username=currentUser, userId=currentUserId, errorMessage=errorMessage))
                 resp.set_cookie("current_username", _username)
                 return resp
@@ -93,12 +93,9 @@ def getDataset(dataset_id):
 def addDataset():
     receivedData = json.loads(request.data.decode('utf-8'))
     _params = receivedData.get('params')
+    _user = request.cookies.get('current_username')
 
-    current_user = request.cookies.get('current_username')
-    if current_user:
-        return uploadDataset(_params, current_user)
-    else:
-        pass
+    return uploadDataset(_params, _user)
 
 
 @app.route('/dataset/<dataset_id>/files', methods=['POST'])
@@ -115,10 +112,11 @@ def getDatasetFiles(dataset_id):
 
 @app.route('/dataset/<dataset_id>', methods=['PUT'])
 def editDataset(dataset_id):
-    global current_user
     receivedData = json.loads(request.data.decode('utf-8'))
     _params = receivedData.get('params')
-    return updateDataset(dataset_id, _params, current_user)
+    _user = request.cookies.get('current_username')
+
+    return updateDataset(dataset_id, _params, _user)
 
 
 @app.route('/dataset/<dataset_id>/files', methods=['PUT'])

@@ -11,6 +11,9 @@ import ckan_connector as ck
 
 
 def updateDataset(dataset_id, params, current_user):
+    if current_user is None:
+        return createResponse(HTTPStatus.UNAUTHORIZED, "USER_UNAUTHORIZED")
+
     try:
         es = getTransaction()
 
