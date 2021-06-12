@@ -19,7 +19,6 @@ export interface ISearchPageProps {
 export interface ISearchPageState {
     searchResult: Array<SearchCardItems[]>;
     numberOfCards: number;
-    isAuthenticated: boolean;
     shouldDisplayPagination: boolean;
     currentPage: number;
     todosPerPage: number;
@@ -31,7 +30,6 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
     state: ISearchPageState = {
         searchResult: [],
         numberOfCards: 0,
-        isAuthenticated: false,
         shouldDisplayPagination: false,
         
         currentPage: 1,
@@ -46,13 +44,6 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
     };
 
     componentDidMount(): void {
-        this.state.isAuthenticated = false;
-        const token = localStorage.getItem('login_user_token');
-        console.log(token);
-        
-        if(token) {
-            this.state.isAuthenticated = true;
-        }
 
         //////////////////// FUNCTIONS /////////////////////
         this.handleClickArrowLeft = this.handleClickArrowLeft.bind(this);

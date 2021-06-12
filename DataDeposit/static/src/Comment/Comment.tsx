@@ -50,7 +50,6 @@ export default class Comment extends React.Component<ICommentProps, ICommentStat
     }
 
     async handleClickDelete(): Promise<DeleteMessageItem> {
-        const token = localStorage.getItem('login_user_token');
         let returnMessage: DeleteMessageItem = {};
         const translate = new MyTranslator("Response-codes");
 

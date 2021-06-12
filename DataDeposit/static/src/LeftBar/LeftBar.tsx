@@ -10,36 +10,33 @@ import './leftbar.scss';
 
 
 export interface ILeftBarProps {
-    className?: String;
+    className?: string;
     modeSearch: boolean;
 }
 
 export interface ILeftBarState {
-    activeItem: string;
     isAuthenticated: boolean;
 }
 
 export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarState> {
 
-    state = { activeItem: 'bio',
+    state: ILeftBarState = { 
         isAuthenticated: false
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         this.state.isAuthenticated = false;
         const token = localStorage.getItem('login_user_token');
-        if(token) {
+        if (token) {
             this.setState({
                 isAuthenticated: true
             })
         }
     }
-
-    handleItemClick = (e, { name }) => this.setState({ activeItem: name })
   
     render() {
 
-        const className = "leftBat-fixed-style vertical-line";
+        const className: string = "leftBat-fixed-style vertical-line";
         const translate = new MyTranslator("LeftBar");
         return (
             <Col className={className} md={{ size: 2, offset: 0 }}>
@@ -66,5 +63,4 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
             </Col>
       )
     }
-
 }

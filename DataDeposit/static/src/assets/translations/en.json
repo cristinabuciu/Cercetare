@@ -34,7 +34,8 @@
     "ADD_DATASET_COMMENT_SUCCESS": "Review posted successfully.",
     "LOGIN_ERROR": "There was an unexpected error while logging in the user.",
     "GET_STATISTICS_ERROR": "There was an unexpected error while getting the statistics.",
-    "UPLOAD_FORM_ERROR": " fields have errors."
+    "UPLOAD_FORM_ERROR": " fields have errors.",
+    "USER_UNAUTHORIZED": "You must be authorized in order to perform this operation."
   },
 
   "common": {
