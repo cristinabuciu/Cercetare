@@ -103,13 +103,13 @@
     "dataset-title-label": "Dataset title:",
     "dataset-title-placeholder": "Dataset title",
     "dataset-title-error-req": "Please enter a name for the dataset",
-    "dataset-title-error-pattern": "Your name must be composed only with letter and numbers",
-    "dataset-title-error-len": "Your name must be between 5 and 500 characters",
+    "dataset-title-error-pattern": "Name may be composed only of letters and digits",
+    "dataset-title-error-len": "Name must contain at least 5 characters",
 
     "dataset-author-label": "Authors:",
     "dataset-author-placeholder": "Dataset authors",
-    "dataset-author-error-req": "Please enter an author for the dataset",
-    "dataset-author-error-pattern": "Your name must be composed only with letter, numbers and ;",
+    "dataset-author-error-req": "Please enter the authors of the dataset",
+    "dataset-author-error-pattern": "Names must be composed only of letters and digits and split by ;",
     "dataset-author-error-len": "This field must have at least 5 characters",
 
     "articol-title-label": "Article title:",
@@ -117,36 +117,36 @@
 
     "year-label": "Year of the publication:",
     "year-placeholder": "Year of the publication" ,
-    "year-error-req": "Please enter a year for the dataset",
-    "year-error-pattern": "Please enter a valid year for the dataset",
+    "year-error-req": "Please enter the publication year of the dataset",
+    "year-error-pattern": "Please enter a valid publication year of the dataset",
 
     "country-label": "Select a country:",
     "country-placeholder": "Select a country",
     "country-error-req": "Please select a country",
 
-    "domain-label": "Select a Domain:",
+    "domain-label": "Select a domain:",
     "domain-placeholder": "Select a domain",
-    "domain-error-req": "Please select a domain for the dataset",
+    "domain-error-req": "Please select a domain",
 
     "newdomain-label": "Enter new domain:",
     "newdomain-placeholder": "Enter new domain",
     "newdomain-error-req": "Please enter a new domain for the dataset",
-    "newdomain-error-pattern": "Your name must be composed only with letter and numbers",
-    "newdomain-error-len": "Your name must be between 2 and 50 characters",
+    "newdomain-error-pattern": "Domain name must be composed only of letters and digits",
+    "newdomain-error-len": "Domain name must be between 2 and 50 characters length",
 
     "tags-label": "Select tags:",
     "tags-placeholder": "Select tags",
 
-    "sdesc-label": "Short Description:",
+    "sdesc-label": "Short description:",
     "sdesc-placeholder": "Please enter a short description...",
     "sdesc-error-req": "Please enter a short description",
-    "sdesc-error-len": "Your name must be between 10 and 1000 characters",
+    "sdesc-error-len": "Description must be between 10 and 1000 characters length",
 
     "git-label": "GitHub link:",
     "git-placeholder": "GitHub link",
 
     "existing-resource": "Existing resource: ",
-    "delete-resource": "Delete Resource",
+    "delete-resource": "Delete resource",
 
     "download-link-label": "Download link ",
     "download-link-label-edit": "Add External link ",
@@ -154,7 +154,7 @@
     "download-link-error-req": "Please enter an external url",
 
     "upload-internal-label": "Upload dataset",
-    "upload-internal-label-edit": "Upload another Resource",
+    "upload-internal-label-edit": "Upload another resource",
 
     "data-integrity-label": "Data integrity and authenticity:",
     "data-integrity-placeholder": "Data integrity and authenticity",
@@ -169,7 +169,7 @@
     "data-reuse-label": "Data Reuse:",
     "data-reuse-placeholder": "Data Reuse",
     "data-reuse-error-req": "Please enter information about Data Reuse",
-    "data-reuse-error-len": "Your input must be between 5 and 500 characters'",
+    "data-reuse-error-len": "Your input must be between 5 and 500 characters",
 
     "show-more-info": "Show more info",
 
