@@ -30,7 +30,10 @@
     "GET_USER_ID_ERROR": "S-a produs o eroare la obținerea ID-ului utilizatorului.",
     "USER_NOT_FOUND": "Utilizatorul nu a fost găsit.",
     "ADD_DATASET_COMMENT_SUCCESS": "Review-ul a fost adăugat cu succes.",
-    "LOGIN_ERROR": "S-a produs o eroare la autentificarea utilizatorului."
+    "LOGIN_ERROR": "S-a produs o eroare la autentificarea utilizatorului.",
+    "GET_STATISTICS_ERROR": "-",
+    "UPLOAD_FORM_ERROR": " -",
+    "USER_UNAUTHORIZED": "-"
   },
 
   "common": {
