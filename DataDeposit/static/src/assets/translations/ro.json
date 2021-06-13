@@ -53,11 +53,6 @@
     "login": "Autentificare"
   },
 
-  "SearchPage": {
-    "items-not-found": "Niciun rezultat!",
-    "items-error": "Eroare la căutare!"
-  },
-
   "UserPage": {
 
   },

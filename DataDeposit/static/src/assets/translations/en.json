@@ -53,11 +53,6 @@
     "login": "Login"
   },
 
-  "SearchPage": {
-    "items-not-found": "No dataset found!",
-    "items-error": "There was a search error!"
-  },
-
   "UserPage": {
 
   },
@@ -70,7 +65,11 @@
     "search": "Search",
     "author": "Author",
     "year": "Year",
-    "dataset-title": "Dataset title"
+    "dataset-title": "Dataset title",
+    "domain-label": "Domain:",
+    "country-label": "Country:",
+    "dataFormat-label": "Data format:",
+    "downloadFrom-label": "Download type:"
   },
 
   "LeftBar": {

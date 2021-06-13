@@ -32,6 +32,13 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
                 isAuthenticated: true
             })
         }
+
+        //////////// FUNCTIONS /////////////
+        this.resetSearch = this.resetSearch.bind(this);
+    }
+
+    resetSearch(): void {
+        localStorage.removeItem('allFilters');
     }
   
     render() {
@@ -45,7 +52,7 @@ export default class LeftBar extends React.Component<ILeftBarProps, ILeftBarStat
                     <>
                     {this.props.modeSearch ? 
                         <NavLink tag={Link} className="margin-bottom-30" to="/uploadPage"><Button outline size='lg' className="button-color">{translate.useTranslation("upload")}</Button>{' '}</NavLink>
-                        : <NavLink tag={Link} className="margin-bottom-30" to="/search"><Button outline size='lg' className="button-color">{translate.useTranslation("search")}</Button>{' '}</NavLink>}</>
+                        : <NavLink tag={Link} className="margin-bottom-30" to="/search"><Button outline size='lg' onClick={this.resetSearch} className="button-color">{translate.useTranslation("search")}</Button>{' '}</NavLink>}</>
                         : <></>
                     }
                     

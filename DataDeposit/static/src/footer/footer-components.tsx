@@ -13,7 +13,7 @@ export const FooterBody = props => (
        <span className="column-list">
         <ul>
         {props.isAuthenticated ? <li className="column-list"><NavLink tag={Link} to="/uploadPage">{props.translate.useTranslation("upload")}</NavLink></li> : <></>}
-        <li className="column-list"><NavLink tag={Link} to="/search">{props.translate.useTranslation("search")}</NavLink></li></ul>
+        <li className="column-list" onClick={props.resetSearch}><NavLink tag={Link} to="/search">{props.translate.useTranslation("search")}</NavLink></li></ul>
       </span>
       
       <span style={{ fontWeight: 'normal', marginLeft: '20px', marginRight: ' 20px' }}>Made with ❤️ at UPB</span>

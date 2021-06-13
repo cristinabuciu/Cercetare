@@ -21,12 +21,22 @@ export class Footer extends React.Component<IFooterProps, IFooterState> {
                 isAuthenticated: true
             })
         }
+
+		/////////// FUNCTIONS /////////////
+		this.resetSearch = this.resetSearch.bind(this);
 	}
+
+	resetSearch(): void {
+        localStorage.removeItem('allFilters');
+    }
 
 	render() {
 		const translate = new MyTranslator("Footer");
 		return (
-			<FooterBody translate={translate} isAuthenticated={this.state.isAuthenticated}/>
+			<FooterBody 
+				resetSearch={this.resetSearch}
+				translate={translate} 
+				isAuthenticated={this.state.isAuthenticated}/>
 		);
 	}
 }

@@ -3,8 +3,8 @@ import MyTranslator from '../../assets/MyTranslator'
 
 import axios from 'axios';
 import { Card, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Input, Row, Col, Badge } from 'reactstrap';
-import {InputText, CustomSelect} from '../Items-components'
+    CardTitle, CardSubtitle, Button, Row, Col, Badge } from 'reactstrap';
+import { InputText, CustomSelect } from '../Items-components'
 import { SearchCardItems } from '../../models/SearchCardItems'
 import NumericInput from 'react-numeric-input';
 import "../../style_home.scss";
@@ -13,6 +13,8 @@ import { SelectList } from "../../models/FormItems";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ResponseStatus } from '../../models/ResponseStatus'
+import { IFilters } from '../../models/IFilters'
+import { AvField, AvForm } from 'availity-reactstrap-validation';
 
 export interface ICardProps {
     setItemsForShow: Function;
@@ -20,6 +22,7 @@ export interface ICardProps {
     handleLoaderChange: Function;
 
     userId?: number;
+    allFiltersType?: IFilters;
 }
 
 export interface ICardState {
@@ -30,16 +33,16 @@ export interface ICardState {
         subdomain: Array<String>;
         country: Array<String>;
         dataFormat: Array<String>;
-        sortBy: Array<String>;
+        sortBy: Array<SelectList>;
         downloadFrom: Array<SelectList>;
     };
-    downloadFrom: SelectList;
+    downloadFrom: string;
     domain: string;
-    subdomain: Array<String>;
+    tags: Array<String>;
     country: string;
     dataFormat: string;
-    sortBy: string;
-    resultsPerPage: number | null;
+    sortBy: SelectList;
+    resultsPerPage: number;
     year: string;
     dataset_title: string | null;
     authors: string | null;
@@ -61,15 +64,15 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             },
             country: ['All countries  '],
             dataFormat: ['All Data Formats '],
-            sortBy: ['dataset_title ASC', 'dataset_title DESC', 'avg_rating_value ASC', 'avg_rating_value DESC'],
+            sortBy: [{label: "Title ASC", value: 'dataset_title ASC'}, {label: "Title DESC", value: 'dataset_title DESC'}, {label: "Rating ASC", value: 'avg_rating_value ASC'}, {label: "Rating DESC", value: 'avg_rating_value DESC'}],
             downloadFrom: [{label: 'All Downloads ', value: '*'}, {label: 'Download Link', value: 'EXTERNAL'}, {label: 'Download File', value: 'INTERNAL'}, {label: 'No Download', value: 'NONE'}]
         },
         domain: "All domains  ",
-        subdomain: [],
+        tags: [],
         country: "All countries  ",
         dataFormat: "All Data Formats ",
-        downloadFrom: {label: "All Downloads ", value: "*"},
-        sortBy: "Sort By  ",
+        downloadFrom: "*",
+        sortBy: {label: "Sort By  ", value: "*"},
         resultsPerPage: 7,
         year: '',
         dataset_title: '',
@@ -122,19 +125,54 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         })
         .finally( () => {
             // always executed
+            this.updateTagList(this.state.domain);
             this.forceUpdate();
         });
 
         ///////////////// FUNCTIONS /////////////////
         this.searchData = this.searchData.bind(this);
         this.changeValue = this.changeValue.bind(this);
-        this.searchData(true);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.updateTagList = this.updateTagList.bind(this);
+        if (!localStorage.getItem('allFilters') || this.props.userId) {
+            this.searchData(true);
+        }
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.currentPage !== this.props.currentPage) {
+        if (prevProps.allFiltersType !== this.props.allFiltersType) {
+            console.log("BAZOOKA");
+            if (this.props.allFiltersType) {
+                this.setState({
+                    domain: this.props.allFiltersType.notArrayParams.domain === '*' ? 'All domains  ' : this.props.allFiltersType.notArrayParams.domain,
+                    tags: this.props.allFiltersType.arrayParams.tags,
+                    country: this.props.allFiltersType.notArrayParams.country === '*' ? "All countries  " : this.props.allFiltersType.notArrayParams.country,
+                    dataFormat: this.props.allFiltersType.notArrayParams.data_format === '*' ? "All Data Formats " : this.props.allFiltersType.notArrayParams.data_format,
+                    downloadFrom: this.props.allFiltersType.notArrayParams.downloadType,
+                    sortBy: {label: "Sort By  ", value: "*"},
+                    resultsPerPage: this.props.allFiltersType.resultsPerPage,
+                    year: this.props.allFiltersType.notArrayParams.year,
+                    dataset_title: this.props.allFiltersType.notArrayParams.dataset_title === '*' ? '' : this.props.allFiltersType.notArrayParams.dataset_title,
+                    authors: this.props.allFiltersType.arrayParams.author.join(),
+                    resultsSearchArrayLen: this.props.allFiltersType.totalResults
+                });
+                
+                this.updateTagList(this.props.allFiltersType.notArrayParams.domain);
+                this.searchData(false, false, this.props.allFiltersType);
+            }
+        }
+        else if (prevProps.currentPage !== this.props.currentPage) {
             this.searchData(false);
         }
+    }
+
+    updateTagList(newDomain: string): boolean {
+        if (this.state.searchInputOptions.subdomainList[newDomain]) {
+            this.state.searchInputOptions.subdomain = this.state.searchInputOptions.subdomainList[newDomain];
+            this.forceUpdate();
+            return true;
+        }
+        return false;
     }
 
     changeValue(e, comboBoxTitle, shouldUpdateNumber): void {
@@ -143,14 +181,14 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         if (comboBoxTitle === 'domain') {
             this.state.searchInputOptions.subdomain = this.state.searchInputOptions.subdomainList[e];
             this.setState({
-                subdomain: []
+                tags: []
             });
         }
 
         if (comboBoxTitle === 'dataFormat') {
-            if (this.state.downloadFrom.value === 'EXTERNAL' || this.state.downloadFrom.value === 'NONE')
+            if (this.state.downloadFrom === 'EXTERNAL' || this.state.downloadFrom === 'NONE')
             {
-                this.state.downloadFrom = {label: "All Downloads ", value: "*"}
+                this.state.downloadFrom = "*"
             }
         }
 
@@ -180,37 +218,53 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         return n[0];
     }
 
-    searchData(shouldCount: boolean, searchWasPressed: boolean = false): void {
+    handleSubmit(event, errors, values): void {
+        if (errors.length == 0) {
+            this.searchData(false, true);   
+        }
+    }
+
+    searchData(shouldCount: boolean, searchWasPressed: boolean = false, allFiltersType: IFilters | null = null): void {
         console.log("AEROSMITH");
         console.log(this.props.currentPage);
         let responseStatus: ResponseStatus = {};
 		const translate = new MyTranslator("Response-codes");
-        
         if (shouldCount == false) {
             this.props.handleLoaderChange(true);
         }
+        let currentFilters: IFilters = {
+            notArrayParams: {
+                domain: this.state.domain === 'All domains  ' ? '*' : this.state.domain,
+                country: this.state.country === 'All countries  ' ? '*' : this.state.country,
+                data_format: this.state.dataFormat === 'All Data Formats ' ? '*' : this.state.dataFormat,
+                year: this.state.year === '' ? '*' : this.state.year + '*',
+                dataset_title: this.state.dataset_title === '' ? '*' : this.state.dataset_title,
+                downloadType: this.state.downloadFrom,
+                userId: this.props.userId
+            },
+            arrayParams: {
+                tags: this.state.tags, //=== 'All subdomains  ' ? '' : this.state.subdomain,
+                author: this.state.authors.split(",")
+            },
+            sortBy: this.state.sortBy.value === '*' ? 'None' : this.splitSort(this.state.sortBy.value),
+            sortByField: this.state.sortBy.value === '*' ? 'None' : this.splitSortName(this.state.sortBy.value),
+            count: shouldCount,
+            resultsPerPage: this.state.resultsPerPage,
+            currentPage: this.props.currentPage,
+            totalResults: this.state.resultsSearchArrayLen
+        };
+
+        if (allFiltersType) {
+            currentFilters = allFiltersType;
+        }
+
+        if (shouldCount == false) {
+            localStorage.setItem('allFilters', JSON.stringify(currentFilters));
+        }
+
         axios.get( '/datasets', {
             params: {
-                allFilters: {
-                    notArrayParams: {
-                        domain: this.state.domain === 'All domains  ' ? '*' : this.state.domain,
-                        country: this.state.country === 'All countries  ' ? '*' : this.state.country,
-                        data_format: this.state.dataFormat === 'All Data Formats ' ? '*' : this.state.dataFormat,
-                        year: this.state.year === '' ? '*' : this.state.year + '*',
-                        dataset_title: this.state.dataset_title === '' ? '*' : this.state.dataset_title,
-                        downloadType: this.state.downloadFrom.value,
-                        userId: this.props.userId
-                    },
-                    arrayParams: {
-                        tags: this.state.subdomain, //=== 'All subdomains  ' ? '' : this.state.subdomain,
-                        author: this.state.authors.split(",")
-                    },
-                    sortBy: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSort(this.state.sortBy),
-                    sortByField: this.state.sortBy === 'Sort By  ' ? 'None' : this.splitSortName(this.state.sortBy),
-                    count: shouldCount,
-                    resultsPerPage: this.state.resultsPerPage,
-                    currentPage: this.props.currentPage
-                }
+                allFilters: currentFilters
             }
         })
         .then(response => {
@@ -220,7 +274,6 @@ export default class Search extends React.Component<ICardProps, ICardState> {
             if (shouldCount == false) {
                 if (response.data['statusCode'] === 200) {
                     responseStatus.wasSuccess = true;
-
                     this.setState({
                         resultsSearchArray:response.data['data']
                     }, () => {
@@ -260,7 +313,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
 
     handleSelectChange = value => {
         this.setState({
-            subdomain: value
+            tags: value
         }, () => {
             this.searchData(true);
         });
@@ -269,56 +322,127 @@ export default class Search extends React.Component<ICardProps, ICardState> {
 
     render() { 
         const translate = new MyTranslator("Search");
+        const yearValueRegex: RegExpMatchArray | null = this.state.year.match(/(\d+)/);
+        let yearValue: number | null = yearValueRegex ? parseInt(yearValueRegex[0]) : null;
+        
       return (
         <Card className="z-depth-1-half">
         <CardBody>
-          <CardTitle></CardTitle>
-          <CardSubtitle></CardSubtitle>
-          <CardText>
+        <CardTitle></CardTitle>
+        <CardSubtitle></CardSubtitle>
+        <CardText>
+        <AvForm onSubmit={this.handleSubmit}>
             <Row>
-                <Col className="text-align-left">
-                    <InputText nameOfDropdown="domain" titleDropdown={this.state.domain} listOfItems={this.state.searchInputOptions.domain} changeValue={this.changeValue} />
+                <Col>
+                    <AvField
+                        type="select" 
+                        label={translate.useTranslation("domain-label")} 
+                        name="domain"
+                        value={this.state.domain}
+                        onChange={(e) => this.changeValue(e.target.value, e.target.name, true)} >
+                        {
+                            this.state.searchInputOptions.domain.map((item: string) => {
+                                return (<option value={item}>{item}</option>)
+                            })
+                        }
+                    </AvField>
                 </Col>
-                <Col className="text-align-center">
-                    <InputText nameOfDropdown="country" titleDropdown={this.state.country} listOfItems={this.state.searchInputOptions.country} changeValue={this.changeValue} />
+                <Col>
+                    <AvField
+                        type="select" 
+                        value={this.state.country}
+                        label={translate.useTranslation("country-label")} 
+                        onChange={(e) => this.changeValue(e.target.value, e.target.name, true)}
+                        name="country" >
+                        {
+                            this.state.searchInputOptions.country.map((item: string) => {
+                                return (<option value={item}>{item}</option>)
+                            })
+                        }
+                    </AvField>
                 </Col>
-                <Col className="text-align-right">
-                    <InputText nameOfDropdown="dataFormat" titleDropdown={this.state.dataFormat} listOfItems={this.state.searchInputOptions.dataFormat} changeValue={this.changeValue}  />
+                <Col>
+                    <AvField
+                        type="select" 
+                        name="dataFormat"
+                        value={this.state.dataFormat}
+                        label={translate.useTranslation("dataFormat-label")} 
+                        onChange={(e) => this.changeValue(e.target.value, e.target.name, true)} >
+                        {
+                            this.state.searchInputOptions.dataFormat.map((item: string) => {
+                                return (<option value={item}>{item}</option>)
+                            })
+                        }
+                    </AvField>
                 </Col>
-                <Col className="text-align-right">
-                    <InputText nameOfDropdown="downloadFrom" titleDropdown={this.state.downloadFrom.label} listOfItems={this.state.searchInputOptions.downloadFrom} changeValue={this.changeValue}  />
+                <Col>
+                    <AvField
+                        type="select" 
+                        label={translate.useTranslation("downloadFrom-label")} 
+                        name="downloadFrom"
+                        value={this.state.downloadFrom}
+                        onChange={(e) => this.changeValue(e.target.value, e.target.name, true)} >
+                        {
+                            this.state.searchInputOptions.downloadFrom.map((item: SelectList) => {
+                                return (<option value={item.value}>{item.label}</option>)
+                            })
+                        }
+                    </AvField>
                 </Col>
             </Row>
             <Row className="padding-top-20">
                 <Col>
                     <CustomSelect 
                         options={this.state.searchInputOptions.subdomain}
-                        value={this.state.subdomain}
+                        value={this.state.tags}
                         handleChange={this.handleSelectChange}
                         placeholder="All tags"
                     />
 
                 </Col>
             </Row>
-            <Row className="padding-top-20">
+            <Row className="padding-top-20 align-start">
                 <Col md={{ size: 5, offset: 0 }}>
-                    <Input type="text" name="author" id="Author" placeholder={translate.useTranslation("author")} 
-                        onChange={e => this.changeValue(e.target.value, 'authors', true)} />
+                    <AvField 
+                        type="text" 
+                        id="Author"
+                        name="authors"
+                        value={this.state.authors}
+                        placeholder={translate.useTranslation("author")}
+                        onChange={e => this.changeValue(e.target.value, e.target.name, true)}
+                        validate={{
+                            pattern: {value: '^[A-Za-z0-9; ]+$', errorMessage: translate.useTranslation("dataset-author-pattern")}
+                        }}
+                    />
                 </Col>
                 <Col md={{ size: 2, offset: 0 }}>
-                    <Input type="number" name="year" id="Year" placeholder={translate.useTranslation("year")}  className="text-align-center" 
-                        onChange={e => this.changeValue(e.target.value, 'year', true)}/>
+                    <AvField 
+                        type="number" 
+                        name="year" 
+                        value={yearValue}
+                        placeholder={translate.useTranslation("year")}
+                        onChange={e => this.changeValue(e.target.value, e.target.name, true)}
+                    />
                 </Col>
                 <Col md={{ size: 5, offset: 0 }}>
-                    <Input type="text" name="Dataset-title" id="Dataset-title" placeholder={translate.useTranslation("dataset-title")} 
-                        onChange={e => this.changeValue(e.target.value, 'dataset_title', true)}/>
+                    <AvField 
+                        type="text" 
+                        id="Dataset-title"
+                        name="dataset_title"
+                        value={this.state.dataset_title}
+                        placeholder={translate.useTranslation("dataset-title")}
+                        onChange={e => this.changeValue(e.target.value, e.target.name, true)}
+                        validate={{
+                            pattern: {value: '^[A-Za-z0-9- ]+$', errorMessage: translate.useTranslation("dataset-title-error-pattern")}
+                        }}
+                    />
                 </Col>
             </Row>
             <Row className="padding-top-20">
                 <Col>
                     <InputText 
                         nameOfDropdown="sortBy" 
-                        titleDropdown={this.state.sortBy} 
+                        titleDropdown={this.state.sortBy.label} 
                         listOfItems={this.state.searchInputOptions.sortBy} 
                         className="button-style-sort"
                         changeValue={this.changeValue} />
@@ -329,25 +453,20 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                         min={3} 
                         max={50} 
                         value={this.state.resultsPerPage}
-                        onChange={value => this.setState({resultsPerPage: value })} />
+                        onChange={value => this.setState({resultsPerPage: value ? value : 3 })} />
                 </Col>
-                {/* <Col md={{ size: 6, offset: 0 }}></Col>*/}
                 <Col md={{ size: 4, offset: 0 }} className="text-align-right"> 
-                    <Button color="primary" outline className="search-button-size" onClick={() => this.searchData(false, true)}>
+                    <Button color="primary" outline className="search-button-size" type="submit">
                     <FontAwesomeIcon icon={faSearch}/>{translate.useTranslation("search")}    <Badge color="secondary">{this.state.resultsSearchArrayLen}</Badge>
                     </Button>
                 </Col>
                     
             </Row>
-          </CardText>
+        </AvForm>
+        </CardText>
           
         </CardBody>
       </Card>
       )
     }
 }
-
-
-
-
-
