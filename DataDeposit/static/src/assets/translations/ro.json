@@ -46,7 +46,8 @@
     "Back": "Înapoi",
     "delete": "Șterge",
     "go-to-button": "Vizualizați setul de date încărcat",
-    "upload-another-button": "Încărcați un nou set de date"
+    "upload-another-button": "Încărcați un nou set de date",
+    "Go-Home": "Acasă"
   },
 
   "Login-Form": {
