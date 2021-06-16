@@ -46,7 +46,8 @@
     "Back": "Back",
     "delete": "Delete",
     "go-to-button": "Go to your dataset",
-    "upload-another-button": "Upload another dataset"
+    "upload-another-button": "Upload another dataset",
+    "Go-Home": "Home"
   },
 
   "Login-Form": {

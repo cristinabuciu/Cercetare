@@ -91,7 +91,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
         console.log(response);
           localStorage.removeItem('login_user_token');
           this.state.isAuthenticated = false;
-          window.location.reload(false);
+          window.location.reload();
       })
       .catch(function (error) {
         console.log(error);
@@ -107,6 +107,7 @@ export class HeaderMenu extends React.Component<IHeaderProps, IHeaderState> {
     });
 
     localStorage.setItem("language", code);
+    window.location.reload();
   }
 
   render() {
