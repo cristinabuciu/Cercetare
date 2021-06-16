@@ -11,6 +11,7 @@ import SearchCard from '../Items/SearchCard';
 import { LoaderComponent, PaginationItem } from '../Items/Items-components'
 import { SearchCardItems } from '../models/SearchCardItems'
 import { ResponseStatus } from '../models/ResponseStatus'
+import { IFilters } from '../models/IFilters';
 
 export interface ISearchPageProps {
     greeting: string;
@@ -24,6 +25,7 @@ export interface ISearchPageState {
     todosPerPage: number;
     loaderVisibility: boolean;
     responseStatus: ResponseStatus;
+    allFiltersType: IFilters | undefined;
 }
 
 export default class SearchPage extends React.Component<ISearchPageProps, ISearchPageState> {
@@ -40,10 +42,24 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
 			wasError: false,
 			wasSuccess: false,
 			responseMessage: ""
-		}
+		},
+        allFiltersType: undefined
     };
 
     componentDidMount(): void {
+
+        const allFilters: string | null = localStorage.getItem('allFilters');
+        
+        if (allFilters) {
+            const allFiltersType: IFilters | null = JSON.parse(allFilters);
+            if (allFiltersType) {
+                this.setState({
+                    allFiltersType: JSON.parse(allFilters),
+                    todosPerPage: allFiltersType.resultsPerPage,
+                    currentPage: allFiltersType.currentPage
+                });
+            }
+        }
 
         //////////////////// FUNCTIONS /////////////////////
         this.handleClickArrowLeft = this.handleClickArrowLeft.bind(this);
@@ -188,27 +204,11 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
 
     render() {
         const searchResult = this.showSearchCards();
-        const currentPage = this.state.currentPage;
-        const todosPerPage = this.state.todosPerPage;
-  
-        // Logic for displaying todos
-        // const indexOfLastTodo = currentPage * todosPerPage;
-        // const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
-        // const currentTodos = searchResult.slice(indexOfFirstTodo, indexOfLastTodo);
-
-        // PAGINARE IN FRONTEND
-        // const renderTodos = currentTodos.map((card, index) => {
-        //   return <div key={index}>{card}</div>;
-        // });
-    
+        
         // Logic for displaying page numbers
         const renderPageNumbers = this.createPageNumberArray();
-        const translate = new MyTranslator("SearchPage");
         
         return (
-                //  <button onClick={() => this.setState({count: this.state.count+1})}>
-                //     This button has been clicked {this.state.count} times.
-                // </button> 
                 <Container className="themed-container" fluid={true}>
                     <Row lg="12">
                         <Title titleSet={this.props.greeting}/>
@@ -223,6 +223,7 @@ export default class SearchPage extends React.Component<ISearchPageProps, ISearc
                         </Col>
                         <Col md={{ size: 10, offset: 0 }}>
                             <Search 
+                                allFiltersType={this.state.allFiltersType}
                                 setItemsForShow={this.setItemsForShow}
                                 currentPage={this.state.currentPage}
                                 handleLoaderChange={this.handleLoaderChange}

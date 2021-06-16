@@ -474,7 +474,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                     <AvField
                                         type="select" 
                                         name="country" 
-                                        label={translate.useTranslation("year-label")} 
+                                        label={translate.useTranslation("country-label")} 
                                         required
                                         validate={{
                                             required: {value: true, errorMessage: translate.useTranslation("country-error-req")},
