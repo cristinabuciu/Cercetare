@@ -244,13 +244,19 @@ def getDatasetFilesInfo(datasetId):
         return createResponse(HTTPStatus.INTERNAL_SERVER_ERROR, "GET_RESOURCE_INFO_ERROR")
 
 
-def getAllComments(datasetId, currentPage, resultsPerPage):
+def getAllComments(datasetId, currentPage, resultsPerPage, sortField, sortOrder):
     try:
         es = getTransaction()
 
         comments = [comment['_source'] for comment in es.get_dataset_comments(int(datasetId))]
         comments = list(filter(lambda comment: len(comment['commentBody']) > 0 and len(comment['commentTitle']) > 0, comments))
-        comments = sorted(comments, key=itemgetter('createdAt'), reverse=True)
+
+        # sort
+        if sortField == 'None':
+            comments = sorted(comments, key=lambda comment: int(comment['createdAt']), reverse=True)
+        else:
+            reverseOrder = True if sortOrder == 'DESC' else False
+            comments = sorted(comments, key=lambda comment: float(comment[sortField]), reverse=reverseOrder)
 
         lastCommentIndex = int(currentPage) * int(resultsPerPage)
         firstCommentIndex = lastCommentIndex - int(resultsPerPage)
