@@ -144,8 +144,10 @@ def deleteDataset(dataset_id):
 def getDatasetComments(dataset_id):
     _currentPage = request.args['currentPage']
     _resultsPerPage = request.args['resultsPerPage']
+    _sortField = request.args['sortByField']
+    _sortOrder = request.args['sortBy']
 
-    return getAllComments(dataset_id, _currentPage, _resultsPerPage)
+    return getAllComments(dataset_id, _currentPage, _resultsPerPage, _sortField, _sortOrder)
 
 
 @app.route('/dataset/<dataset_id>/comments', methods=['POST'])
