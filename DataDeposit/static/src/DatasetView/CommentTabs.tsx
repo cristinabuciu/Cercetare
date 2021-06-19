@@ -1,16 +1,16 @@
-import * as React from 'react';
 import axios from 'axios';
-import MyTranslator from '../assets/MyTranslator'
-
 import classnames from 'classnames';
+import * as React from 'react';
+import { Alert, Card, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
+import MyTranslator from '../assets/MyTranslator';
 import AddComment from "../Comment/AddComment";
 import Comment from "../Comment/Comment";
-import { Row, Col, TabContent, TabPane, Nav, NavItem, Card, NavLink, Alert } from 'reactstrap';
-import { LoaderComponent } from '../Items/Items-components'
-import { CommentItem } from '../models/CommentItem'
-import { ResponseStatus } from '../models/ResponseStatus'
-import { SelectList } from '../models/FormItems';
+import { LoaderComponent } from '../Items/Items-components';
 import { SearchComments } from '../Items/Search/SearchComments';
+import { CommentItem } from '../models/CommentItem';
+import { SelectList } from '../models/FormItems';
+import { ResponseStatus } from '../models/ResponseStatus';
+
 
 export interface ICommentTabsProps {
     id: number;
@@ -26,6 +26,7 @@ export interface ICommentTabsState {
     resultsPerPage: number;
     comments: CommentItem[];
     responseGetStatus: ResponseStatus;
+    isAuthenticated: boolean;
 }
 
 export default class CommentTabs extends React.Component<ICommentTabsProps, ICommentTabsState> {
@@ -45,10 +46,18 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
 			responseMessage: ""
 		},
 
-        comments: []
+        comments: [],
+        isAuthenticated: false
     }
 
     componentDidMount(): void {
+        this.state.isAuthenticated = false;
+        const token = localStorage.getItem('login_user_token');
+        if (token) {
+            this.setState({
+                isAuthenticated: true
+            })
+        }
 
         //////////// FUNCTIONS //////////////
         this.updateComments = this.updateComments.bind(this);
@@ -246,7 +255,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                         {translate.useTranslation("all-comments")}
                     </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem className={this.state.isAuthenticated ? "" : "display-none"}>
                     <NavLink
                         className={classnames({ active: this.state.activeTab === '2' })}
                         onClick={ () => this.switchTabs('2') }>

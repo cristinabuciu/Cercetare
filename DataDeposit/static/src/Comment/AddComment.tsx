@@ -235,6 +235,9 @@ export interface ICommentFormState {
       event.preventDefault();   // prevents page from reloading on submit
 
       const token = localStorage.getItem('login_user_token');
+      if (!token) {
+        return;
+      }
       let errorMessage: string = "";
 
       const rating = this.props.rating;
