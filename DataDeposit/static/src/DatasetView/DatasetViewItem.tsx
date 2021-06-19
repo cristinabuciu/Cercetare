@@ -233,16 +233,17 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                     <CommentTabs
                         id={this.props.id} />
                 </Col>
-
-                <Card className="margin-top-20">
-                    <Row >
-                        <HorizontalList 
-                            views={this.props.views}
-                            ratings={this.props.ratings}
-                            updates={this.props.updates}
-                            downloads={this.props.downloads} />
-                    </Row>  
-                </Card>
+                <Col>
+                    <Card className="margin-top-20">
+                        <Row >
+                            <HorizontalList 
+                                views={this.props.views}
+                                ratings={this.props.ratings}
+                                updates={this.props.updates}
+                                downloads={this.props.downloads} />
+                        </Row>  
+                    </Card>
+                </Col>
             </Row>
             </>
         )
