@@ -183,7 +183,7 @@ def addComment(datasetId, comment):
             "username": comment['username'],
             "commentTitle": comment['commentTitle'],
             "commentBody": comment['commentBody'],
-            "createdAt": str(time()),
+            "createdAt": str(int(time())),
             "rating": comment['rating']}
 
         es.insert(INDEX_COMMENTS, '_doc', newComment)

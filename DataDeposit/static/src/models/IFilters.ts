@@ -17,6 +17,7 @@ interface NotArrayParams {
 	dataset_title: string;
 	downloadType: string;
 	userId: number | undefined;
+	privateSearch: boolean;
 }
 
 interface ArrayParams {

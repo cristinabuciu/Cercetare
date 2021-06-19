@@ -13,6 +13,7 @@ import { NavLink } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import "./items.scss"
 import ModalConfirm from '../common/ModalConfirm'
+import MyTranslator from '../assets/MyTranslator';
 
 export interface ISearchCardProps {
     id: number;
@@ -82,107 +83,107 @@ export default class SearchCard extends React.Component<ISearchCardProps, ISearc
     }
   
     render() {  
-
-      return (
-        <Card className="margin-top-20 z-depth-hoverable">
-            <Row>
-                <Col xs="0" md="0" lg="1" className="resizable-1050"> 
-                     <Label for="titluDataset" className="label-format">Title:</Label>
-                 </Col>
-                 <Col xs="6" lg="8">
-                     <NavLink tag={Link} to={'/datasetView/' + this.props.id}>{this.props.dataset_title}</NavLink>
-                 </Col>
-                 <Col xs="2" lg="1" className="text-align-right">
-                    <ModalQuickView 
-                        id={this.props.id}
-                        privateItem={this.props.privateItem}
-                        buttonLabel="Quick"
-                        domain={this.props.domain}
-                        subdomain={this.props.subdomain}
-                        country={this.props.country}
-                        data_format={this.props.data_format}
-                        year={this.props.year}
-                        short_desc={this.props.short_desc}
-                        avg_rating={this.props.avg_rating}
-                        owner={this.props.owner}
-                        modalTitle={this.props.dataset_title}
-                        authors={this.props.authors}
-                        downloadType={this.props.shouldHaveDownloadButton ? 
-                            <>{
-                                this.props.shouldHaveDownloadLink ? 
-                                <><a target="_blank" href={this.props.downloadPath}><FontAwesomeIcon icon={faLink} />Download Link</a></>
+        const translate = new MyTranslator("Search");
+        return (
+            <Card className="margin-top-20 z-depth-hoverable">
+                <Row>
+                    <Col xs="0" md="0" lg="1" className="resizable-1050"> 
+                        <Label for="titluDataset" className="label-format">{translate.useTranslation("card-label")}</Label>
+                    </Col>
+                    <Col xs="6" lg="8">
+                        <NavLink tag={Link} to={'/datasetView/' + this.props.id}>{this.props.dataset_title}</NavLink>
+                    </Col>
+                    <Col xs="2" lg="1" className="text-align-right">
+                        <ModalQuickView 
+                            id={this.props.id}
+                            privateItem={this.props.privateItem}
+                            buttonLabel="Quick"
+                            domain={this.props.domain}
+                            subdomain={this.props.subdomain}
+                            country={this.props.country}
+                            data_format={this.props.data_format}
+                            year={this.props.year}
+                            short_desc={this.props.short_desc}
+                            avg_rating={this.props.avg_rating}
+                            owner={this.props.owner}
+                            modalTitle={this.props.dataset_title}
+                            authors={this.props.authors}
+                            downloadType={this.props.shouldHaveDownloadButton ? 
+                                <>{
+                                    this.props.shouldHaveDownloadLink ? 
+                                    <><a target="_blank" href={this.props.downloadPath}><FontAwesomeIcon icon={faLink} />{translate.useTranslation("link-label")}</a></>
+                                    :
+                                    <span><FontAwesomeIcon icon={faDatabase} />  {translate.useTranslation("file-label")}</span>
+                                }</>
                                 :
-                                <span><FontAwesomeIcon icon={faDatabase} />  Download File</span>
-                            }</>
-                            :
-                            <>No download</>
-                            }
-                        buttonClassName="quick-view-button" />
-                </Col>
-                <Col xs="4" lg="2">
-                <div id="TooltipStars">
-                    <StarRatings
-                        rating={this.props.avg_rating}
-                        starDimension="19px"
-                        starSpacing="3px"
-                        numberOfStars={5}
-                        starRatedColor="gold"
-                        name='rating'
-                    />
-                    
-                    </div>
-                </Col>
-                
-             </Row>
-             <Row className="padding-top-10">
-                 <Col className="spanSpecial resizable-1350">
-                 <FontAwesomeIcon icon={faCalendar} /> {this.props.year}
-                 </Col>
-                 {this.props.shouldHaveDelete ?
-                    <></>
-                    :
-                    <Col className="spanSpecial">
-                    <FontAwesomeIcon icon={faUser} /> {this.props.owner}
+                                <>{translate.useTranslation("none-label")}</>
+                                }
+                            buttonClassName="quick-view-button" />
                     </Col>
-                 }
-                 <Col className="spanDomain">
-                 <FontAwesomeIcon icon={faNewspaper} /> {this.props.domain}
-                 </Col>
-                 <Col className="spanSpecial resizable-1350">
-                 <FontAwesomeIcon icon={faFile} /> {this.props.data_format}
-                 </Col>
-                 <Col className="spanSpecial resizable-1350">
-                 <FontAwesomeIcon icon={faGlobe} /> {this.props.country}
-                 </Col>
-                <Col className="spanSpecial">
-                    {this.props.shouldHaveDownloadButton ? 
-                    <>{
-                        this.props.shouldHaveDownloadLink ? 
-                        <div className="resource-download" onClick={() => this.handleDownload()}><FontAwesomeIcon icon={faLink} /> Download Link</div>
+                    <Col xs="4" lg="2">
+                    <div id="TooltipStars">
+                        <StarRatings
+                            rating={this.props.avg_rating}
+                            starDimension="19px"
+                            starSpacing="3px"
+                            numberOfStars={5}
+                            starRatedColor="gold"
+                            name='rating'
+                        />
+                        
+                        </div>
+                    </Col>
+                    
+                </Row>
+                <Row className="padding-top-10">
+                    <Col className="spanSpecial resizable-1350">
+                    <FontAwesomeIcon icon={faCalendar} /> {this.props.year}
+                    </Col>
+                    {this.props.shouldHaveDelete ?
+                        <></>
                         :
-                        <div className="resource-download" onClick={() => this.handleDownload()}><FontAwesomeIcon icon={faDatabase} /> Download File</div>
-                    }</>
-                    :
-                    <>No download</>
+                        <Col className="spanSpecial">
+                        <FontAwesomeIcon icon={faUser} /> {this.props.owner}
+                        </Col>
                     }
-                    
-                </Col>
-                {this.props.shouldHaveDelete ?
-                    <Col className="spanSpecial resizable-1350 text-align-right">
-                        <ModalConfirm
-                            idToBeConfirmed={this.props.id}
-                            buttonLabel="Delete"
-                            buttonClassName="" 
-                            modalTitle="Delete Dataset"
-                            modalBody="You have requested to delete the following dataset:"
-                            modalSubtitle={this.props.dataset_title}
-                            handleConfirm={this.props.handleDelete}
-                            />
+                    <Col className="spanDomain">
+                    <FontAwesomeIcon icon={faNewspaper} /> {this.props.domain}
                     </Col>
-                    :
-                    <></>
-                 }
-             </Row>
+                    <Col className="spanSpecial resizable-1350">
+                    <FontAwesomeIcon icon={faFile} /> {this.props.data_format}
+                    </Col>
+                    <Col className="spanSpecial resizable-1350">
+                    <FontAwesomeIcon icon={faGlobe} /> {this.props.country}
+                    </Col>
+                    <Col className="spanSpecial">
+                        {this.props.shouldHaveDownloadButton ? 
+                        <>{
+                            this.props.shouldHaveDownloadLink ? 
+                            <div className="resource-download" onClick={() => this.handleDownload()}><FontAwesomeIcon icon={faLink} /> {translate.useTranslation("link-label")}</div>
+                            :
+                            <div className="resource-download" onClick={() => this.handleDownload()}><FontAwesomeIcon icon={faDatabase} /> {translate.useTranslation("file-label")}</div>
+                        }</>
+                        :
+                        <>{translate.useTranslation("none-label")}</>
+                        }
+                        
+                    </Col>
+                    {this.props.shouldHaveDelete ?
+                        <Col className="spanSpecial resizable-1350 text-align-right">
+                            <ModalConfirm
+                                idToBeConfirmed={this.props.id}
+                                buttonLabel="Delete"
+                                buttonClassName="" 
+                                modalTitle="Delete Dataset"
+                                modalBody="You have requested to delete the following dataset:"
+                                modalSubtitle={this.props.dataset_title}
+                                handleConfirm={this.props.handleDelete}
+                                />
+                        </Col>
+                        :
+                        <></>
+                    }
+                </Row>
             </Card>
         
       )

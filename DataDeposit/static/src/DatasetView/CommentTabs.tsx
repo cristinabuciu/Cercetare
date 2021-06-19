@@ -5,13 +5,12 @@ import MyTranslator from '../assets/MyTranslator'
 import classnames from 'classnames';
 import AddComment from "../Comment/AddComment";
 import Comment from "../Comment/Comment";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Row, Col, TabContent, TabPane, Nav, NavItem, Button, Card, NavLink, Alert } from 'reactstrap';
-import NumericInput from 'react-numeric-input';
-import {InputText, LoaderComponent} from '../Items/Items-components'
+import { Row, Col, TabContent, TabPane, Nav, NavItem, Card, NavLink, Alert } from 'reactstrap';
+import { LoaderComponent } from '../Items/Items-components'
 import { CommentItem } from '../models/CommentItem'
 import { ResponseStatus } from '../models/ResponseStatus'
+import { SelectList } from '../models/FormItems';
+import { SearchComments } from '../Items/Search/SearchComments';
 
 export interface ICommentTabsProps {
     id: number;
@@ -22,10 +21,9 @@ export interface ICommentTabsState {
     currentPage: number;
     numberOfCards: number;
     shouldDisplayPagination: boolean;
-    sortBy: String;
-    sortByList: Array<string>;
+    sortBy: SelectList;
     loaderVisibility: boolean;
-    resultsPerPage: number | null;
+    resultsPerPage: number;
     comments: CommentItem[];
     responseGetStatus: ResponseStatus;
 }
@@ -38,8 +36,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         numberOfCards: 0,
         resultsPerPage: 5,
         shouldDisplayPagination: false,
-        sortBy: "Sort By  ",
-        sortByList: ['# TODO'],
+        sortBy: {label: "Sort By  ", value: "*"},
         loaderVisibility: false,
         responseGetStatus: {
 			wasError: false,
@@ -56,7 +53,23 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         //////////// FUNCTIONS //////////////
         this.updateComments = this.updateComments.bind(this);
         this.showSearchCards = this.showSearchCards.bind(this);
+        this.changeValueSort = this.changeValueSort.bind(this);
+        this.receiveSearchParams = this.receiveSearchParams.bind(this);
+        this.splitSort = this.splitSort.bind(this);
+        this.splitSortName = this.splitSortName.bind(this);
+        /////////////////////////////////////
+
         this.updateComments();
+    }
+
+    receiveSearchParams(resultsPerPage: number, sortBy: SelectList): void {
+        this.setState({
+            resultsPerPage: resultsPerPage,
+            currentPage: 1,
+            sortBy: sortBy
+        }, () => {
+            this.updateComments();
+        });
     }
 
     setLoader (value: boolean = true): void {
@@ -79,6 +92,16 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         });
     }
 
+    splitSort(words: string): string {
+        const n: Array<string> = words.split(" ");
+        return n[n.length - 1];
+    }
+
+    splitSortName(words: string): string {
+        const n: Array<string>  = words.split(" ");
+        return n[0];
+    }
+
     updateComments(): void {
         let responseGetStatus: ResponseStatus = {};
 		const translate = new MyTranslator("Response-codes");
@@ -88,7 +111,9 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         axios.get( '/dataset/' + this.props.id + '/comments', {
             params: {
                 currentPage: this.state.currentPage,
-                resultsPerPage: this.state.resultsPerPage
+                resultsPerPage: this.state.resultsPerPage,
+                sortBy: this.state.sortBy.value === '*' ? 'None' : this.splitSort(this.state.sortBy.value),
+                sortByField: this.state.sortBy.value === '*' ? 'None' : this.splitSortName(this.state.sortBy.value),
             }
         })
         .then(response => {
@@ -181,8 +206,9 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
         return cards;
     }
 
-    changeValueSort = (e) => {
-        debugger;
+    changeValueSort(e, comboBoxTitle, shouldUpdateNumber): void {
+        this.state[comboBoxTitle] = e;
+        this.forceUpdate();
     }
 
     render() {
@@ -232,30 +258,7 @@ export default class CommentTabs extends React.Component<ICommentTabsProps, ICom
                 <TabPane tabId="1">
                     <Row>
                     <Col sm="12">
-                    <Row>
-                        <Col md="12">
-                            <div className="review-body text-align-center">
-                                <hr className="hr-style-review" />
-                                <NumericInput 
-                                    className="width-numeric-input" 
-                                    step={1} 
-                                    min={3} 
-                                    max={50} 
-                                    value={this.state.resultsPerPage}
-                                    onChange={value => this.setState({resultsPerPage: value })} />
-                                    <InputText 
-                                        nameOfDropdown="sortBy" 
-                                        titleDropdown={this.state.sortBy} 
-                                        listOfItems={this.state.sortByList} 
-                                        className="button-style-sort"
-                                        changeValue={this.changeValueSort} 
-                                        />
-                                <Button color="link"><FontAwesomeIcon icon={faSearch}/></Button>
-                            </div>
-                        </Col>
-                    
-                    </Row>
-
+                    <SearchComments receiveSearchParams={this.receiveSearchParams} />
                         {this.state.shouldDisplayPagination ? searchResult : <></>}
                         <LoaderComponent visible={this.state.loaderVisibility}/>
                         <Row className={this.state.responseGetStatus.wasInfo ? "" : "display-none"}>

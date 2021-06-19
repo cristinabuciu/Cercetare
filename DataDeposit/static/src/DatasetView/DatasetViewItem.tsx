@@ -145,6 +145,9 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
 
     render() {  
         const translate = new MyTranslator("View");
+        const subtitle: string = translate.useTranslation("last-updated") + this.props.lastUpdatedAt;
+        console.log("Kenny G");
+        console.log(subtitle);
         return (
             <>
             <Row>
@@ -154,7 +157,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                         className="margin-bottom-10p" 
                         titleSet={this.props.dataset_title}
                         image={this.props.domain + "_domain.jpg"}
-                        subtitle={"Last updated " + this.props.lastUpdatedAt}
+                        subtitle={subtitle}
                         profileID={this.state.userID}
                         hasProfilePhoto={this.props.hasPhoto} />
                 </Col>
@@ -200,6 +203,7 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                         downloadPath={this.props.downloadPath}
                         shouldHaveDownloadButton={this.props.shouldHaveDownloadButton}
                         shouldHaveDownloadLink={this.props.shouldHaveDownloadLink}
+                        translate={translate}
                     />
                     :
                     <DatasetUpdate 
@@ -230,18 +234,14 @@ export default class DatasetViewLoading extends React.Component<IDatasetViewLoad
                         id={this.props.id} />
                 </Col>
 
-
                 <Card className="margin-top-20">
-                {/* <CardBody> */}
-                <Row >
-                    <HorizontalList 
-                        views={this.props.views}
-                        ratings={this.props.ratings}
-                        updates={this.props.updates}
-                        downloads={this.props.downloads} />
-                </Row>
-                {/* </CardBody> */}
-                    
+                    <Row >
+                        <HorizontalList 
+                            views={this.props.views}
+                            ratings={this.props.ratings}
+                            updates={this.props.updates}
+                            downloads={this.props.downloads} />
+                    </Row>  
                 </Card>
             </Row>
             </>
