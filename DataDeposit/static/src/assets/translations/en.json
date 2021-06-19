@@ -70,7 +70,12 @@
     "domain-label": "Domain:",
     "country-label": "Country:",
     "dataFormat-label": "Data format:",
-    "downloadFrom-label": "Download type:"
+    "downloadFrom-label": "Download type:",
+    "card-label": "Title:",
+    "private-search": "Show only private datasets",
+    "file-label": "Download File",
+    "link-label": "Download Link",
+    "none-label": "No Download"
   },
 
   "LeftBar": {
@@ -195,7 +200,27 @@
 
   "View": {
     "about": "About",
-    "edit": "Update"
+    "edit": "Update",
+
+    "domain-label": "Domain:",
+    "tags-label": "Tags:",
+    "author-label": "Authors:",
+    "article-label": "Article title:",
+    "country-label": "Country:",
+    "created-label": "Created:",
+    "rating-label": "Rating:",
+    "data-label": "Data format:",
+    "resource-label": "Resource Type:",
+    "checksum-label": "Resource checksum:",
+    "git-label": "Gitlink:",
+    "owner-label": "Uploaded by:",
+    "file-label": "Download File",
+    "link-label": "Download Link",
+    "integrity-label": "Data integrity and authenticity",
+    "cont-label": "Continuity of access",
+    "reuse-label": "Data reuse",
+    "download-label": "Download",
+    "last-updated": "Last updated "
   },
 
   "Home": {

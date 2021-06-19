@@ -13,14 +13,14 @@ export const AboutBody = props => (
                     <div className="overflow-hidden">
                     <span className="column-item">
                         <span className="column-data bold">
-                        <FontAwesomeIcon icon={faCalendar}/> Domain:
+                        <FontAwesomeIcon icon={faCalendar}/> {props.translate.useTranslation("domain-label")}
                         </span>
                         {props.domain ? props.domain : "-"}
                     </span>
 
                     <span className="column-item">
                         <span className="column-data bold">
-                        <FontAwesomeIcon icon={faTags}/> Tags:
+                        <FontAwesomeIcon icon={faTags}/> {props.translate.useTranslation("tags-label")}
                         </span>
                         <div className="overflow-hidden">
                         {props.subdomain ? props.subdomain.map(txt => <div className="column-list">{txt}</div>) : "-"}
@@ -29,7 +29,7 @@ export const AboutBody = props => (
 
                     <span className="column-item">
                         <span className="column-data bold">
-                        <FontAwesomeIcon icon={faPortrait}/> Authors:
+                        <FontAwesomeIcon icon={faPortrait}/> {props.translate.useTranslation("author-label")}
                         </span>
                         <div className="overflow-hidden">
                         {props.authors ? props.authors.map(txt => <div className="column-list">{txt}</div>) : "-"}
@@ -38,21 +38,21 @@ export const AboutBody = props => (
 
                     <span className="column-item">
                         <span className="column-data bold">
-                        <FontAwesomeIcon icon={faPortrait}/> Article title:
+                        <FontAwesomeIcon icon={faPortrait}/> {props.translate.useTranslation("article-label")}
                         </span>
                         {props.article_title ? props.article_title : "-"}
                     </span>
 
                     <span className="column-item">
                         <span className="column-data bold">
-                        <FontAwesomeIcon icon={faGlobe}/> Country:
+                        <FontAwesomeIcon icon={faGlobe}/> {props.translate.useTranslation("country-label")}
                         </span>
                         {props.country ? props.country : "-"}
                     </span>
                     
                     <span className="column-item">
                         <span className="column-data bold">
-                        <FontAwesomeIcon icon={faCalendar}/> Created:
+                        <FontAwesomeIcon icon={faCalendar}/> {props.translate.useTranslation("created-label")}
                         </span>
                         {props.year ? props.year : "-"}
                     </span>
@@ -62,49 +62,49 @@ export const AboutBody = props => (
                     <div className="overflow-hidden">
                         <span className="column-item">
                             <span className="column-data bold">
-                            <FontAwesomeIcon icon={faStar}/> Rating:
+                            <FontAwesomeIcon icon={faStar}/> {props.translate.useTranslation("rating-label")}
                             </span>
                             {props.avg_rating ? props.avg_rating : "0"}
                         </span>
                         <span className="column-item">
                             <span className="column-data bold">
-                            <FontAwesomeIcon icon={faFile}/> Data format:
+                            <FontAwesomeIcon icon={faFile}/> {props.translate.useTranslation("data-label")}
                             </span>
                             {props.data_format ? props.data_format : "-"}
                         </span>
                         <span className="column-item">
                             <span className="column-data bold">
-                            <FontAwesomeIcon icon={faFileDownload}/> Resource Type:
+                            <FontAwesomeIcon icon={faFileDownload}/> {props.translate.useTranslation("resource-label")}
                             </span>
                             {props.shouldHaveDownloadButton ? 
                                 <>{
                                     props.shouldHaveDownloadLink ? 
-                                    <><a target="_blank" href={props.downloadPath}><FontAwesomeIcon icon={faLink} />Download Link</a></>
+                                    <><a target="_blank" href={props.downloadPath}><FontAwesomeIcon icon={faLink} />{props.translate.useTranslation("link-label")}</a></>
                                     :
-                                    <span><FontAwesomeIcon icon={faDatabase} />  Download File</span>
+                                    <span><FontAwesomeIcon icon={faDatabase} />  {props.translate.useTranslation("file-label")}</span>
                                 }</>
                                 :
-                                <>None</>
+                                <>{props.translate.useTranslation("None")}</>
                                 }
                         </span>
                         {props.shouldHaveDownloadButton && !props.shouldHaveDownloadLink ? 
                         <span className="column-item">
                             <span className="column-data bold">
-                            <FontAwesomeIcon icon={faLock}/> Resource checksum:
+                            <FontAwesomeIcon icon={faLock}/> {props.translate.useTranslation("checksum-label")}
                             </span>
                             {props.checksum}
                         </span> : <></>
                         }
                         <span className="column-item">
                             <span className="column-data bold">
-                            <FontAwesomeIcon icon={faGlobe}/> Gitlink:
+                            <FontAwesomeIcon icon={faGlobe}/> {props.translate.useTranslation("git-label")}
                             </span>
                             {props.gitlink ? props.gitlink : "-"}
                         </span>
 
                         <span className="column-item">
                             <span className="column-data bold">
-                            <FontAwesomeIcon icon={faUser}/> Uploaded by:
+                            <FontAwesomeIcon icon={faUser}/> {props.translate.useTranslation("owner-label")}
                             </span>
                             {props.owner ? props.owner : "-"}
                         </span>
@@ -121,7 +121,7 @@ export const AboutBody = props => (
     <Row>
         <Col>
             <div className="column-title margin-top-10">
-                Data integrity and authenticity
+                {props.translate.useTranslation("integrity-label")}
             </div>
             <div>
                 {props.dataIntegrity ? props.dataIntegrity : "Not specified"}
@@ -131,7 +131,7 @@ export const AboutBody = props => (
     <Row>
         <Col>
             <div className="column-title margin-top-10">
-                Continuity of access
+                {props.translate.useTranslation("cont-label")}
             </div>
             <div>
                 {props.continuityAccess ? props.continuityAccess : "Not specified"}
@@ -141,7 +141,7 @@ export const AboutBody = props => (
     <Row>
         <Col>
             <div className="column-title margin-top-10">
-                Data reuse
+                {props.translate.useTranslation("reuse-label")}
             </div>
             <div>
                 {props.dataReuse ? props.dataReuse : "Not specified"}
@@ -156,7 +156,7 @@ export const AboutBody = props => (
                 color="primary" 
                 outline className="upload-button-size" 
                 onClick={() => props.handleDownload()}>
-                Download
+                {props.translate.useTranslation("download-label")}
             </Button>
             : <></>
             }

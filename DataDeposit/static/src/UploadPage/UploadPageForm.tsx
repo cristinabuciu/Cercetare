@@ -420,9 +420,9 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         label={translate.useTranslation("dataset-author-label")}
                                         placeholder={translate.useTranslation("dataset-author-placeholder")}
                                         validate={{
-                                            required: {value: true, errorMessage: translate.useTranslation("dataset-author-req")},
-                                            pattern: {value: '^[A-Za-z0-9; ]+$', errorMessage: translate.useTranslation("dataset-author-pattern")},
-                                            minLength: {value: 5, errorMessage: translate.useTranslation("dataset-author-len")},
+                                            required: {value: true, errorMessage: translate.useTranslation("dataset-author-error-req")},
+                                            pattern: {value: '^[A-Za-z0-9; ]+$', errorMessage: translate.useTranslation("dataset-author-error-pattern")},
+                                            minLength: {value: 5, errorMessage: translate.useTranslation("dataset-author-error-len")},
                                         }}
                                         />
                                     <TooltipButton 
@@ -554,9 +554,9 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                                         id="description" 
                                         placeholder= {translate.useTranslation("sdesc-placeholder")}
                                         validate={{
-                                            required: {value: true, errorMessage: translate.useTranslation("sdesc-req")},
-                                            minLength: {value:10, errorMessage: translate.useTranslation("sdesc-len")},
-                                            maxLength: {value: 1000, errorMessage: translate.useTranslation("sdesc-len")}
+                                            required: {value: true, errorMessage: translate.useTranslation("sdesc-error-req")},
+                                            minLength: {value:10, errorMessage: translate.useTranslation("sdesc-error-len")},
+                                            maxLength: {value: 1000, errorMessage: translate.useTranslation("sdesc-error-len")}
                                         }}
                                     />
                                 </Col>

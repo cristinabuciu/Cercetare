@@ -14,9 +14,9 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ResponseStatus } from '../../models/ResponseStatus'
 import { IFilters } from '../../models/IFilters'
-import { AvField, AvForm } from 'availity-reactstrap-validation';
+import { AvField, AvForm, AvGroup } from 'availity-reactstrap-validation';
 
-export interface ICardProps {
+interface ICardProps {
     setItemsForShow: Function;
     currentPage: number;
     handleLoaderChange: Function;
@@ -25,8 +25,9 @@ export interface ICardProps {
     allFiltersType?: IFilters;
 }
 
-export interface ICardState {
+interface ICardState {
     buttonDropDownStatus: boolean;
+    privateSearch: boolean;
     startDate: Date;
     searchInputOptions: {
         domain: Array<String>;
@@ -55,6 +56,7 @@ export interface ICardState {
 export default class Search extends React.Component<ICardProps, ICardState> {
     state = {
         buttonDropDownStatus: true,
+        privateSearch: false,
         startDate: new Date(),
         searchInputOptions: {
             domain: ['All domains  '],//['All domains  ', 'IT', 'MEDICINE', 'ARCHITECTURE', 'BIOLOGY', 'CHEMISTRY', 'PHYSICS', 'BUSINESS'],
@@ -193,14 +195,14 @@ export default class Search extends React.Component<ICardProps, ICardState> {
         }
 
         if (comboBoxTitle === 'downloadFrom') {
-            if (e.value && (e.value === 'EXTERNAL' || e.value === 'NONE'))
+            if (e === 'EXTERNAL' || e === 'NONE')
             {
                 this.setState({
                     dataFormat: "All Data Formats "
                 });
             }
         }
-
+        debugger;
         this.state[comboBoxTitle] = e;
         this.forceUpdate();
         if (shouldUpdateNumber) {
@@ -219,6 +221,7 @@ export default class Search extends React.Component<ICardProps, ICardState> {
     }
 
     handleSubmit(event, errors, values): void {
+        console.log("Mafia");
         if (errors.length == 0) {
             this.searchData(false, true);   
         }
@@ -240,7 +243,8 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 year: this.state.year === '' ? '*' : this.state.year + '*',
                 dataset_title: this.state.dataset_title === '' ? '*' : this.state.dataset_title,
                 downloadType: this.state.downloadFrom,
-                userId: this.props.userId
+                userId: this.props.userId,
+                privateSearch: this.state.privateSearch
             },
             arrayParams: {
                 tags: this.state.tags, //=== 'All subdomains  ' ? '' : this.state.subdomain,
@@ -462,6 +466,16 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 </Col>
                     
             </Row>
+            {/* <Row>
+                <Col className={this.props.userId ? "" : "display-none"}>
+                    <AvField 
+                        type="checkbox" 
+                        value={this.state.privateSearch}
+                        name="privateSearch" 
+                        onChange={e => this.changeValue(e.target.value === 'false' ? true : false, e.target.name, true)}
+                        label={translate.useTranslation("private-search")} />
+                </Col>
+            </Row> */}
         </AvForm>
         </CardText>
           
