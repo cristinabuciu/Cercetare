@@ -221,7 +221,7 @@ export default class UploadPageForm extends React.Component<IUploadPageFormProps
                 },
                 arrayParams: {
                     tags: this.state.datasetMetadata.tags,
-                    authors: values['dataset-authors'].split(", ")
+                    authors: values['dataset-authors'].split(";")
                 },
                 private: this.state.datasetMetadata.valueSwitch
             }
