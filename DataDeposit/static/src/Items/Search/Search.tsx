@@ -247,8 +247,8 @@ export default class Search extends React.Component<ICardProps, ICardState> {
                 privateSearch: this.state.privateSearch
             },
             arrayParams: {
-                tags: this.state.tags, //=== 'All subdomains  ' ? '' : this.state.subdomain,
-                author: this.state.authors.split(",")
+                tags: this.state.tags,
+                author: this.state.authors.split(";")
             },
             sortBy: this.state.sortBy.value === '*' ? 'None' : this.splitSort(this.state.sortBy.value),
             sortByField: this.state.sortBy.value === '*' ? 'None' : this.splitSortName(this.state.sortBy.value),
