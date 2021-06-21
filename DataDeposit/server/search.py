@@ -3,7 +3,6 @@ from application_properties import INDEX_USERS, INDEX_DATASETS, INDEX_DOMAINS, I
 from utils import getTransaction, calculateLastUpdatedAt, createResponse
 
 from http import HTTPStatus
-from operator import itemgetter
 
 import re
 import ckan_connector as ck
@@ -204,6 +203,10 @@ def findDataset(datasetId):
         es = getTransaction()
 
         dataset = es.get_es_data_by_id(INDEX_DATASETS, datasetId)[0]['_source']
+
+        if dataset['deleted'] is True:
+            print("Tried to get deleted datasetId={}".format(datasetId))
+            return createResponse(HTTPStatus.NOT_FOUND, "GET_DATASET_NOT_FOUND")
 
         resourceType, downloadPath = getResourceType(dataset)
         dataset['resourceType'] = resourceType

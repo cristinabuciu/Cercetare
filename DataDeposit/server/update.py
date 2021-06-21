@@ -60,11 +60,12 @@ def updateDataset(dataset_id, params, current_user):
         new_dataset['deleted'] = False
         new_dataset['deletedAt'] = -1
 
+        domain = new_dataset['domain'].upper()
+        new_dataset['domain'] = domain
+
         es.update(INDEX_DATASETS, '_doc', existingDataset_ES_ID, new_dataset, WAIT_FOR)
 
         # update domains
-        domain = params['notArrayParams']['domain'].upper()
-
         isDomainNew = not(es.get_domain_by_name(domain))
         if isDomainNew:
             es.insert(INDEX_DOMAINS, '_doc', {"domainName": domain})

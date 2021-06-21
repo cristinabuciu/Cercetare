@@ -25,6 +25,7 @@
     "ITEMS_NOT_FOUND": "Niciun rezultat.",
     "GET_DATASETS_ERROR": "S-a produs o eroare la căutarea seturilor de date.",
     "GET_DATASET_ERROR": "S-a produs o eroare la căutarea setului de date.",
+    "GET_DATASET_NOT_FOUND": "Setul de date căutat nu a putut fi găsit.",
     "GET_RESOURCE_INFO_ERROR": "S-a produs o eroare la obținerea resursei existente. Actualizarea nu se poate efectua.",
     "GET_DATASET_COMMENTS_ERROR": "S-a produs o eroare la obținerea comentariilor.",
     "NO_REVIEWS": "Nu sunt review-uri acordate.",

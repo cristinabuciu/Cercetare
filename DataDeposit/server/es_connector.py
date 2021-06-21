@@ -128,12 +128,14 @@ class ESClass(object):
             return searchJson
 
     def get_public_datasets(self):
-        body = {"query": { "bool": {"must": [ {"match": {"private": False}} ] } } }
+        body = {"query": { "bool": {"must": [ {"match": {"deleted": False}}, {"match": {"private": False}} ] } } }
         s = self.es.search(index=INDEX_DATASETS, body=body, size=self.DEFAULT_SIZE)
         return s['hits']['hits']
 
     def count_datasets_by_ownerId(self, ownerId, isPrivate):
-        body = {"query": { "bool": {"must": [{ "match": {"ownerId": int(ownerId) } }, { "match": {"private": isPrivate } }]}}}
+        body = {"query": { "bool": {"must": [{"match": {"deleted": False}},
+                                             { "match": {"ownerId": int(ownerId) } },
+                                             { "match": {"private": isPrivate } }] }}}
 
         s = self.count(INDEX_DATASETS, body)
         return s['count']
