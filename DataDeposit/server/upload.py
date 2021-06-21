@@ -49,12 +49,13 @@ def uploadDataset(params, current_user):
         dataset_json['deleted'] = False
         dataset_json['deletedAt'] = -1
 
+        domain = dataset_json['domain'].upper()
+        dataset_json['domain'] = domain
+
         es.insert(INDEX_DATASETS, '_doc', dataset_json, WAIT_FOR)
         es.update_id_generator(INDEX_DATASETS)
 
         # update domains
-        domain = params['notArrayParams']['domain'].upper()
-
         isDomainNew = not(es.get_domain_by_name(domain))
         if isDomainNew:
             es.insert(INDEX_DOMAINS, '_doc', {"domainName": domain})

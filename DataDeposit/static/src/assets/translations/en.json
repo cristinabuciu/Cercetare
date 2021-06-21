@@ -25,6 +25,7 @@
     "ITEMS_NOT_FOUND": "No items found.",
     "GET_DATASETS_ERROR": "There was an unexpected error while searching for datasets.",
     "GET_DATASET_ERROR": "There was an unexpected error while getting the dataset.",
+    "GET_DATASET_NOT_FOUND": "The dataset that you are looking for could not be found.",
     "GET_RESOURCE_INFO_ERROR": "There was an error while fetching the existing resource. Update can not be performed.",
     "GET_DATASET_COMMENTS_ERROR": "There was an error when getting the comments.",
     "NO_REVIEWS": "No reviews posted yet.",
