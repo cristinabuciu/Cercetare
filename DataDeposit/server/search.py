@@ -305,8 +305,13 @@ def getAllDefaultData():
         es = getTransaction()
 
         domains = [domain['_source']['domainName'] for domain in es.get_es_index(INDEX_DOMAINS)]
+        domains.sort()
+
         countries = list(es.get_es_index(INDEX_LOCATIONS)[0]['_source'].keys())
+        countries.sort()
+
         allowed_data_format = list(UPLOAD_FILE_ALLOWED_MIME_TYPES.values())
+        allowed_data_format.sort()
 
         tags = {}
         for tag in es.get_es_index(INDEX_TAGS):
