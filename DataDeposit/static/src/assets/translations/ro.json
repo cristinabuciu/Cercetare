@@ -67,7 +67,16 @@
     "search": "Caută",
     "author": "Autor",
     "year": "An",
-    "dataset-title": "Titlu set de date"
+    "dataset-title": "Titlu set de date",
+    "domain-label": "Domeniu:",
+    "country-label": "Țară:",
+    "dataFormat-label": "Format date:",
+    "downloadFrom-label": "Tip descărcare:",
+    "card-label": "Titlu:",
+    "private-search": "Arată doar seturile de date private",
+    "file-label": "Fișier descărcare",
+    "link-label": "Referință descărcare",
+    "none-label": "Fără descărcare"
   },
 
   "LeftBar": {
@@ -192,7 +201,27 @@
 
   "View": {
     "about": "Despre",
-    "edit": "Actualizează"
+    "edit": "Actualizează",
+
+    "domain-label": "Domeniu:",
+    "tags-label": "Tag-uri:",
+    "author-label": "Autori:",
+    "article-label": "Titlu articol:",
+    "country-label": "Țară:",
+    "created-label": "Publicat:",
+    "rating-label": "Rating:",
+    "data-label": "Format date:",
+    "resource-label": "Tip resursă:",
+    "checksum-label": "Suma de control resursă:",
+    "git-label": "Referință Git:",
+    "owner-label": "Încărcat de:",
+    "file-label": "Fișier descărcare",
+    "link-label": "Referință descărcare",
+    "integrity-label": "Integritatea și autenticitatea datelor",
+    "cont-label": "Continuitatea accesului",
+    "reuse-label": "Reutilizarea datelor",
+    "download-label": "Descarcă",
+    "last-updated": "Last updated "
   },
 
   "Home": {
