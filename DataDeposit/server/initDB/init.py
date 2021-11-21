@@ -4,9 +4,8 @@ from time import sleep
 import es_connector
 import pprint
 
-
 locations = {}
-IP = '172.19.0.2'
+IP = '<es_ip>'
 
 #################### ADAUGARE LOCATII ##################
 with open("./locations_mapping/locations.json", 'r') as f:
